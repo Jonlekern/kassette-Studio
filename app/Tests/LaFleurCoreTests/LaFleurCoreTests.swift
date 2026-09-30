@@ -295,3 +295,18 @@ final class CalibrageTests: XCTestCase {
         XCTAssertEqual(p.platine, ReglagesPlatine())
     }
 }
+
+final class DiscogsTests: XCTestCase {
+    func testDetail() throws {
+        let json = #"""
+        {"images": [{"uri": "https://i.discogs.com/a.jpg", "type": "primary"}],
+         "extraartists": [{"name": "Jeremy Sadik (2)", "role": "Producer"}, {"name": "Ana", "role": "Producer"},
+                          {"name": "Bob", "role": "Mixed By"}],
+         "notes": "Recorded at the lake."}
+        """#
+        let d = try ClientDiscogs.decoderDetail(Data(json.utf8))
+        XCTAssertEqual(d.photos.count, 1)
+        XCTAssertEqual(d.credits, "Producer : Jeremy Sadik, Ana\nMixed By : Bob")
+        XCTAssertEqual(d.notes, "Recorded at the lake.")
+    }
+}

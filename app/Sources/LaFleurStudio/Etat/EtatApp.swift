@@ -276,7 +276,21 @@ final class EtatApp: ObservableObject {
         lancer(String(localized: "Lecture du dossier…")) { [self] in
             await relireDossier()
             guard !fichiers.isEmpty else { statut = String(localized: "Aucun fichier audio dans ce dossier"); return }
-            let pistes = DossierAudio.pistes(depuis: fichiers)
+            var pistes = DossierAudio.pistes(depuis: fichiers)
+            // Covers intégrées aux fichiers : une par album, copiée dans le dossier de l'app.
+            var covers: [String: URL] = [:]
+            for i in pistes.indices {
+                guard let f = pistes[i].fichier else { continue }
+                let album = pistes[i].morceau.album
+                if covers[album] == nil, let data = await DossierAudio.pochette(f) {
+                    let dossier = stockage.racine.appendingPathComponent("images", isDirectory: true)
+                    try? FileManager.default.createDirectory(at: dossier, withIntermediateDirectories: true)
+                    let dest = dossier.appendingPathComponent("cover-\(UUID().uuidString).\(data.starts(with: [0x89, 0x50]) ? "png" : "jpg")")
+                    if (try? data.write(to: dest)) != nil { covers[album] = dest }
+                }
+                pistes[i].morceau.pochetteURL = covers[album]
+            }
+            if projet.pochetteURL == nil { projet.pochetteURL = pistes.first?.morceau.pochetteURL }
             if projet.titre.isEmpty { projet.titre = pistes.first?.morceau.album ?? "" }
             if projet.artiste.isEmpty { projet.artiste = pistes.first?.morceau.artiste ?? "" }
             repartirDansLOrdre(pistes)

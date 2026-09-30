@@ -255,6 +255,7 @@
 "J-card" = "J-card";
 "J-card verso" = "Оборот вкладыша";
 "J-card, O-card, obi : papier mat ou satiné de 170 à 250 g/m², A4." = "J-card, O-card, оби: матовая или сатиновая бумага 170–250 г/м², A4.";
+"Jamais les paroles complètes (droits d'auteur) : seulement où les trouver." = "Никогда полный текст (авторские права): только где его найти.";
 "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Dis-moi l'ambiance, ou clique sur « Proposer »." = "Я начну с настоящих кассетных изданий, если найду, иначе — с твоей обложки. Опиши настроение или нажми «Предложить».";
 "Jeton Discogs" = "Токен Discogs";
 "Jeton Discogs refusé : vérifie-le dans Réglages → Sources." = "Токен Discogs отклонён: проверь его в Настройки → Источники.";
@@ -279,6 +280,7 @@
 "Lien Spotify" = "Ссылка Spotify";
 "Lien non reconnu : colle un lien Spotify de playlist, d'album ou de morceau." = "Ссылка не распознана: вставь ссылку Spotify на плейлист, альбом или трек.";
 "Lien perso" = "Своя ссылка";
+"Lien vers les paroles (genius.com)" = "Ссылка на тексты песен (genius.com)";
 "Logo de la maison de disque" = "Логотип лейбла";
 "Logo importé (usage perso uniquement)" = "Логотип импортирован (только для личного использования)";
 "Long" = "Длинный";
@@ -320,6 +322,7 @@
 "PRÊT · %lld MORCEAUX" = "ГОТОВО · ТРЕКОВ: %lld";
 "Papier" = "Бумага";
 "Papier conseillé" = "Рекомендуемая бумага";
+"Paroles : genius.com" = "Тексты песен: genius.com";
 "Pas connecté à Spotify (Réglages → Spotify)." = "Нет подключения к Spotify (Настройки → Spotify).";
 "Pas de fichier audio pour « %@ ». Associe-le dans l'écran Mixtape." = "Нет аудиофайла для «%@». Привяжи его на экране Микстейп.";
 "Passer au début de la face B" = "Перейти к началу стороны B";
@@ -360,6 +363,7 @@
 "Relire" = "Перечитать";
 "Relâche la pause de la platine… %lld" = "Отпусти паузу деки… %lld";
 "Remettre « %@ »" = "Вернуть «%@»";
+"Reprendre crédits et notes" = "Взять титры и заметки";
 "Retirer ce morceau" = "Убрать этот трек";
 "Retirer de la cassette" = "Убрать с кассеты";
 "Retirer de la cassette (ne sera pas enregistré)" = "Убрать с кассеты (не будет записан)";

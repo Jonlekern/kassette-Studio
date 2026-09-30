@@ -224,6 +224,8 @@ struct EcranJaquette: View {
                 TextEditor(text: lien(\.notes)).font(W98.police).frame(height: 60).creux()
                 Text("Crédits")
                 TextEditor(text: lien(\.credits)).font(W98.police).frame(height: 60).creux()
+                Toggle("Lien vers les paroles (genius.com)", isOn: lien(\.lienParoles)).toggleStyle(.checkbox)
+                    .help("Jamais les paroles complètes (droits d'auteur) : seulement où les trouver.")
                 if etat.design.obi {
                     Text("Texte de l'obi")
                     Champ(invite: etat.mise.texteTranche, texte: lien(\.obiTexte))
@@ -258,6 +260,15 @@ struct EcranJaquette: View {
                                 }
                             }
                             Link("Source : \(e.source)", destination: e.page).foregroundStyle(W98.bleu)
+                            if !e.credits.isEmpty || !e.notes.isEmpty {
+                                Button("Reprendre crédits et notes") {
+                                    var d = etat.design
+                                    if !e.credits.isEmpty { d.credits = e.credits }
+                                    if !e.notes.isEmpty && d.notes.isEmpty { d.notes = e.notes }
+                                    etat.design = d
+                                }
+                                .buttonStyle(.w98)
+                            }
                         }
                         .padding(4).creux()
                     }

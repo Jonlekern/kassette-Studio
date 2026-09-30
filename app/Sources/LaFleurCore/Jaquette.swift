@@ -137,6 +137,8 @@ public struct Design: Codable, Hashable, Sendable {
     public var credits = ""
     public var obiTexte = ""
     public var afficherLogoMaison = true
+    /// Une ligne « Paroles : genius.com » dans les crédits (jamais les paroles elles-mêmes).
+    public var lienParoles = false
 
     // Codes
     public var codeBarres = true
@@ -167,7 +169,7 @@ public struct Design: Codable, Hashable, Sendable {
     public var alertesForcees: Set<String> = []
 
     enum CodingKeys: String, CodingKey {
-        case jcard, ocard, etiquettes, obi, volets, dos, reperes, variante, propositions, historique, imagePerso, echelles, texteTranche, notes, credits, obiTexte, afficherLogoMaison, codeBarres, genreCode, numeroCode, texteCode, placeCode, couleursCode, barresPerso, fondPerso, chiffresCode, echelleCode, qr, contenuQR, texteQR, placeQR, codeSpotify, codeX, codeY, rotationCode, logoMaison, alertesForcees
+        case jcard, ocard, etiquettes, obi, volets, dos, reperes, variante, propositions, historique, imagePerso, echelles, texteTranche, notes, credits, obiTexte, afficherLogoMaison, lienParoles, codeBarres, genreCode, numeroCode, texteCode, placeCode, couleursCode, barresPerso, fondPerso, chiffresCode, echelleCode, qr, contenuQR, texteQR, placeQR, codeSpotify, codeX, codeY, rotationCode, logoMaison, alertesForcees
     }
 
     /// Décodage tolérant : un champ absent ou illisible prend sa valeur par défaut (les anciennes cassettes restent lisibles).
@@ -192,6 +194,7 @@ public struct Design: Codable, Hashable, Sendable {
         credits = v(.credits, d.credits)
         obiTexte = v(.obiTexte, d.obiTexte)
         afficherLogoMaison = v(.afficherLogoMaison, d.afficherLogoMaison)
+        lienParoles = v(.lienParoles, d.lienParoles)
         codeBarres = v(.codeBarres, d.codeBarres)
         genreCode = v(.genreCode, d.genreCode)
         numeroCode = v(.numeroCode, d.numeroCode)

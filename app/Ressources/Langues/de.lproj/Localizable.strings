@@ -255,6 +255,7 @@
 "J-card" = "J-Card";
 "J-card verso" = "J-Card Rückseite";
 "J-card, O-card, obi : papier mat ou satiné de 170 à 250 g/m², A4." = "J-Card, O-Card, Obi: mattes oder seidenmattes Papier, 170–250 g/m², A4.";
+"Jamais les paroles complètes (droits d'auteur) : seulement où les trouver." = "Nie die vollständigen Songtexte (Urheberrecht): nur wo man sie findet.";
 "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Dis-moi l'ambiance, ou clique sur « Proposer »." = "Ich starte mit echten Kassettenausgaben, falls ich welche finde, sonst mit deinem Cover. Sag mir die Stimmung oder klick „Vorschlagen“.";
 "Jeton Discogs" = "Discogs-Token";
 "Jeton Discogs refusé : vérifie-le dans Réglages → Sources." = "Discogs-Token abgelehnt: prüfe es unter Einstellungen → Quellen.";
@@ -279,6 +280,7 @@
 "Lien Spotify" = "Spotify-Link";
 "Lien non reconnu : colle un lien Spotify de playlist, d'album ou de morceau." = "Link nicht erkannt: füge einen Spotify-Link zu Playlist, Album oder Titel ein.";
 "Lien perso" = "Eigener Link";
+"Lien vers les paroles (genius.com)" = "Link zu den Songtexten (genius.com)";
 "Logo de la maison de disque" = "Label-Logo";
 "Logo importé (usage perso uniquement)" = "Logo importiert (nur privat)";
 "Long" = "Lang";
@@ -320,6 +322,7 @@
 "PRÊT · %lld MORCEAUX" = "BEREIT · %lld TITEL";
 "Papier" = "Papier";
 "Papier conseillé" = "Empfohlenes Papier";
+"Paroles : genius.com" = "Songtexte: genius.com";
 "Pas connecté à Spotify (Réglages → Spotify)." = "Nicht mit Spotify verbunden (Einstellungen → Spotify).";
 "Pas de fichier audio pour « %@ ». Associe-le dans l'écran Mixtape." = "Keine Audiodatei für „%@“. Ordne sie im Mixtape-Bildschirm zu.";
 "Passer au début de la face B" = "Zum Anfang von Seite B";
@@ -360,6 +363,7 @@
 "Relire" = "Neu einlesen";
 "Relâche la pause de la platine… %lld" = "Pause am Deck lösen… %lld";
 "Remettre « %@ »" = "„%@“ zurücklegen";
+"Reprendre crédits et notes" = "Credits und Notizen übernehmen";
 "Retirer ce morceau" = "Diesen Titel entfernen";
 "Retirer de la cassette" = "Von der Kassette entfernen";
 "Retirer de la cassette (ne sera pas enregistré)" = "Von der Kassette entfernen (wird nicht aufgenommen)";

@@ -53,4 +53,8 @@ T = {
 "Platine": ("Deck", "Дека", "Deck"),
 "Langue": ("Language", "Язык", "Sprache"),
 "Conditions": ("Terms", "Условия", "Bedingungen"),
+"Paroles : genius.com": ("Lyrics: genius.com", "Тексты песен: genius.com", "Songtexte: genius.com"),
+"Lien vers les paroles (genius.com)": ("Link to the lyrics (genius.com)", "Ссылка на тексты песен (genius.com)", "Link zu den Songtexten (genius.com)"),
+"Jamais les paroles complètes (droits d'auteur) : seulement où les trouver.": ("Never the full lyrics (copyright): only where to find them.", "Никогда полный текст (авторские права): только где его найти.", "Nie die vollständigen Songtexte (Urheberrecht): nur wo man sie findet."),
+"Reprendre crédits et notes": ("Use these credits and notes", "Взять титры и заметки", "Credits und Notizen übernehmen"),
 }

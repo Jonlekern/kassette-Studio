@@ -18,6 +18,13 @@ public actor ClientDiscogs {
 
     public struct Photo: Hashable, Sendable { public let url: URL; public let genre: String }
 
+    /// Photos, crédits (rôle : nom) et notes de pochette d'une édition.
+    public struct Detail: Sendable {
+        public let photos: [Photo]
+        public let credits: String
+        public let notes: String
+    }
+
     public enum Erreur: LocalizedError {
         case pasDeJeton, http(Int)
         public var errorDescription: String? {
@@ -53,10 +60,23 @@ public actor ClientDiscogs {
         return r.results.map { $0.edition }
     }
 
-    /// Toutes les photos d'une édition (recto, dos, J-card, cassette…).
-    public func photos(_ id: Int) async throws -> [Photo] {
-        let r = try JSONDecoder().decode(EditionAPI.self, from: try await get("/releases/\(id)"))
-        return (r.images ?? []).compactMap { i in URL(string: i.uri).map { Photo(url: $0, genre: i.type ?? "") } }
+    /// Toutes les photos d'une édition (recto, dos, J-card, cassette…), ses crédits et ses notes.
+    public func detail(_ id: Int) async throws -> Detail {
+        try Self.decoderDetail(try await get("/releases/\(id)"))
+    }
+
+    static func decoderDetail(_ d: Data) throws -> Detail {
+        let r = try JSONDecoder().decode(EditionAPI.self, from: d)
+        let photos = (r.images ?? []).compactMap { i in URL(string: i.uri).map { Photo(url: $0, genre: i.type ?? "") } }
+        // Regroupe les crédits par rôle : « Producer : A, B ».
+        var parRole: [(String, [String])] = []
+        for a in r.extraartists ?? [] {
+            let nom = a.name.replacingOccurrences(of: #" \(\d+\)$"#, with: "", options: .regularExpression)
+            let role = a.role ?? ""
+            if let i = parRole.firstIndex(where: { $0.0 == role }) { parRole[i].1.append(nom) } else { parRole.append((role, [nom])) }
+        }
+        let credits = parRole.map { $0.0.isEmpty ? $0.1.joined(separator: ", ") : "\($0.0) : \($0.1.joined(separator: ", "))" }.joined(separator: "\n")
+        return Detail(photos: photos, credits: credits, notes: r.notes ?? "")
     }
 
     static func decoderRecherche(_ d: Data) throws -> [Edition] { try JSONDecoder().decode(RechercheAPI.self, from: d).results.map { $0.edition } }
@@ -86,5 +106,8 @@ private struct RechercheAPI: Decodable {
 
 private struct EditionAPI: Decodable {
     struct I: Decodable { let uri: String; let type: String? }
+    struct A: Decodable { let name: String; let role: String? }
     let images: [I]?
+    let extraartists: [A]?
+    let notes: String?
 }

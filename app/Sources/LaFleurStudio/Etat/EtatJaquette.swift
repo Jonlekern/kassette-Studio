@@ -18,6 +18,9 @@ struct EditionK7: Identifiable, Hashable {
     let source: String
     let page: URL
     let images: [URL]
+    /// Crédits et notes de pochette (Discogs), vides si inconnus.
+    var credits = ""
+    var notes = ""
 }
 
 struct Souci: LocalizedError {
@@ -78,12 +81,14 @@ extension EtatApp {
         if !jetonDiscogs.isEmpty {
             let dc = ClientDiscogs(jeton: jetonDiscogs)
             for e in ((try? await dc.chercher(artiste: artiste, album: titre)) ?? []).prefix(4) {
-                let photos = (try? await dc.photos(e.id)) ?? []
+                let detail = try? await dc.detail(e.id)
+                let photos = detail?.photos ?? []
                 let imgs = photos.isEmpty ? [e.image].compactMap { $0 } : photos.map(\.url)
                 guard !imgs.isEmpty else { continue }
                 let infos: [String?] = [e.annee, e.pays, e.maisonsDeDisque.first, e.catalogue]
                 res.append(EditionK7(id: "dc-\(e.id)", titre: e.titre, detail: infos.compactMap { $0 }.joined(separator: " · "),
-                                     source: "Discogs", page: e.page, images: imgs))
+                                     source: "Discogs", page: e.page, images: imgs,
+                                     credits: detail?.credits ?? "", notes: detail?.notes ?? ""))
             }
         }
         editionsK7 = res
@@ -123,8 +128,10 @@ extension EtatApp {
             for e in editionsK7.prefix(2) {
                 for u in e.images.prefix(2) { await joindre(u, "scan d'une vraie édition cassette (\(e.source) : \(e.titre), \(e.detail))") }
             }
+            // Crédits trouvés sur Discogs : des infos sûres que Claude peut reprendre.
+            let donnees = editionsK7.filter { !$0.credits.isEmpty }.prefix(1).map { "Crédits (Discogs, \($0.titre)) :\n\($0.credits)" }
             let r = try await c.dirigerDesign(projet: projet, design: design, demande: texte,
-                                              conversation: conversation.map { ($0.deClaude ? "Claude : " : "Utilisateur : ") + $0.texte },
+                                              conversation: donnees + conversation.map { ($0.deClaude ? "Claude : " : "Utilisateur : ") + $0.texte },
                                               polices: Typo.disponibles, images: images, legendes: legendes, regenerer: regenerer)
             var d = design
             let lettres = ["A", "B", "C", "D", "E"]

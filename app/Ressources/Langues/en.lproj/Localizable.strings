@@ -255,6 +255,7 @@
 "J-card" = "J-card";
 "J-card verso" = "J-card back";
 "J-card, O-card, obi : papier mat ou satiné de 170 à 250 g/m², A4." = "J-card, O-card, obi: matte or satin paper, 170–250 g/m², A4.";
+"Jamais les paroles complètes (droits d'auteur) : seulement où les trouver." = "Never the full lyrics (copyright): only where to find them.";
 "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Dis-moi l'ambiance, ou clique sur « Proposer »." = "I start from real cassette editions if I find any, otherwise from your cover. Tell me the mood, or click “Propose”.";
 "Jeton Discogs" = "Discogs token";
 "Jeton Discogs refusé : vérifie-le dans Réglages → Sources." = "Discogs token rejected: check it in Settings → Sources.";
@@ -279,6 +280,7 @@
 "Lien Spotify" = "Spotify link";
 "Lien non reconnu : colle un lien Spotify de playlist, d'album ou de morceau." = "Link not recognised: paste a Spotify playlist, album or track link.";
 "Lien perso" = "Own link";
+"Lien vers les paroles (genius.com)" = "Link to the lyrics (genius.com)";
 "Logo de la maison de disque" = "Record label logo";
 "Logo importé (usage perso uniquement)" = "Logo imported (personal use only)";
 "Long" = "Long";
@@ -320,6 +322,7 @@
 "PRÊT · %lld MORCEAUX" = "READY · %lld TRACKS";
 "Papier" = "Paper";
 "Papier conseillé" = "Recommended paper";
+"Paroles : genius.com" = "Lyrics: genius.com";
 "Pas connecté à Spotify (Réglages → Spotify)." = "Not connected to Spotify (Settings → Spotify).";
 "Pas de fichier audio pour « %@ ». Associe-le dans l'écran Mixtape." = "No audio file for “%@”. Link it in the Mixtape screen.";
 "Passer au début de la face B" = "Skip to the start of side B";
@@ -360,6 +363,7 @@
 "Relire" = "Rescan";
 "Relâche la pause de la platine… %lld" = "Release the deck's pause… %lld";
 "Remettre « %@ »" = "Put back “%@”";
+"Reprendre crédits et notes" = "Use these credits and notes";
 "Retirer ce morceau" = "Remove this track";
 "Retirer de la cassette" = "Remove from tape";
 "Retirer de la cassette (ne sera pas enregistré)" = "Remove from tape (won't be recorded)";

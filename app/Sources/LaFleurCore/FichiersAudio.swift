@@ -54,6 +54,16 @@ public enum DossierAudio {
         return infos
     }
 
+    /// Cover intégrée au fichier (tags ID3, MP4, FLAC…), telle quelle (JPEG ou PNG).
+    public static func pochette(_ url: URL) async -> Data? {
+        let asset = AVURLAsset(url: url)
+        let tout = ((try? await asset.load(.commonMetadata)) ?? []) + ((try? await asset.load(.metadata)) ?? [])
+        for item in tout where item.commonKey == .commonKeyArtwork {
+            if let d = try? await item.load(.dataValue), !d.isEmpty { return d }
+        }
+        return nil
+    }
+
     public static func lireTout(_ dossier: URL) async -> [InfosFichier] {
         var out: [InfosFichier] = []
         for url in lister(dossier) { if let i = await lire(url) { out.append(i) } }

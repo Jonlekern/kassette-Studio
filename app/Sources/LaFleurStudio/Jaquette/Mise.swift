@@ -146,8 +146,14 @@ struct Mise {
                   largeur: largeur, hauteur: hauteur, couleur: p.texte, fond: p.fond)
     }
 
+    /// Crédits imprimés, avec le lien vers les paroles si demandé.
+    var texteCredits: String {
+        let paroles = design.lienParoles ? String(localized: "Paroles : genius.com") : ""
+        return [design.credits.trimmingCharacters(in: .whitespacesAndNewlines), paroles].filter { !$0.isEmpty }.joined(separator: "\n\n")
+    }
+
     func creditsSpec(largeur: CGFloat, hauteur: CGFloat) -> SpecTexte {
-        SpecTexte(zone: "credits", texte: design.credits, famille: v.policeTexte, pt: 5 * e("credits"),
+        SpecTexte(zone: "credits", texte: texteCredits, famille: v.policeTexte, pt: 5 * e("credits"),
                   largeur: largeur, hauteur: hauteur, couleur: p.texte, fond: p.fond)
     }
 
@@ -175,7 +181,7 @@ struct Mise {
     var blocs: [Bloc] {
         var b: [Bloc] = [.tracklist]
         if !design.notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { b.append(.notes) }
-        if !design.credits.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { b.append(.credits) }
+        if !texteCredits.isEmpty { b.append(.credits) }
         return b
     }
 
