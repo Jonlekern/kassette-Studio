@@ -43,16 +43,39 @@ cd kassette-Studio/app
 
 ## Utilisation
 
-- **Mixtape** : cherche un album (ou colle un lien Spotify), ou « Cassette depuis le dossier ».
-  L'app coupe les faces A/B au mieux et associe chaque morceau à son fichier ; les cas douteux sont
-  demandés. Mode Mixtape : décris une ambiance, Claude propose, tu coches.
-- **Enregistrer** : coche la liste, règle le niveau avec la tonalité 1 kHz, mets la platine en
-  ENREGISTREMENT + PAUSE, clique ● et relâche la pause pendant le compte à rebours.
-- **Réglages** (⌘,) : sortie audio, platine simple ou auto-reverse (durée réelle, délai d'inversion
-  avec « Mesurer »), blancs, marge, compte à rebours, égalisation du volume.
+- **Mixtape** : cherche un album (Spotify, ou **MusicBrainz** sans compte), colle un lien Spotify, ou
+  « Cassette depuis le dossier ». L'app coupe les faces A/B au mieux et associe chaque morceau à son
+  fichier ; les cas douteux sont demandés. Mode Mixtape : décris une ambiance, Claude propose, tu coches.
+- **Jaquette** :
+  - coche les formats (J-card 3 à 8 volets, O-card cassingle, étiquettes de K7, obi) et les codes
+    (code-barres EAN-13 / UPC-A / Code 128, QR code, code Spotify) ; les codes sont réels et se scannent ;
+  - « Proposer » : Claude cherche d'abord les vraies éditions cassette de l'album (MusicBrainz, et Discogs
+    si tu as mis ton jeton), puis propose 3 variantes (A, B, C). ↻ refait une seule variante,
+    « Régénérer tout » les trois, « Versions » revient en arrière. Tu peux lui parler (« plus sombre ») ;
+  - pour une mixtape : collage des covers, ta propre image, style K7 maison ou design dessiné par Claude ;
+  - **Vérification** : l'app mesure chaque texte à chaque modification (dépasse, trop petit, contraste,
+    code illisible). « Tout corriger » ajuste tout seul ; « Vérifier avec Claude » lui montre le rendu ;
+  - **Exporter** : PDF (fond perdu 3 mm, traits de coupe et de pliage), PNG 600 DPI, ou Imprimer ;
+  - **Aperçu 3D** : la J-card dans son boîtier, glisse pour tourner.
+- **Enregistrer** : la K7 de la platine porte ton étiquette. Coche la liste, règle le niveau avec la
+  tonalité 1 kHz, mets la platine en ENREGISTREMENT + PAUSE, clique ● et relâche la pause pendant le
+  compte à rebours. Les bobines tournent et tout s'arrête net en fin de face.
+- **Collection** : toutes tes K7 avec leur recto ; ouvrir, dupliquer, réimprimer la jaquette.
 
-## Pas encore fait (étapes suivantes)
+## Imprimer à la bonne taille (une seule fois par imprimante)
 
-- Jaquettes et impression, vérification avant impression, aperçu 3D.
-- Discogs, MusicBrainz, recherche web de Claude (le réglage existe, la recherche arrive).
-- Traduction de l'interface en anglais, russe et allemand (Claude répond déjà dans la langue choisie).
+1. Réglages → **Impression** : choisis l'imprimante et le papier (A4 ou Letter).
+2. **Imprimer la règle** : une règle de 10 cm et une de 4 pouces sortent sur la page.
+3. Mesure la règle imprimée avec une vraie règle, tape la valeur (« 9,8 » cm) → **OK**.
+4. C'est tout : l'app corrige l'échelle de toutes les impressions sur cette imprimante (réglage gardé,
+   bouton « Réinitialiser (100 %) »). En option : règle verticale et décalage des marges.
+
+Toujours imprimer à **100 %**, jamais « Ajuster à la page ». Papier : 170 à 250 g/m² pour les jaquettes,
+autocollant pleine page pour les étiquettes. Le PDF exporté n'est pas corrigé : il est à la taille exacte,
+pour une impression en boutique.
+
+## Réglages (⌘,)
+
+Audio (sortie vers la platine), Platine (simple ou auto-reverse, durée réelle, délai d'inversion avec
+« Mesurer », blancs, marge, compte à rebours), Impression (calibrage), Claude (clé, recherche web sur des
+sites de musique choisis), Spotify, Sources (jeton Discogs gratuit), Langue, Conditions.

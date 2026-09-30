@@ -42,6 +42,53 @@ enum Captures {
         try? Export.calibrage().write(to: dossier.appendingPathComponent("calibrage.pdf"))
         if let d = Export.planchePourClaude(etat.mise) { try? d.write(to: dossier.appendingPathComponent("planche-pour-claude.png")) }
 
+        // Les 5 styles de recto, sur une mixtape avec des covers différentes.
+        var mix = etat.projet
+        mix.mode = .mixtape; mix.titre = "Summer Drive"; mix.artiste = ""
+        let couleurs: [(Double, Double, Double)] = [(0.9, 0.3, 0.3), (0.2, 0.6, 0.4), (0.95, 0.8, 0.2), (0.3, 0.3, 0.8)]
+        for (i, c) in couleurs.enumerated() {
+            let u = cover(dans: tmp, i, c)
+            if i < mix.faceA.count { mix.faceA[i].morceau.pochetteURL = u }
+            if i < mix.faceB.count { mix.faceB[i].morceau.pochetteURL = u }
+        }
+        for i in mix.faceA.indices { mix.faceA[i].morceau.pochetteURL = mix.faceA[i % 4].morceau.pochetteURL }
+        for i in mix.faceB.indices { mix.faceB[i].morceau.pochetteURL = mix.faceB[i % 4].morceau.pochetteURL }
+        await Images.partage.precharger(mix.toutes.map(\.morceau.pochetteURL))
+        let graphique = [
+            ElementGraphique(forme: .cercle, x: 0.15, y: 0.1, largeur: 0.7, hauteur: 0.7, couleur: "#F2C14E"),
+            ElementGraphique(forme: .rectangle, x: 0, y: 0.62, largeur: 1, hauteur: 0.06, couleur: "#F78154"),
+            ElementGraphique(forme: .rectangle, x: 0, y: 0.72, largeur: 1, hauteur: 0.04, couleur: "#F78154", opacite: 0.7),
+            ElementGraphique(forme: .rectangle, x: 0, y: 0.8, largeur: 1, hauteur: 0.02, couleur: "#F78154", opacite: 0.5),
+            ElementGraphique(forme: .triangle, x: 0.55, y: 0.35, largeur: 0.4, hauteur: 0.3, couleur: "#4D9078"),
+            ElementGraphique(forme: .texte, x: 0.06, y: 0.86, largeur: 0.9, hauteur: 0.1, couleur: "#FFFFFF", texte: "SIDE A · SIDE B"),
+        ]
+        let styles: [(StyleRecto, String, String)] = [(.pochette, "Cormorant Garamond", "#14283A"), (.collage, "Bebas Neue", "#111111"),
+                                                      (.imagePerso, "Playfair Display", "#1D1D1D"), (.maison, "Permanent Marker", "#EFE6D2"),
+                                                      (.graphique, "Syne", "#2B2D42")]
+        let mixFixe = mix
+        let demoFixe = etat.projet
+        let rectos = HStack(alignment: .top, spacing: 6 * Typo.ptParMM) {
+            ForEach(styles.indices, id: \.self) { i in
+                let sty = styles[i]
+                let st = sty.0, police = sty.1, fond = sty.2
+                let dm: Design = {
+                    var d = Design()
+                    d.variante = Variante(nom: "\(i)", palette: Palette(fond: fond, texte: st == .maison ? "#1B1B1B" : "#F4F1EA", accent: "#F78154"),
+                                          policeTitre: police, policeTexte: "Space Mono", titreItalique: st == .pochette, style: st,
+                                          elements: st == .graphique ? graphique : [])
+                    d.imagePerso = st == .imagePerso ? mixFixe.faceA[2].morceau.pochetteURL : nil
+                    return d
+                }()
+                VStack(spacing: 2) {
+                    Text(st.nom).font(.system(size: 9))
+                    RectoVue(mise: Mise(projet: st == .pochette ? demoFixe : mixFixe, design: dm), largeur: Gabarits.recto,
+                             hauteur: Gabarits.hauteurJ, u: Typo.ptParMM)
+                }
+            }
+        }
+        .padding(10).background(Color.white)
+        if let data = Export.png(rectos, dpi: 200) { try? data.write(to: dossier.appendingPathComponent("styles-recto.png")) }
+
         // Même cassette avec 3 volets (verso) et un texte de tranche trop long : les alertes doivent le voir.
         var d = etat.design
         d.volets = 3; d.texteTranche = "JEREMY SADIK · AN AFTERNOON AT THE LAKE · THE COMPLETE EDITION"
@@ -98,6 +145,18 @@ enum Captures {
         ctx.setFillColor(CGColor(srgbRed: 0.06, green: 0.12, blue: 0.1, alpha: 1))
         ctx.move(to: CGPoint(x: 0, y: 270)); ctx.addLine(to: CGPoint(x: 140, y: 330)); ctx.addLine(to: CGPoint(x: 260, y: 285))
         ctx.addLine(to: CGPoint(x: 600, y: 300)); ctx.addLine(to: CGPoint(x: 600, y: 265)); ctx.addLine(to: CGPoint(x: 0, y: 265)); ctx.fillPath()
+        if let img = ctx.makeImage() { try? NSBitmapImageRep(cgImage: img).representation(using: .png, properties: [:])?.write(to: url) }
+        return url
+    }
+
+    /// Cover de démonstration : un aplat de couleur avec un rond.
+    static func cover(dans dossier: URL, _ i: Int, _ c: (Double, Double, Double)) -> URL {
+        let url = dossier.appendingPathComponent("cover-\(i).png")
+        let n = 300
+        guard let ctx = CGContext(data: nil, width: n, height: n, bitsPerComponent: 8, bytesPerRow: 0,
+                                  space: CGColorSpace(name: CGColorSpace.sRGB)!, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return url }
+        ctx.setFillColor(CGColor(srgbRed: c.0, green: c.1, blue: c.2, alpha: 1)); ctx.fill(CGRect(x: 0, y: 0, width: n, height: n))
+        ctx.setFillColor(CGColor(srgbRed: 1, green: 1, blue: 1, alpha: 0.35)); ctx.fillEllipse(in: CGRect(x: 60 + i * 20, y: 80, width: 150, height: 150))
         if let img = ctx.makeImage() { try? NSBitmapImageRep(cgImage: img).representation(using: .png, properties: [:])?.write(to: url) }
         return url
     }

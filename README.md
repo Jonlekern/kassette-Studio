@@ -13,8 +13,11 @@ Usage personnel uniquement, rien n'est publié.
 
 ## Où on en est
 
-**Étape 1 en cours** : Mixtape + Enregistrement (code dans [app/](app/), mode d'emploi dans
-[app/LISEZMOI.md](app/LISEZMOI.md)). L'app est compilée et testée sur macOS par GitHub Actions à chaque envoi.
+**Étapes 1 et 2 codées, à tester** : Mixtape, Jaquette (J-card, O-card, étiquettes, obi, codes, Claude
+directeur artistique, vérification, export, impression calibrée), Enregistrement, Collection. Code dans
+[app/](app/), mode d'emploi dans [app/LISEZMOI.md](app/LISEZMOI.md). À chaque envoi, GitHub Actions
+compile l'app sur macOS, lance les tests (minutage audio au sample près, codes-barres relus par le lecteur
+de macOS) et photographie chaque écran et chaque format de jaquette (artefact « Captures »).
 
 - [docs/brainstorm.md](docs/brainstorm.md) : les décisions prises et les questions ouvertes
 - [docs/analyse-texs.md](docs/analyse-texs.md) : analyse de Tapercraft (vhs.texs.org), l'outil de référence
