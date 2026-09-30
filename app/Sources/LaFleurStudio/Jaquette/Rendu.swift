@@ -129,38 +129,67 @@ struct RectoVue: View {
     let mise: Mise
     let largeur: CGFloat
     let hauteur: CGFloat
-    /// Fond perdu à ajouter en haut et à droite (mm).
+    /// Fond perdu à ajouter en haut et à droite (mm) ; en paysage, l'image déborde aussi en bas.
     var perduHaut: CGFloat = 0
     var perduDroite: CGFloat = 0
     let u: CGFloat
 
     var body: some View {
         let p = mise.design.variante.palette
-        ZStack(alignment: .topLeading) {
-            ImageRecto(mise: mise, largeur: largeur + perduDroite, hauteur: largeur + perduHaut, u: u)
-                .offset(y: -perduHaut * u)
-            VStack(spacing: 1.5 * u) {
-                TexteMM(spec: mise.titre(largeur: largeur - 8), u: u)
-                TexteMM(spec: mise.artiste(largeur: largeur - 8), u: u)
-            }
-            .placer(4, largeur + 2.5, largeur - 8, hauteur - largeur - 9, u, .top)
-            if mise.design.afficherLogoMaison {
-                Group {
-                    if mise.projet.maisonDeDisque.uppercased() == "LAFLEURSTUDIO" {
-                        LogoForme().fill(Color(hex: p.texte))
-                    } else if let logo = mise.design.logoMaison {
-                        ImageCache(url: logo, remplir: false)
-                    } else {
-                        Text(mise.projet.maisonDeDisque.uppercased()).font(Typo.font(mise.design.variante.policeTexte, 1.6 * u))
-                            .foregroundStyle(Color(hex: p.texte)).lineLimit(1).minimumScaleFactor(0.5)
+        let r = mise.zonesRecto(l: largeur, h: hauteur)
+        Group {
+            if mise.design.orientation == .paysage {
+                // Composé à l'horizontale (hauteur × largeur), puis tourné d'un quart de tour :
+                // l'image carrée se retrouve en bas du recto, le texte en haut, à lire en penchant la tête.
+                ZStack(alignment: .topLeading) {
+                    ImageRecto(mise: mise, largeur: largeur + perduHaut, hauteur: largeur + perduDroite, u: u)
+                        .offset(x: -perduHaut * u)
+                    VStack(spacing: 1.5 * u) {
+                        TexteMM(spec: r.titre, u: u)
+                        TexteMM(spec: r.artiste, u: u)
+                    }
+                    .placer(largeur + 3, 4, hauteur - largeur - 6, largeur - 14, u, .center)
+                    if mise.design.afficherLogoMaison {
+                        LogoMaison(mise: mise, u: u).placer(largeur + (hauteur - largeur) / 2 - 12, largeur - 7, 24, 5, u, .center)
                     }
                 }
-                .placer(largeur / 2 - 12, hauteur - (mise.design.logoMaison != nil && mise.projet.maisonDeDisque.uppercased() != "LAFLEURSTUDIO" ? 9 : 5.5),
-                        24, mise.design.logoMaison != nil && mise.projet.maisonDeDisque.uppercased() != "LAFLEURSTUDIO" ? 6 : 1.8, u, .center)
+                .frame(width: hauteur * u, height: largeur * u, alignment: .topLeading)
+                .rotationEffect(.degrees(-90))
+                .frame(width: largeur * u, height: hauteur * u)
+            } else {
+                ZStack(alignment: .topLeading) {
+                    ImageRecto(mise: mise, largeur: largeur + perduDroite, hauteur: largeur + perduHaut, u: u)
+                        .offset(y: -perduHaut * u)
+                    VStack(spacing: 1.5 * u) {
+                        TexteMM(spec: r.titre, u: u)
+                        TexteMM(spec: r.artiste, u: u)
+                    }
+                    .placer(4, largeur + 2.5, largeur - 8, hauteur - largeur - 9, u, .top)
+                    if mise.design.afficherLogoMaison {
+                        LogoMaison(mise: mise, u: u).placer(largeur / 2 - 12, hauteur - 9, 24, 6, u, .bottom)
+                    }
+                }
+                .frame(width: largeur * u, height: hauteur * u, alignment: .topLeading)
             }
         }
-        .frame(width: largeur * u, height: hauteur * u, alignment: .topLeading)
         .background(Color(hex: p.fond))
+    }
+}
+
+/// Logo de la maison de disque : LAFLEURSTUDIO dessiné, un logo importé, ou le nom en texte.
+struct LogoMaison: View {
+    let mise: Mise
+    let u: CGFloat
+    var body: some View {
+        let p = mise.design.variante.palette
+        if mise.projet.maisonDeDisque.uppercased() == "LAFLEURSTUDIO" {
+            LogoForme().fill(Color(hex: p.texte)).frame(width: 24 * u, height: 1.8 * u)
+        } else if let logo = mise.design.logoMaison {
+            ImageCache(url: logo, remplir: false)
+        } else {
+            Text(mise.projet.maisonDeDisque.uppercased()).font(Typo.font(mise.design.variante.policeTexte, 1.6 * u))
+                .foregroundStyle(Color(hex: p.texte)).lineLimit(1).minimumScaleFactor(0.5)
+        }
     }
 }
 

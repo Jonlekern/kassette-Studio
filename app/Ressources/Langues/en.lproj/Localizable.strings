@@ -316,6 +316,7 @@
 "Opacité" = "Opacity";
 "Option : les traits rouges sont à 15 mm du bord gauche et du bord haut. S'ils sont décalés, note de combien." = "Optional: the red lines are 15 mm from the left and top edges. If they're off, note by how much.";
 "Options : règle verticale, décalage" = "Options: vertical ruler, offset";
+"Orientation" = "Orientation";
 "Ouvrir" = "Open";
 "PDF" = "PDF";
 "PDF enregistré (fond perdu, traits de coupe et de pliage)" = "PDF saved (bleed, crop and fold marks)";
@@ -329,6 +330,7 @@
 "Passer au début de la face B" = "Skip to the start of side B";
 "Passer à la fin de la face A" = "Skip to the end of side A";
 "Patte de colle" = "Glue tab";
+"Paysage" = "Landscape";
 "Perso" = "Custom";
 "Place" = "Position";
 "Place du QR" = "QR position";
@@ -437,6 +439,7 @@
 "Usage perso uniquement" = "Personal use only";
 "VU" = "VU";
 "Versions (%lld)" = "Versions (%lld)";
+"Vertical" = "Portrait";
 "Vider les faces" = "Clear the sides";
 "Volet intérieur" = "Inner panel";
 "Volets" = "Panels";

@@ -316,6 +316,7 @@
 "Opacité" = "Непрозрачность";
 "Option : les traits rouges sont à 15 mm du bord gauche et du bord haut. S'ils sont décalés, note de combien." = "По желанию: красные линии в 15 мм от левого и верхнего края. Если они смещены, запиши на сколько.";
 "Options : règle verticale, décalage" = "Опции: вертикальная линейка, смещение";
+"Orientation" = "Ориентация";
 "Ouvrir" = "Открыть";
 "PDF" = "PDF";
 "PDF enregistré (fond perdu, traits de coupe et de pliage)" = "PDF сохранён (вылеты, метки реза и сгиба)";
@@ -329,6 +330,7 @@
 "Passer au début de la face B" = "Перейти к началу стороны B";
 "Passer à la fin de la face A" = "Перейти к концу стороны A";
 "Patte de colle" = "Клеевой клапан";
+"Paysage" = "Горизонтально";
 "Perso" = "Свой";
 "Place" = "Место";
 "Place du QR" = "Место QR";
@@ -437,6 +439,7 @@
 "Usage perso uniquement" = "Только для личного использования";
 "VU" = "VU";
 "Versions (%lld)" = "Версии (%lld)";
+"Vertical" = "Вертикально";
 "Vider les faces" = "Очистить стороны";
 "Volet intérieur" = "Внутренняя панель";
 "Volets" = "Панели";

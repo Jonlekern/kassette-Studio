@@ -316,6 +316,7 @@
 "Opacité" = "Deckkraft";
 "Option : les traits rouges sont à 15 mm du bord gauche et du bord haut. S'ils sont décalés, note de combien." = "Optional: Die roten Linien liegen 15 mm vom linken und oberen Rand. Sind sie verschoben, notiere um wie viel.";
 "Options : règle verticale, décalage" = "Optionen: senkrechtes Lineal, Versatz";
+"Orientation" = "Ausrichtung";
 "Ouvrir" = "Öffnen";
 "PDF" = "PDF";
 "PDF enregistré (fond perdu, traits de coupe et de pliage)" = "PDF gespeichert (Beschnitt, Schnitt- und Falzmarken)";
@@ -329,6 +330,7 @@
 "Passer au début de la face B" = "Zum Anfang von Seite B";
 "Passer à la fin de la face A" = "Zum Ende von Seite A";
 "Patte de colle" = "Klebelasche";
+"Paysage" = "Querformat";
 "Perso" = "Eigene";
 "Place" = "Position";
 "Place du QR" = "QR-Position";
@@ -437,6 +439,7 @@
 "Usage perso uniquement" = "Nur für den privaten Gebrauch";
 "VU" = "VU";
 "Versions (%lld)" = "Versionen (%lld)";
+"Vertical" = "Hochformat";
 "Vider les faces" = "Seiten leeren";
 "Volet intérieur" = "Innenfeld";
 "Volets" = "Felder";

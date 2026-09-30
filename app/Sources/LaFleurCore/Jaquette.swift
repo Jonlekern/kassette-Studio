@@ -38,6 +38,12 @@ public enum StyleRecto: String, Codable, CaseIterable, Sendable {
     }
 }
 
+/// Sens de l'artwork sur le recto : vertical (image en haut, titre dessous) ou paysage (tout tourné d'un quart de tour).
+public enum OrientationRecto: String, Codable, CaseIterable, Sendable {
+    case vertical, paysage
+    public var nom: String { switch self { case .vertical: "Vertical"; case .paysage: "Paysage" } }
+}
+
 public enum PlaceCode: String, Codable, CaseIterable, Sendable {
     case rabat, tranche, interieur, libre
     public var nom: String {
@@ -127,6 +133,7 @@ public struct Design: Codable, Hashable, Sendable {
     public var propositions: [Variante] = []
     public var historique: [Variante] = []
     public var imagePerso: URL?
+    public var orientation: OrientationRecto = .vertical
     /// Échelle du texte par zone (« tranche », « titre », « tracklist »…), 1 = taille normale.
     public var echelles: [String: Double] = [:]
 
@@ -169,7 +176,7 @@ public struct Design: Codable, Hashable, Sendable {
     public var alertesForcees: Set<String> = []
 
     enum CodingKeys: String, CodingKey {
-        case jcard, ocard, etiquettes, obi, volets, dos, reperes, variante, propositions, historique, imagePerso, echelles, texteTranche, notes, credits, obiTexte, afficherLogoMaison, lienParoles, codeBarres, genreCode, numeroCode, texteCode, placeCode, couleursCode, barresPerso, fondPerso, chiffresCode, echelleCode, qr, contenuQR, texteQR, placeQR, codeSpotify, codeX, codeY, rotationCode, logoMaison, alertesForcees
+        case jcard, ocard, etiquettes, obi, volets, dos, reperes, variante, propositions, historique, imagePerso, orientation, echelles, texteTranche, notes, credits, obiTexte, afficherLogoMaison, lienParoles, codeBarres, genreCode, numeroCode, texteCode, placeCode, couleursCode, barresPerso, fondPerso, chiffresCode, echelleCode, qr, contenuQR, texteQR, placeQR, codeSpotify, codeX, codeY, rotationCode, logoMaison, alertesForcees
     }
 
     /// Décodage tolérant : un champ absent ou illisible prend sa valeur par défaut (les anciennes cassettes restent lisibles).
@@ -188,6 +195,7 @@ public struct Design: Codable, Hashable, Sendable {
         propositions = v(.propositions, d.propositions)
         historique = v(.historique, d.historique)
         imagePerso = v(.imagePerso, d.imagePerso)
+        orientation = v(.orientation, d.orientation)
         echelles = v(.echelles, d.echelles)
         texteTranche = v(.texteTranche, d.texteTranche)
         notes = v(.notes, d.notes)

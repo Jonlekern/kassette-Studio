@@ -188,6 +188,10 @@ struct EcranJaquette: View {
             }
 
             Groupe(titre: "Recto") {
+                Picker("Orientation", selection: lien(\.orientation)) {
+                    ForEach(OrientationRecto.allCases, id: \.self) { Text(tr($0.nom)).tag($0) }
+                }
+                .pickerStyle(.segmented)
                 Picker("Style", selection: lien(\.variante.style)) { ForEach(StyleRecto.allCases, id: \.self) { Text(tr($0.nom)).tag($0) } }
                 HStack {
                     Button("Choisir une image…") { etat.choisirImagePerso() }.buttonStyle(.w98)

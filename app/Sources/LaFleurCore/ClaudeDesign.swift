@@ -92,6 +92,7 @@ extension ClientClaude {
         Cassette : \(c.longueur.nom), \(c.bande.nom), réducteur de bruit \(c.reducteur.nom)\(c.marque.isEmpty ? "" : ", \(c.marque)")
         Formats à imprimer : \([d.jcard ? "J-card \(d.volets) volets (dos \(d.dos.nom))" : nil, d.ocard ? "O-card" : nil, d.etiquettes ? "étiquettes de K7" : nil, d.obi ? "obi" : nil].compactMap { $0 }.joined(separator: ", "))
         Codes : \([d.codeBarres ? d.genreCode.nom : nil, d.qr ? "QR code" : nil, d.codeSpotify ? "code Spotify" : nil].compactMap { $0 }.joined(separator: ", "))
+        Orientation de l'artwork choisie par l'utilisateur : \(d.orientation == .paysage ? "PAYSAGE (recto tourné d'un quart de tour : image carrée à gauche, texte à droite, dans un cadre de 101,6 × 64 mm)" : "verticale (image carrée en haut, texte dessous, 64 × 101,6 mm)") ; respecte-la.
         Design actuel : fond \(d.variante.palette.fond), texte \(d.variante.palette.texte), accent \(d.variante.palette.accent), titre en \(d.variante.policeTitre), texte en \(d.variante.policeTexte), recto « \(d.variante.style.nom) »
         \(faces)
         """

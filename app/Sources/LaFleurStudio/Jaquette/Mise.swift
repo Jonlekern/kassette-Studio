@@ -93,9 +93,19 @@ struct Mise {
                          kerning: 0.4, largeur: longueur - 28, hauteur: epaisseur - 2, lignes: n, couleur: p.texte, fond: p.fond)
     }
 
-    func titre(largeur: CGFloat) -> SpecTexte {
+    func titre(largeur: CGFloat, hauteur: CGFloat = 19) -> SpecTexte {
         SpecTexte(zone: "titre", texte: projet.titre.isEmpty ? "Sans titre" : projet.titre, famille: v.policeTitre, pt: 15 * e("titre"),
-                  italique: v.titreItalique, largeur: largeur, hauteur: 19, couleur: p.texte, fond: p.fond)
+                  italique: v.titreItalique, largeur: largeur, hauteur: hauteur, couleur: p.texte, fond: p.fond)
+    }
+
+    /// Zones du texte du recto selon l'orientation (largeur du recto `l`, hauteur `h`, en mm).
+    func zonesRecto(l: CGFloat, h: CGFloat) -> (titre: SpecTexte, artiste: SpecTexte) {
+        if design.orientation == .paysage {
+            // Cadre tourné : h × l, image carrée l × l à gauche, texte dans la colonne de droite.
+            let w = h - l - 6
+            return (titre(largeur: w, hauteur: l - 16), artiste(largeur: w))
+        }
+        return (titre(largeur: l - 8), artiste(largeur: l - 8))
     }
 
     func artiste(largeur: CGFloat) -> SpecTexte {
@@ -246,8 +256,8 @@ struct Mise {
         let g = gabaritJ
         if design.jcard {
             z.append(tranche(longueur: g.hauteur, epaisseur: Gabarits.tranche))
-            z.append(titre(largeur: Gabarits.recto - 8))
-            z.append(artiste(largeur: Gabarits.recto - 8))
+            let r = zonesRecto(l: Gabarits.recto, h: g.hauteur)
+            z.append(r.titre); z.append(r.artiste)
             if let r = g.panneau(.rabat) {
                 z.append(badgeSpec(largeur: r.largeur - 2))
                 if design.codeBarres && design.placeCode == .rabat { z.append(texteCodeSpec(largeur: r.largeur - 2)) }
@@ -273,7 +283,7 @@ struct Mise {
         }
         if design.ocard {
             z.append(tranche(longueur: Gabarits.ocard.hauteur, epaisseur: 12.3))
-            z.append(titre(largeur: 64.3 - 8))
+            z.append(zonesRecto(l: 64.3, h: Gabarits.ocard.hauteur).titre)
             z += tracklistSpecs(largeur: 63.8 - 8, hauteur: Gabarits.ocard.hauteur - 34)
         }
         if design.etiquettes { z.append(etiquetteTitre()) }

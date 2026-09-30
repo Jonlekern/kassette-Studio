@@ -89,6 +89,13 @@ enum Captures {
         .padding(10).background(Color.white)
         if let data = Export.png(rectos, dpi: 200) { try? data.write(to: dossier.appendingPathComponent("styles-recto.png")) }
 
+        // Artwork en paysage.
+        var dp = etat.design; dp.orientation = .paysage; etat.design = dp
+        if let data = Export.png(JCardVue(mise: etat.mise, perdu: 3, u: Typo.ptParMM), dpi: 300) {
+            try? data.write(to: dossier.appendingPathComponent("format-j-card-paysage.png"))
+        }
+        dp.orientation = .vertical; etat.design = dp
+
         // Même cassette avec 3 volets (verso) et un texte de tranche trop long : les alertes doivent le voir.
         var d = etat.design
         d.volets = 3; d.texteTranche = "JEREMY SADIK · AN AFTERNOON AT THE LAKE · THE COMPLETE EDITION"
