@@ -39,7 +39,7 @@ jobs:
           swift build -Xswiftc -emit-localized-strings -Xswiftc -emit-localized-strings-path -Xswiftc "$PWD/chaines" 2>&1 | tail -5
           find chaines .build -name "*.stringsdata" -newer Package.swift 2>/dev/null | head -50
           find chaines .build -name "*.stringsdata" -newer Package.swift -exec cp {} chaines/ \; 2>/dev/null || true
-          ls chaines | head
+          python3 Ressources/Langues/generer.py --verifier chaines || true
       - name: Captures des écrans et des jaquettes
         continue-on-error: true
         run: |

@@ -101,7 +101,7 @@ struct EcranJaquette: View {
     private var barreApercu: some View {
         HStack(spacing: 4) {
             ForEach(formatsCoches, id: \.0) { f in
-                Button(f.1) { apercu = f.0 }.buttonStyle(apercu == f.0 ? .w98Gras : .w98)
+                Button(LocalizedStringKey(f.1)) { apercu = f.0 }.buttonStyle(apercu == f.0 ? .w98Gras : .w98)
             }
             Spacer()
             Text("Zoom")
