@@ -138,7 +138,9 @@ struct RectoVue: View {
         let p = mise.design.variante.palette
         let r = mise.zonesRecto(l: largeur, h: hauteur)
         Group {
-            if mise.design.orientation == .paysage {
+            if mise.design.cadrage == .pleineHauteur {
+                pleineHauteur(r)
+            } else if mise.design.orientation == .paysage {
                 // Composé à l'horizontale (hauteur × largeur), puis tourné d'un quart de tour :
                 // l'image carrée se retrouve en bas du recto, le texte en haut, à lire en penchant la tête.
                 ZStack(alignment: .topLeading) {
@@ -175,6 +177,52 @@ struct RectoVue: View {
             }
         }
         .background(Color(hex: p.fond))
+    }
+
+    /// Image sur tout le recto, bandeau titre en bas (famille Nirvana, The Cure, Nas).
+    @ViewBuilder
+    private func pleineHauteur(_ r: (titre: SpecTexte, artiste: SpecTexte)) -> some View {
+        let p = mise.design.variante.palette
+        let paysage = mise.design.orientation == .paysage
+        // Cadre de composition : tourné d'un quart de tour en paysage.
+        let w = paysage ? hauteur : largeur, h = paysage ? largeur : hauteur
+        let b = mise.bandeauRecto
+        let pw = paysage ? perduHaut : perduDroite, ph = paysage ? perduDroite : perduHaut
+        let cadre = ZStack(alignment: .topLeading) {
+            ImageRecto(mise: mise, largeur: w + pw, hauteur: h - b + (paysage ? 0 : ph), u: u)
+                .offset(x: paysage ? -pw * u : 0, y: paysage ? 0 : -ph * u)
+            ImagesPosees(images: mise.design.imagesPosees, largeur: w, hauteur: h, u: u)
+            Rectangle().fill(Color(hex: p.fond))
+                .frame(width: (w + pw) * u, height: b * u)
+                .offset(x: paysage ? -pw * u : 0, y: (h - b) * u)
+            Rectangle().fill(Color(hex: p.accent)).frame(width: (w + pw) * u, height: 0.8 * u)
+                .offset(x: paysage ? -pw * u : 0, y: (h - b) * u)
+            if paysage {
+                VStack(alignment: .leading, spacing: 1 * u) {
+                    TexteMM(spec: r.titre, u: u)
+                    TexteMM(spec: r.artiste, u: u)
+                }
+                .placer(4, h - b + 2, w - 36, b - 4, u, .leading)
+                if mise.design.afficherLogoMaison {
+                    LogoMaison(mise: mise, u: u).placer(w - 29, h - b + 5, 25, 8, u, .center)
+                }
+            } else {
+                VStack(spacing: 1.5 * u) {
+                    TexteMM(spec: r.titre, u: u)
+                    TexteMM(spec: r.artiste, u: u)
+                }
+                .placer(4, h - b + 2, w - 8, b - 9.5, u, .top)
+                if mise.design.afficherLogoMaison {
+                    LogoMaison(mise: mise, u: u).placer(w / 2 - 12, h - 6.5, 24, 4.5, u, .bottom)
+                }
+            }
+        }
+        .frame(width: w * u, height: h * u, alignment: .topLeading)
+        if paysage {
+            cadre.rotationEffect(.degrees(-90)).frame(width: largeur * u, height: hauteur * u)
+        } else {
+            cadre
+        }
     }
 }
 
@@ -225,22 +273,28 @@ struct TrancheVue: View {
     var body: some View {
         let p = mise.design.variante.palette
         let petit = Typo.font(mise.design.variante.policeTexte, 4.6 * u / Typo.ptParMM)
+        // Comme sur les vraies K7 : maison de disque en haut, artiste · titre, catalogue en bas.
         HStack(spacing: 0) {
-            Text(mise.projet.numeroCatalogue).font(petit).foregroundStyle(Color(hex: p.texte))
-                .lineLimit(1).minimumScaleFactor(0.5).frame(width: 14 * u)
-            TexteMM(spec: mise.tranche(longueur: longueur, epaisseur: epaisseur), u: u)
             Group {
-                if avecCode, let c = CodesBarres.generer(mise.design.genreCode, mise.numeroCode) {
-                    let (b, f) = mise.couleursCode
-                    let m = min(0.13, 13 / CGFloat(c.modules.count + 20))
-                    CodeBarresVue(code: c, module: m, hauteur: epaisseur - 3.5, barres: Color(hex: b), fond: Color(hex: f), chiffres: false, u: u)
-                } else if mise.projet.maisonDeDisque.uppercased() == "LAFLEURSTUDIO" {
+                if mise.projet.maisonDeDisque.uppercased() == "LAFLEURSTUDIO" {
                     LogoForme().fill(Color(hex: p.texte)).frame(width: 12 * u, height: 1.2 * u)
                 } else if let logo = mise.design.logoMaison {
                     ImageCache(url: logo, remplir: false).frame(width: 12 * u, height: 8 * u).rotationEffect(.degrees(-90))
                 } else {
                     Text(mise.projet.maisonDeDisque.uppercased()).font(petit).foregroundStyle(Color(hex: p.texte))
                         .lineLimit(1).minimumScaleFactor(0.4)
+                }
+            }
+            .frame(width: 14 * u)
+            TexteMM(spec: mise.tranche(longueur: longueur, epaisseur: epaisseur), u: u)
+            Group {
+                if avecCode, let c = CodesBarres.generer(mise.design.genreCode, mise.numeroCode) {
+                    let (b, f) = mise.couleursCode
+                    let m = min(0.13, 13 / CGFloat(c.modules.count + 20))
+                    CodeBarresVue(code: c, module: m, hauteur: epaisseur - 3.5, barres: Color(hex: b), fond: Color(hex: f), chiffres: false, u: u)
+                } else {
+                    Text(mise.projet.numeroCatalogue).font(petit).foregroundStyle(Color(hex: p.texte))
+                        .lineLimit(1).minimumScaleFactor(0.5)
                 }
             }
             .frame(width: 14 * u)
@@ -263,7 +317,7 @@ struct RabatVue: View {
             TexteMM(spec: mise.badgeSpec(largeur: l), u: u)
             Spacer(minLength: 0)
             PileCodes(mise: mise, largeur: l, u: u,
-                      avecQR: mise.design.placeQR == .rabat, avecBarres: mise.design.placeCode == .rabat)
+                      avecQR: mise.design.placeQR == .rabat, avecBarres: mise.design.placeCode == .rabat, vertical: true)
             TexteMM(spec: mise.droitsSpec(largeur: l), u: u)
         }
         .padding(.vertical, 3 * u)

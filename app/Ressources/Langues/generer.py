@@ -10,7 +10,7 @@ import glob, json, os, re, sys
 ici = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ici)
 T = {}
-for m in ["t1", "t2", "t3", "t4", "t5", "t6", "t7"]:
+for m in ["t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8"]:
     T.update(__import__(m).T)
 
 spec = re.compile(r"%(?:\d+\$)?(?:lld|ld|d|@|lf|f|%)")

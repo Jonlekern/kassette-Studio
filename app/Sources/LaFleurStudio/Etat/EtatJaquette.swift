@@ -21,6 +21,8 @@ struct EditionK7: Identifiable, Hashable {
     /// Crédits et notes de pochette (Discogs), vides si inconnus.
     var credits = ""
     var notes = ""
+    /// Faux quand l'album n'est jamais sorti en K7 : ce sont les dos de l'édition CD ou vinyle.
+    var cassette = true
 }
 
 struct Souci: LocalizedError {
@@ -92,6 +94,20 @@ extension EtatApp {
                                      credits: detail?.credits ?? "", notes: detail?.notes ?? ""))
             }
         }
+        // Jamais sorti en cassette : le dos du CD ou du vinyle donne la tracklist, les crédits et la maison de disque.
+        if res.isEmpty {
+            let autres = (try? await musicBrainz.chercher(artiste.isEmpty ? titre : "\(artiste) - \(titre)")) ?? []
+            for a in autres.prefix(8) where res.count < 3 {
+                let imgs = (try? await musicBrainz.images(a.id)) ?? []
+                let dos = imgs.filter { $0.types.contains("Back") }
+                guard !dos.isEmpty else { continue }
+                res.append(EditionK7(id: "mb-\(a.id)", titre: a.titre,
+                                     detail: [a.annee, a.maisonDeDisque, a.catalogue].compactMap { $0 }.joined(separator: " · "),
+                                     source: String(localized: "MusicBrainz (dos CD/vinyle)"),
+                                     page: URL(string: "https://musicbrainz.org/release/\(a.id)")!,
+                                     images: dos.map(\.vignette), cassette: false))
+            }
+        }
         editionsK7 = res
         editionsCherchees = true
     }
@@ -132,7 +148,11 @@ extension EtatApp {
                 }
             }
             for e in editionsK7.prefix(2) {
-                for u in e.images.prefix(2) { await joindre(u, "scan d'une vraie édition cassette (\(e.source) : \(e.titre), \(e.detail))") }
+                for u in e.images.prefix(2) {
+                    await joindre(u, e.cassette
+                        ? "scan d'une vraie édition cassette (\(e.source) : \(e.titre), \(e.detail))"
+                        : "dos de l'édition CD/vinyle (album jamais sorti en cassette : adapte-le aux conventions K7) (\(e.titre), \(e.detail))")
+                }
             }
             // Crédits trouvés sur Discogs : des infos sûres que Claude peut reprendre.
             let donnees = editionsK7.filter { !$0.credits.isEmpty }.prefix(1).map { "Crédits (Discogs, \($0.titre)) :\n\($0.credits)" }

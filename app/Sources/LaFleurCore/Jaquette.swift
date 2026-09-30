@@ -44,6 +44,12 @@ public enum OrientationRecto: String, Codable, CaseIterable, Sendable {
     public var nom: String { switch self { case .vertical: "Vertical"; case .paysage: "Paysage" } }
 }
 
+/// Cadrage de l'image du recto : carrée avec le titre dessous, ou pleine hauteur avec un bandeau titre en bas.
+public enum CadrageRecto: String, Codable, CaseIterable, Sendable {
+    case carre, pleineHauteur
+    public var nom: String { switch self { case .carre: "Image carrée"; case .pleineHauteur: "Pleine hauteur" } }
+}
+
 public enum PlaceCode: String, Codable, CaseIterable, Sendable {
     case rabat, tranche, interieur, libre
     public var nom: String {
@@ -134,6 +140,7 @@ public struct Design: Codable, Hashable, Sendable {
     public var historique: [Variante] = []
     public var imagePerso: URL?
     public var orientation: OrientationRecto = .vertical
+    public var cadrage: CadrageRecto = .carre
     /// Images posées sur le recto (logos, écussons, éléments trouvés par Claude).
     public var imagesPosees: [ImagePosee] = []
     /// Échelle du texte par zone (« tranche », « titre », « tracklist »…), 1 = taille normale.
@@ -178,7 +185,7 @@ public struct Design: Codable, Hashable, Sendable {
     public var alertesForcees: Set<String> = []
 
     enum CodingKeys: String, CodingKey {
-        case jcard, ocard, etiquettes, obi, volets, dos, reperes, variante, propositions, historique, imagePerso, orientation, imagesPosees, echelles, texteTranche, notes, credits, obiTexte, afficherLogoMaison, lienParoles, codeBarres, genreCode, numeroCode, texteCode, placeCode, couleursCode, barresPerso, fondPerso, chiffresCode, echelleCode, qr, contenuQR, texteQR, placeQR, codeSpotify, codeX, codeY, rotationCode, logoMaison, alertesForcees
+        case jcard, ocard, etiquettes, obi, volets, dos, reperes, variante, propositions, historique, imagePerso, orientation, cadrage, imagesPosees, echelles, texteTranche, notes, credits, obiTexte, afficherLogoMaison, lienParoles, codeBarres, genreCode, numeroCode, texteCode, placeCode, couleursCode, barresPerso, fondPerso, chiffresCode, echelleCode, qr, contenuQR, texteQR, placeQR, codeSpotify, codeX, codeY, rotationCode, logoMaison, alertesForcees
     }
 
     /// Décodage tolérant : un champ absent ou illisible prend sa valeur par défaut (les anciennes cassettes restent lisibles).
@@ -198,6 +205,7 @@ public struct Design: Codable, Hashable, Sendable {
         historique = v(.historique, d.historique)
         imagePerso = v(.imagePerso, d.imagePerso)
         orientation = v(.orientation, d.orientation)
+        cadrage = v(.cadrage, d.cadrage)
         imagesPosees = v(.imagesPosees, d.imagesPosees)
         echelles = v(.echelles, d.echelles)
         texteTranche = v(.texteTranche, d.texteTranche)

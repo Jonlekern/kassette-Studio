@@ -100,6 +100,12 @@ struct Mise {
 
     /// Zones du texte du recto selon l'orientation (largeur du recto `l`, hauteur `h`, en mm).
     func zonesRecto(l: CGFloat, h: CGFloat) -> (titre: SpecTexte, artiste: SpecTexte) {
+        if design.cadrage == .pleineHauteur {
+            // Image sur tout le recto, bandeau titre en bas (en paysage : en bas du cadre tourné, logo à droite).
+            return design.orientation == .paysage
+                ? (titre(largeur: h - 36, hauteur: 8), artiste(largeur: h - 36))
+                : (titre(largeur: l - 8, hauteur: 11), artiste(largeur: l - 8))
+        }
         if design.orientation == .paysage {
             // Cadre tourné : h × l, image carrée l × l à gauche, texte dans la colonne de droite.
             let w = h - l - 6
@@ -107,6 +113,9 @@ struct Mise {
         }
         return (titre(largeur: l - 8), artiste(largeur: l - 8))
     }
+
+    /// Hauteur du bandeau titre en cadrage pleine hauteur (mm).
+    var bandeauRecto: CGFloat { design.orientation == .paysage ? 18 : 26 }
 
     func artiste(largeur: CGFloat) -> SpecTexte {
         SpecTexte(zone: "artiste", texte: (projet.artiste.isEmpty ? (projet.mode == .mixtape ? "MIXTAPE" : "") : projet.artiste).uppercased(),
@@ -325,7 +334,7 @@ struct Mise {
     func largeurModule(_ c: CodeBarres1D) -> CGFloat {
         let place: CGFloat
         switch design.placeCode {
-        case .rabat: place = (gabaritJ.panneau(.rabat)?.largeur ?? Gabarits.recto) - 3
+        case .rabat: place = 40  // couché dans la longueur du rabat
         case .tranche: place = 30
         case .interieur: place = 40
         case .libre: place = 25
@@ -345,11 +354,13 @@ struct Mise {
             let zone = "\(f(p.x))–\(f(p.x + p.largeur)) mm"
             switch p.genre {
             case .rabat:
-                l.append("• Rabat (dos court, \(zone)) : en haut le badge de bande (« \(badge(largeur: p.largeur - 2).replacingOccurrences(of: "\n", with: " / ")) ») ; en bas, de haut en bas : \(design.qr && design.placeQR == .rabat ? "QR code, " : "")\(design.codeSpotify && design.placeCode == .rabat ? "code Spotify, " : "")\(design.codeBarres && design.placeCode == .rabat ? "texte « \(texteCode) » puis code-barres \(design.genreCode.nom) \(numeroCode), " : "")ligne « \(projet.ligneDroits) ».")
+                l.append("• Rabat (dos court, \(zone)) : en haut le badge de bande (« \(badge(largeur: p.largeur - 2).replacingOccurrences(of: "\n", with: " / ")) ») ; en bas, de haut en bas : \(design.qr && design.placeQR == .rabat ? "QR code, " : "")\(design.codeSpotify && design.placeCode == .rabat ? "code Spotify, " : "")\(design.codeBarres && design.placeCode == .rabat ? "texte « \(texteCode) » puis code-barres \(design.genreCode.nom) \(numeroCode) couché dans la longueur (~40 mm de haut), " : "")ligne « \(projet.ligneDroits) ».")
             case .tranche:
-                l.append("• Tranche (\(zone), texte tourné, se lit de haut en bas) : catalogue « \(projet.numeroCatalogue) » en haut, texte « \(texteTranche) » au centre, \(design.codeBarres && design.placeCode == .tranche ? "code-barres" : "logo/nom de la maison de disque « \(projet.maisonDeDisque) »") en bas.")
+                l.append("• Tranche (\(zone), texte tourné, se lit de haut en bas) : logo/nom de la maison de disque « \(projet.maisonDeDisque) » en haut, texte « \(texteTranche) » au centre, \(design.codeBarres && design.placeCode == .tranche ? "code-barres" : "catalogue « \(projet.numeroCatalogue) »") en bas.")
             case .recto:
-                if design.orientation == .paysage {
+                if design.cadrage == .pleineHauteur {
+                    l.append("• Recto (\(zone)), cadrage PLEINE HAUTEUR\(design.orientation == .paysage ? ", orientation paysage (cadre \(f(g.hauteur)) × \(f(p.largeur)) mm tourné d'un quart de tour)" : "") : l'image (style « \(v.style.nom) ») remplit tout le recto ; bandeau de \(f(bandeauRecto)) mm couleur de fond en bas avec titre « \(projet.titre) », artiste « \(projet.artiste) » et logo de la maison de disque.")
+                } else if design.orientation == .paysage {
                     l.append("• Recto (\(zone)), orientation PAYSAGE : composé dans un cadre \(f(g.hauteur)) × \(f(p.largeur)) mm tourné d'un quart de tour ; image carrée \(f(p.largeur)) mm (en bas du recto une fois tourné), titre « \(projet.titre) » et artiste « \(projet.artiste) » dans la colonne de texte (en haut), logo de la maison de disque sous le texte.")
                 } else {
                     l.append("• Recto (\(zone)), orientation VERTICALE : image carrée \(f(p.largeur)) × \(f(p.largeur)) mm en haut (style « \(v.style.nom) »), titre « \(projet.titre) » (\(v.policeTitre)) vers \(f(p.largeur + 3)) mm, artiste « \(projet.artiste) » dessous, logo « \(projet.maisonDeDisque) » en bas centré à ~\(f(g.hauteur - 5)) mm.")

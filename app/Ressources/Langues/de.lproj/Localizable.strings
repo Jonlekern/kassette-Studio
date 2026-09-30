@@ -113,6 +113,7 @@
 "C'est celui-là" = "Das ist er";
 "C60 · 30 min/face" = "C60 · 30 Min./Seite";
 "C90 · 45 min/face" = "C90 · 45 Min./Seite";
+"Cadrage" = "Bildausschnitt";
 "Cassette" = "Kassette";
 "Cassette depuis le dossier (sans Spotify)" = "Kassette aus Ordner (ohne Spotify)";
 "Cassette face %@" = "Kassette Seite %@";
@@ -234,6 +235,7 @@
 "Ignorer" = "Ignorieren";
 "Ignorer " = "Ignorieren ";
 "Image ajoutée au recto" = "Bild auf der Vorderseite eingefügt";
+"Image carrée" = "Quadratisches Bild";
 "Image posée : %@" = "Bild platziert: %@";
 "Import de « %@ » depuis MusicBrainz…" = "Importiere „%@“ von MusicBrainz…";
 "Import de « %@ »…" = "Importiere „%@“…";
@@ -259,6 +261,7 @@
 "J-card verso" = "J-Card Rückseite";
 "J-card, O-card, obi : papier mat ou satiné de 170 à 250 g/m², A4." = "J-Card, O-Card, Obi: mattes oder seidenmattes Papier, 170–250 g/m², A4.";
 "Jamais les paroles complètes (droits d'auteur) : seulement où les trouver." = "Nie die vollständigen Songtexte (Urheberrecht): nur wo man sie findet.";
+"Jamais sorti en cassette : Claude part du dos de l'édition CD ou vinyle." = "Nie auf Kassette erschienen: Claude geht von der Rückseite der CD- oder Vinyl-Ausgabe aus.";
 "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Dis-moi l'ambiance, ou clique sur « Proposer »." = "Ich starte mit echten Kassettenausgaben, falls ich welche finde, sonst mit deinem Cover. Sag mir die Stimmung oder klick „Vorschlagen“.";
 "Jeton Discogs" = "Discogs-Token";
 "Jeton Discogs refusé : vérifie-le dans Réglages → Sources." = "Discogs-Token abgelehnt: prüfe es unter Einstellungen → Quellen.";
@@ -297,6 +300,7 @@
 "Mode Concentration activé" = "Fokus-Modus an";
 "Modifications de Claude appliquées ✓" = "Änderungen von Claude übernommen ✓";
 "Monter" = "Nach oben";
+"MusicBrainz (dos CD/vinyle)" = "MusicBrainz (CD-/Vinyl-Rückseite)";
 "MusicBrainz (gratuit, sans compte)" = "MusicBrainz (kostenlos, ohne Konto)";
 "MusicBrainz a répondu %lld. Réessaie dans un instant." = "MusicBrainz antwortete %lld. Versuch es gleich nochmal.";
 "MusicBrainz et Cover Art Archive" = "MusicBrainz und Cover Art Archive";
@@ -339,6 +343,7 @@
 "Place du QR" = "QR-Position";
 "Platine" = "Deck";
 "Platine sur %@" = "Deck auf %@";
+"Pleine hauteur" = "Volle Höhe";
 "Plusieurs fichiers ressemblent à ce titre. Choisis le bon :" = "Mehrere Dateien ähneln diesem Titel. Wähle die richtige:";
 "Pochette de l'album" = "Albumcover";
 "Police importée : %@" = "Schrift importiert: %@";

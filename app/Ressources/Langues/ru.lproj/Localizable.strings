@@ -113,6 +113,7 @@
 "C'est celui-là" = "Вот этот";
 "C60 · 30 min/face" = "C60 · 30 мин/сторона";
 "C90 · 45 min/face" = "C90 · 45 мин/сторона";
+"Cadrage" = "Кадрирование";
 "Cassette" = "Кассета";
 "Cassette depuis le dossier (sans Spotify)" = "Кассета из папки (без Spotify)";
 "Cassette face %@" = "Кассета, сторона %@";
@@ -234,6 +235,7 @@
 "Ignorer" = "Пропустить";
 "Ignorer " = "Пропустить ";
 "Image ajoutée au recto" = "Изображение добавлено на лицевую сторону";
+"Image carrée" = "Квадратное изображение";
 "Image posée : %@" = "Изображение добавлено: %@";
 "Import de « %@ » depuis MusicBrainz…" = "Импорт «%@» из MusicBrainz…";
 "Import de « %@ »…" = "Импорт «%@»…";
@@ -259,6 +261,7 @@
 "J-card verso" = "Оборот вкладыша";
 "J-card, O-card, obi : papier mat ou satiné de 170 à 250 g/m², A4." = "J-card, O-card, оби: матовая или сатиновая бумага 170–250 г/м², A4.";
 "Jamais les paroles complètes (droits d'auteur) : seulement où les trouver." = "Никогда полный текст (авторские права): только где его найти.";
+"Jamais sorti en cassette : Claude part du dos de l'édition CD ou vinyle." = "Никогда не выходил на кассете: Claude берёт за основу оборот издания на CD или виниле.";
 "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Dis-moi l'ambiance, ou clique sur « Proposer »." = "Я начну с настоящих кассетных изданий, если найду, иначе — с твоей обложки. Опиши настроение или нажми «Предложить».";
 "Jeton Discogs" = "Токен Discogs";
 "Jeton Discogs refusé : vérifie-le dans Réglages → Sources." = "Токен Discogs отклонён: проверь его в Настройки → Источники.";
@@ -297,6 +300,7 @@
 "Mode Concentration activé" = "Режим «Фокусирование» включён";
 "Modifications de Claude appliquées ✓" = "Изменения Claude применены ✓";
 "Monter" = "Вверх";
+"MusicBrainz (dos CD/vinyle)" = "MusicBrainz (оборот CD/винила)";
 "MusicBrainz (gratuit, sans compte)" = "MusicBrainz (бесплатно, без аккаунта)";
 "MusicBrainz a répondu %lld. Réessaie dans un instant." = "MusicBrainz ответил %lld. Попробуй чуть позже.";
 "MusicBrainz et Cover Art Archive" = "MusicBrainz и Cover Art Archive";
@@ -339,6 +343,7 @@
 "Place du QR" = "Место QR";
 "Platine" = "Дека";
 "Platine sur %@" = "Дека на %@";
+"Pleine hauteur" = "Во всю высоту";
 "Plusieurs fichiers ressemblent à ce titre. Choisis le bon :" = "Несколько файлов похожи на этот трек. Выбери нужный:";
 "Pochette de l'album" = "Обложка альбома";
 "Police importée : %@" = "Шрифт импортирован: %@";

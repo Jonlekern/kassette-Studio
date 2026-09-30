@@ -192,6 +192,10 @@ struct EcranJaquette: View {
                     ForEach(OrientationRecto.allCases, id: \.self) { Text(tr($0.nom)).tag($0) }
                 }
                 .pickerStyle(.segmented)
+                Picker("Cadrage", selection: lien(\.cadrage)) {
+                    ForEach(CadrageRecto.allCases, id: \.self) { Text(tr($0.nom)).tag($0) }
+                }
+                .pickerStyle(.segmented)
                 Picker("Style", selection: lien(\.variante.style)) { ForEach(StyleRecto.allCases, id: \.self) { Text(tr($0.nom)).tag($0) } }
                 HStack {
                     Button("Choisir une image…") { etat.choisirImagePerso() }.buttonStyle(.w98)
@@ -261,6 +265,10 @@ struct EcranJaquette: View {
                         .fixedSize(horizontal: false, vertical: true)
                     Button(etat.jetonDiscogs.isEmpty ? "Chercher sur MusicBrainz" : "Chercher sur MusicBrainz et Discogs") { etat.chercherEditionsK7() }
                         .buttonStyle(.w98).disabled(etat.occupe)
+                    if etat.editionsK7.contains(where: { !$0.cassette }) {
+                        Text("Jamais sorti en cassette : Claude part du dos de l'édition CD ou vinyle.").foregroundStyle(W98.ombre)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
                     ForEach(etat.editionsK7) { e in
                         VStack(alignment: .leading, spacing: 3) {
                             Text(e.titre).bold().lineLimit(1)

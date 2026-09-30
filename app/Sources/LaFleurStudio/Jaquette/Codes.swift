@@ -91,6 +91,8 @@ struct PileCodes: View {
     var avecBarres = true
     /// Côte à côte (QR à gauche, code Spotify et code-barres à droite) au lieu d'empilés.
     var cote = false
+    /// Code-barres couché dans la longueur, comme sur les vraies cassettes (rabat).
+    var vertical = false
 
     var body: some View {
         if cote {
@@ -117,8 +119,16 @@ struct PileCodes: View {
                 VStack(spacing: 0.4 * u) {
                     TexteMM(spec: mise.texteCodeSpec(largeur: largeur), u: u)
                     let m = mise.largeurModule(c)
-                    CodeBarresVue(code: c, module: m, hauteur: min(12, 42 * m), barres: Color(hex: b), fond: Color(hex: f),
-                                  chiffres: d.chiffresCode, u: u)
+                    if vertical {
+                        let extra = (d.chiffresCode ? m * 8.5 * 1.1 : 0) + m * 2
+                        let cb = CodeBarresVue(code: c, module: m, hauteur: max(6, min(16, largeur - extra)), barres: Color(hex: b),
+                                               fond: Color(hex: f), chiffres: d.chiffresCode, u: u)
+                        cb.rotationEffect(.degrees(-90))
+                            .frame(width: cb.hauteurTotale * u, height: cb.largeurTotale * u)
+                    } else {
+                        CodeBarresVue(code: c, module: m, hauteur: min(12, 42 * m), barres: Color(hex: b), fond: Color(hex: f),
+                                      chiffres: d.chiffresCode, u: u)
+                    }
                 }
             }
         }

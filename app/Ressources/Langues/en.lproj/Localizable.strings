@@ -113,6 +113,7 @@
 "C'est celui-là" = "That's the one";
 "C60 · 30 min/face" = "C60 · 30 min/side";
 "C90 · 45 min/face" = "C90 · 45 min/side";
+"Cadrage" = "Framing";
 "Cassette" = "Tape";
 "Cassette depuis le dossier (sans Spotify)" = "Tape from folder (no Spotify)";
 "Cassette face %@" = "Tape side %@";
@@ -234,6 +235,7 @@
 "Ignorer" = "Ignore";
 "Ignorer " = "Ignore ";
 "Image ajoutée au recto" = "Image added to the front";
+"Image carrée" = "Square image";
 "Image posée : %@" = "Image placed: %@";
 "Import de « %@ » depuis MusicBrainz…" = "Importing “%@” from MusicBrainz…";
 "Import de « %@ »…" = "Importing “%@”…";
@@ -259,6 +261,7 @@
 "J-card verso" = "J-card back";
 "J-card, O-card, obi : papier mat ou satiné de 170 à 250 g/m², A4." = "J-card, O-card, obi: matte or satin paper, 170–250 g/m², A4.";
 "Jamais les paroles complètes (droits d'auteur) : seulement où les trouver." = "Never the full lyrics (copyright): only where to find them.";
+"Jamais sorti en cassette : Claude part du dos de l'édition CD ou vinyle." = "Never released on cassette: Claude starts from the back of the CD or vinyl edition.";
 "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Dis-moi l'ambiance, ou clique sur « Proposer »." = "I start from real cassette editions if I find any, otherwise from your cover. Tell me the mood, or click “Propose”.";
 "Jeton Discogs" = "Discogs token";
 "Jeton Discogs refusé : vérifie-le dans Réglages → Sources." = "Discogs token rejected: check it in Settings → Sources.";
@@ -297,6 +300,7 @@
 "Mode Concentration activé" = "Focus mode on";
 "Modifications de Claude appliquées ✓" = "Claude's changes applied ✓";
 "Monter" = "Move up";
+"MusicBrainz (dos CD/vinyle)" = "MusicBrainz (CD/vinyl back)";
 "MusicBrainz (gratuit, sans compte)" = "MusicBrainz (free, no account)";
 "MusicBrainz a répondu %lld. Réessaie dans un instant." = "MusicBrainz replied %lld. Try again in a moment.";
 "MusicBrainz et Cover Art Archive" = "MusicBrainz and Cover Art Archive";
@@ -339,6 +343,7 @@
 "Place du QR" = "QR position";
 "Platine" = "Deck";
 "Platine sur %@" = "Deck set to %@";
+"Pleine hauteur" = "Full height";
 "Plusieurs fichiers ressemblent à ce titre. Choisis le bon :" = "Several files look like this track. Pick the right one:";
 "Pochette de l'album" = "Album cover";
 "Police importée : %@" = "Font imported: %@";

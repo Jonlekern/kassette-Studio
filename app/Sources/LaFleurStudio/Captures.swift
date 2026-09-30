@@ -94,7 +94,16 @@ enum Captures {
         if let data = Export.png(JCardVue(mise: etat.mise, perdu: 3, u: Typo.ptParMM), dpi: 300) {
             try? data.write(to: dossier.appendingPathComponent("format-j-card-paysage.png"))
         }
+        // Cadrage pleine hauteur, vertical puis paysage (code-barres couché dans le rabat).
+        dp.cadrage = .pleineHauteur; etat.design = dp
+        if let data = Export.png(JCardVue(mise: etat.mise, perdu: 3, u: Typo.ptParMM), dpi: 300) {
+            try? data.write(to: dossier.appendingPathComponent("format-j-card-pleine-paysage.png"))
+        }
         dp.orientation = .vertical; etat.design = dp
+        if let data = Export.png(JCardVue(mise: etat.mise, perdu: 3, u: Typo.ptParMM), dpi: 300) {
+            try? data.write(to: dossier.appendingPathComponent("format-j-card-pleine.png"))
+        }
+        dp.cadrage = .carre; etat.design = dp
 
         // Même cassette avec 3 volets (verso) et un texte de tranche trop long : les alertes doivent le voir.
         var d = etat.design

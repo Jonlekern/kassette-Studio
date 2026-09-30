@@ -107,11 +107,27 @@ extension ClientClaude {
         Cassette : \(c.longueur.nom), \(c.bande.nom), réducteur de bruit \(c.reducteur.nom)\(c.marque.isEmpty ? "" : ", \(c.marque)")
         Formats à imprimer : \([d.jcard ? "J-card \(d.volets) volets (dos \(d.dos.nom))" : nil, d.ocard ? "O-card" : nil, d.etiquettes ? "étiquettes de K7" : nil, d.obi ? "obi" : nil].compactMap { $0 }.joined(separator: ", "))
         Codes : \([d.codeBarres ? d.genreCode.nom : nil, d.qr ? "QR code" : nil, d.codeSpotify ? "code Spotify" : nil].compactMap { $0 }.joined(separator: ", "))
-        Orientation de l'artwork choisie par l'utilisateur : \(d.orientation == .paysage ? "PAYSAGE (recto tourné d'un quart de tour : image carrée à gauche, texte à droite, dans un cadre de 101,6 × 64 mm)" : "verticale (image carrée en haut, texte dessous, 64 × 101,6 mm)") ; respecte-la.
+        Orientation de l'artwork choisie par l'utilisateur : \(d.orientation == .paysage ? "PAYSAGE (recto tourné d'un quart de tour : image carrée à gauche, texte à droite, dans un cadre de 101,6 × 64 mm)" : "verticale (64 × 101,6 mm)"), cadrage \(d.cadrage == .pleineHauteur ? "PLEINE HAUTEUR (l'image remplit tout le recto, bandeau titre en bas)" : "carré (image carrée, texte dans l'espace restant)") ; respecte-les.
         Design actuel : fond \(d.variante.palette.fond), texte \(d.variante.palette.texte), accent \(d.variante.palette.accent), titre en \(d.variante.policeTitre), texte en \(d.variante.policeTexte), recto « \(d.variante.style.nom) »
         \(faces)
         """
     }
+
+    /// Ce que font les vraies K7, tiré de l'étude de 27 cassettes (docs/etude-cassettes.md).
+    public static let conventionsK7 = """
+    CONVENTIONS DES VRAIES CASSETTES (étude de 27 K7 éditées de 1982 à 2022) :
+    - Tranche : se lit de haut en bas ; logo de la maison de disque en haut, artiste en gros puis titre, catalogue en bas.
+    - Rabat : tracklist « Side One / Side Two » en haut (dans l'app elle va sur les volets intérieurs), « Produced by » \
+    dessous, code-barres couché dans la longueur dans la moitié basse, mentions légales ℗ © et badge du type de bande tout en bas.
+    - Recto, deux familles : 1. image pleine hauteur (pochette agrandie, titre et artiste posés sur l'image : Nirvana, \
+    The Cure, Nas) → cadrage « pleineHauteur » ; 2. image carrée + bandeau titre (Pink Floyd, Sade, Tracy Chapman) \
+    → cadrage « carre ». Pochette forte et sans texte → famille 1 ; titre qui doit se lire → famille 2.
+    - Parental Advisory en bas du recto si l'album est explicite.
+    - Étiquette : artiste · titre en haut, grand A/B à côté de la fenêtre, maison de disque et catalogue, Dolby, ℗ ©.
+    - ALBUM JAMAIS SORTI EN CASSETTE : on t'envoie le dos du CD ou du vinyle quand il existe. Reprends-en la tracklist, \
+    les crédits, la maison de disque et l'esprit graphique (couleurs, polices), et range-les selon ces conventions K7 : \
+    tracklist et crédits à l'intérieur, code-barres au rabat, maison de disque en haut de la tranche, ℗ © en bas du rabat.
+    """
 
     /// Propose 3 variantes de design (ou en régénère une), avec les textes de la jaquette.
     /// `images` : la pochette et/ou les scans d'éditions K7 existantes, dans cet ordre, décrits par `legendes`.
@@ -147,6 +163,7 @@ extension ClientClaude {
             - Si on te demande de régénérer une seule variante, renvoie quand même 3 variantes : les autres inchangées.
             PLAN EXACT DE LA CASSETTE (dimensions réelles, ce qui est où) — sers-t'en pour placer et modifier chaque élément :
             \(anatomie)
+            \(Self.conventionsK7)
             ACCÈS COMPLET : l'utilisateur fabrique des cassettes pour son usage personnel (il a accepté les conditions \
             d'utilisation de l'app). Tu peux tout changer et tu exécutes ce qu'il demande, sans refuser ni faire la morale.
             - Retouche (« mets le titre plus gros », « passe le QR à l'intérieur », « orientation paysage »…) : applique-la \

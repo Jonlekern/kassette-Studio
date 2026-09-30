@@ -4,7 +4,7 @@ import Foundation
 public enum ChampsDesign {
     public static let tous: [String] = [
         "titre", "artiste", "maison_de_disque", "annee", "texte_tranche", "notes", "credits", "texte_obi", "texte_code",
-        "numero_code", "orientation", "style", "fond", "texte", "accent", "police_titre", "police_texte", "titre_italique",
+        "numero_code", "orientation", "cadrage", "style", "fond", "texte", "accent", "police_titre", "police_texte", "titre_italique",
         "opacite_image", "volets", "dos", "reperes", "jcard", "ocard", "etiquettes", "obi", "code_barres", "type_code",
         "place_code", "couleurs_code", "barres_perso", "fond_perso", "chiffres_code", "taille_code", "qr", "contenu_qr",
         "texte_qr", "place_qr", "code_spotify", "rotation_code", "code_x", "code_y", "logo_maison", "lien_paroles",
@@ -14,7 +14,7 @@ public enum ChampsDesign {
 
     public static let aide = """
     titre, artiste, maison_de_disque, annee, texte_tranche, notes, credits, texte_obi, texte_code, numero_code (texte) ; \
-    orientation (vertical | paysage) ; style (pochette | collage | imagePerso | maison | graphique) ; fond, texte, accent, \
+    orientation (vertical | paysage) ; cadrage (carre | pleineHauteur) ; style (pochette | collage | imagePerso | maison | graphique) ; fond, texte, accent, \
     barres_perso, fond_perso (#RRGGBB) ; police_titre, police_texte (une police de la liste) ; titre_italique, reperes, \
     jcard, ocard, etiquettes, obi, code_barres, chiffres_code, qr, code_spotify, logo_maison, lien_paroles (oui | non) ; \
     opacite_image (0 à 1) ; volets (3 à 8) ; dos (rectoSeul | court | normal | long | biseaute) ; type_code (ean13 | upcA | \
@@ -44,6 +44,7 @@ public enum ChampsDesign {
         case "texte_code": d.texteCode = v.isEmpty ? nil : v
         case "numero_code": d.numeroCode = v
         case "orientation": guard let o = OrientationRecto(rawValue: v) else { return false }; d.orientation = o
+        case "cadrage": guard let c = CadrageRecto(rawValue: v) else { return false }; d.cadrage = c
         case "style": guard let s = StyleRecto(rawValue: v) else { return false }; d.variante.style = s
         case "fond": d.variante.palette.fond = v
         case "texte": d.variante.palette.texte = v
