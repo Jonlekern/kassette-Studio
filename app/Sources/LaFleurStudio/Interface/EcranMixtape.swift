@@ -27,6 +27,7 @@ private struct Sources: View {
     @EnvironmentObject var etat: EtatApp
     @State private var recherche = ""
     @State private var ambiance = ""
+    @State private var rechercheMB = ""
 
     var body: some View {
         ScrollView {
@@ -59,6 +60,26 @@ private struct Sources: View {
                     ForEach(etat.playlists) { p in
                         Button(p.name) { etat.importerPlaylist(p) }.buttonStyle(.plain).foregroundStyle(W98.bleu)
                     }
+                }
+                Groupe(titre: "MusicBrainz (gratuit, sans compte)") {
+                    Champ(invite: "Album, ou « Artiste - Album »…", texte: $rechercheMB).onSubmit { etat.chercherMusicBrainz(rechercheMB) }
+                    if !etat.albumsMusicBrainz.isEmpty {
+                        VStack(spacing: 0) {
+                            ForEach(etat.albumsMusicBrainz) { a in
+                                Button { etat.importerMusicBrainz(a) } label: {
+                                    VStack(alignment: .leading, spacing: 1) {
+                                        Text(a.titre).bold().lineLimit(1)
+                                        Text([a.artiste, a.annee, a.formats.joined(separator: "+"), a.maisonDeDisque, a.catalogue]
+                                                .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " · ")).lineLimit(1)
+                                    }
+                                    .padding(5).frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
+                                }
+                                .buttonStyle(.plain).disabled(etat.occupe)
+                            }
+                        }
+                        .creux()
+                    }
+                    Text("Titres, durées, maison de disque et pochette, sans Spotify.").foregroundStyle(W98.ombre)
                 }
                 Groupe(titre: "Composer avec Claude (mixtape)") {
                     Text("Ambiance").bold()

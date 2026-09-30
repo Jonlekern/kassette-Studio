@@ -37,6 +37,8 @@ final class EtatApp: ObservableObject {
     @Published var commentaireClaude = ""
     @Published var propositions: [Proposition] = []
     @Published var albumsTrouves: [ClientSpotify.AlbumResume] = []
+    @Published var albumsMusicBrainz: [ClientMusicBrainz.Album] = []
+    let musicBrainz = ClientMusicBrainz()
     @Published var playlists: [ClientSpotify.Playlist] = []
     @Published var questions: [QuestionFichier] = []
     @Published private(set) var fichiers: [InfosFichier] = []
@@ -214,6 +216,28 @@ final class EtatApp: ObservableObject {
             let moitie = (l.count + 1) / 2
             projet.faceA = Array(l.prefix(moitie)); projet.faceB = Array(l.dropFirst(moitie))
             commentaireClaude = "Tout ne tient pas sur une \(projet.cassette.longueur.nom) : choisis une cassette plus longue ou retire des morceaux."
+        }
+    }
+
+    // MARK: MusicBrainz
+
+    func chercherMusicBrainz(_ texte: String) {
+        guard !texte.trimmingCharacters(in: .whitespaces).isEmpty else { return }
+        lancer("Recherche sur MusicBrainz…") { [self] in
+            albumsMusicBrainz = try await musicBrainz.chercher(texte)
+            statut = albumsMusicBrainz.isEmpty ? "Rien trouvé sur MusicBrainz (les petits artistes n'y sont pas toujours)" : "\(albumsMusicBrainz.count) éditions trouvées"
+        }
+    }
+
+    func importerMusicBrainz(_ a: ClientMusicBrainz.Album) {
+        lancer("Import de « \(a.titre) » depuis MusicBrainz…") { [self] in
+            let d = try await musicBrainz.detail(a.id)
+            projet.titre = a.titre; projet.artiste = a.artiste; projet.mode = .album
+            projet.annee = a.annee; projet.labelOrigine = a.maisonDeDisque; projet.catalogueOrigine = a.catalogue
+            projet.codeBarresOrigine = d.codeBarres; projet.musicBrainzID = a.id
+            projet.pochetteURL = d.aUnePochette ? a.pochetteURL : projet.pochetteURL
+            albumsMusicBrainz = []
+            remplir(d.morceaux)
         }
     }
 

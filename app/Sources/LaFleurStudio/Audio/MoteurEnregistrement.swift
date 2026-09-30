@@ -168,14 +168,8 @@ final class MoteurEnregistrement: ObservableObject {
         if !moteur.isRunning { try? moteur.start() }
         // Petite avance pour que tout soit programmé avant le premier son.
         let debut = mach_absolute_time() + Self.secondesVersHote(0.3)
-        for (i, (n, f)) in zip(lecteurs, fichiers).enumerated() {
-            guard let seg = deroule.segments.first(where: { $0.genre == .piste(i) }), seg.fin > t0 else { continue }
-            let taux = f.processingFormat.sampleRate
-            let decalage = max(0, t0 - seg.debut)
-            let premiere = AVAudioFramePosition(decalage * taux)
-            guard premiere < f.length else { continue }
-            n.scheduleSegment(f, startingFrame: premiere, frameCount: AVAudioFrameCount(f.length - premiere), at: nil)
-            n.play(at: AVAudioTime(hostTime: debut + Self.secondesVersHote(max(0, seg.debut - t0))))
+        Programmation.programmer(lecteurs: lecteurs, fichiers: fichiers, deroule: deroule, depuis: t0) {
+            AVAudioTime(hostTime: debut + Self.secondesVersHote($0))
         }
         origineHote = debut; originePosition = t0
         position = t0

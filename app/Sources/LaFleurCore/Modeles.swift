@@ -139,6 +139,12 @@ public struct Projet: Codable, Identifiable, Hashable, Sendable {
     public var faceB: [Piste] = []
     public var pochetteURL: URL?
     public var spotifyAlbumID: String?
+    /// Infos d'origine de l'album (MusicBrainz, Discogs…) : année, maison de disque, catalogue, code-barres.
+    public var annee: String?
+    public var labelOrigine: String?
+    public var catalogueOrigine: String?
+    public var codeBarresOrigine: String?
+    public var musicBrainzID: String?
     public var enregistree: Set<Face> = []
     public var creeLe = Date()
     public var modifieLe = Date()

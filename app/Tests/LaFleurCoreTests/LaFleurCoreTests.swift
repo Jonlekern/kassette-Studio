@@ -100,3 +100,90 @@ final class LaFleurCoreTests: XCTestCase {
         XCTAssertNil(ClientSpotify.analyserLien("https://example.com/album/1"))
     }
 }
+
+final class MusicBrainzTests: XCTestCase {
+    func testDecodageDetail() throws {
+        let json = """
+        {"id":"98e6","title":"…Like Clockwork","date":"2013-05-31","barcode":"744861104029",
+         "artist-credit":[{"name":"Queens of the Stone Age","joinphrase":""}],
+         "label-info":[{"catalog-number":"OLE-1040-2","label":{"name":"Matador"}}],
+         "cover-art-archive":{"front":true},
+         "media":[{"format":"CD","position":1,"track-count":2,"tracks":[
+           {"title":"Keep Your Eyes Peeled","length":304160,"position":1,"artist-credit":[{"name":"Queens of the Stone Age","joinphrase":""}]},
+           {"title":"I Sat by the Ocean","length":235000,"position":2}]}]}
+        """
+        let d = try ClientMusicBrainz.decoderDetail(Data(json.utf8))
+        XCTAssertEqual(d.morceaux.count, 2)
+        XCTAssertEqual(d.morceaux[0].titre, "Keep Your Eyes Peeled")
+        XCTAssertEqual(d.morceaux[1].artiste, "Queens of the Stone Age")
+        XCTAssertEqual(d.album.maisonDeDisque, "Matador")
+        XCTAssertEqual(d.album.catalogue, "OLE-1040-2")
+        XCTAssertEqual(d.codeBarres, "744861104029")
+        XCTAssertTrue(d.aUnePochette)
+        XCTAssertEqual(ClientMusicBrainz.requete("Queens of the Stone Age - ...Like Clockwork"),
+                       "release:\"...Like Clockwork\" AND artist:\"Queens of the Stone Age\"")
+    }
+}
+
+import AVFoundation
+
+/// Rendu hors ligne d'une face : vérifie au sample près l'amorce, les blancs et la coupure en fin de face.
+final class MinutageAudioTests: XCTestCase {
+    let taux = 44_100.0
+
+    /// Fichier WAV d'un son continu (amplitude 0,5) de la durée voulue.
+    func fichierTest(_ nom: String, duree: TimeInterval, dossier: URL) throws -> URL {
+        let url = dossier.appendingPathComponent(nom)
+        let format = AVAudioFormat(standardFormatWithSampleRate: taux, channels: 2)!
+        let f = try AVAudioFile(forWriting: url, settings: format.settings)
+        let n = AVAudioFrameCount(duree * taux)
+        let b = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: n)!
+        b.frameLength = n
+        for c in 0..<2 { for i in 0..<Int(n) { b.floatChannelData![c][i] = 0.5 * Float(sin(Double(i) * 0.05)) + 0.3 } }
+        try f.write(from: b)
+        return url
+    }
+
+    func testFaceAuSamplePres() throws {
+        let dossier = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: dossier, withIntermediateDirectories: true)
+        // La piste 2 dure plus longtemps que prévu : elle doit être coupée net à 0,5 s.
+        let urls = [try fichierTest("a.wav", duree: 1.0, dossier: dossier), try fichierTest("b.wav", duree: 0.8, dossier: dossier)]
+        let pistes = [Piste(morceau: Morceau(titre: "a", artistes: [], dureeMs: 1000), fichier: urls[0], dureeFichier: 1.0),
+                      Piste(morceau: Morceau(titre: "b", artistes: [], dureeMs: 500), fichier: urls[1], dureeFichier: 0.5)]
+        var r = ReglagesPlatine(); r.amorce = 0.5; r.blanc = 0.25
+        let deroule = Deroule(pistes, r, cassette: Cassette())
+        XCTAssertEqual(deroule.fin, 2.25, accuracy: 1e-9)
+
+        let moteur = AVAudioEngine()
+        let format = AVAudioFormat(standardFormatWithSampleRate: taux, channels: 2)!
+        try moteur.enableManualRenderingMode(.offline, format: format, maximumFrameCount: 4096)
+        let fichiers = try urls.map { try AVAudioFile(forReading: $0) }
+        let lecteurs = fichiers.map { f -> AVAudioPlayerNode in
+            let n = AVAudioPlayerNode(); moteur.attach(n); moteur.connect(n, to: moteur.mainMixerNode, format: f.processingFormat); return n
+        }
+        try moteur.start()
+        Programmation.programmer(lecteurs: lecteurs, fichiers: fichiers, deroule: deroule, depuis: 0) {
+            AVAudioTime(sampleTime: AVAudioFramePosition($0 * self.taux), atRate: self.taux)
+        }
+
+        let total = Int(3.0 * taux)
+        var signal = [Float](); signal.reserveCapacity(total)
+        let tampon = AVAudioPCMBuffer(pcmFormat: moteur.manualRenderingFormat, frameCapacity: 4096)!
+        while signal.count < total {
+            let n = min(4096, total - signal.count)
+            let st = try moteur.renderOffline(AVAudioFrameCount(n), to: tampon)
+            XCTAssertEqual(st, .success)
+            signal += (0..<Int(tampon.frameLength)).map { abs(tampon.floatChannelData![0][$0]) }
+        }
+        moteur.stop()
+
+        // Instants (en s) où le son commence et s'arrête.
+        var transitions: [Double] = []
+        var actif = false
+        for (i, v) in signal.enumerated() where (v > 0.01) != actif { actif.toggle(); transitions.append(Double(i) / taux) }
+        let attendu = [0.5, 1.5, 1.75, 2.25]
+        XCTAssertEqual(transitions.count, attendu.count, "transitions : \(transitions)")
+        for (t, a) in zip(transitions, attendu) { XCTAssertEqual(t, a, accuracy: 0.001, "transitions : \(transitions)") }
+    }
+}
