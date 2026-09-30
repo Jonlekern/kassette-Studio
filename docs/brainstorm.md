@@ -27,6 +27,13 @@ Projet indépendant : aucun lien avec le site lafleurstudio.ch.
 | Look des éditeurs | Comme la mise en page du site lafleurstudio : fenêtres Win98 |
 | Écran d'enregistrement | Platine K7 Win98 : VU-mètre à aiguilles, compteur de bande, bobines qui tournent, REC / PLAY / STOP |
 
+## Gestion des morceaux
+
+- Chaque morceau des faces A/B a une poignée **⋮⋮** (glisser pour réordonner ou passer d'une face à
+  l'autre) et un bouton **×** pour le retirer. Retirer un morceau le sort de la cassette sans rien
+  supprimer sur le Mac ni sur Spotify ; ⌘Z annule.
+- Les durées et le remplissage de la bande se recalculent aussitôt.
+
 ## Le lecteur d'enregistrement
 
 1. Choix de la face, vérification que tout tient sur la bande.
