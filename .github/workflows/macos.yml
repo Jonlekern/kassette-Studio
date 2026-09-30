@@ -44,6 +44,8 @@ jobs:
         continue-on-error: true
         run: |
           perl -e 'alarm 300; exec @ARGV' dist/LaFleurStudio.app/Contents/MacOS/LaFleurStudio --captures "$PWD/captures"
+          perl -e 'alarm 300; exec @ARGV' dist/LaFleurStudio.app/Contents/MacOS/LaFleurStudio -AppleLanguages "(en)" --captures "$PWD/captures/en" || true
+          perl -e 'alarm 300; exec @ARGV' dist/LaFleurStudio.app/Contents/MacOS/LaFleurStudio -AppleLanguages "(ru)" --captures "$PWD/captures/ru" || true
           ls -la captures
           cat captures/journal.txt || true
       - name: Mettre les captures en téléchargement
