@@ -332,4 +332,56 @@ struct Mise {
         }
         return min(0.33, place / CGFloat(c.modules.count + 20)) * CGFloat(design.echelleCode)
     }
+
+    // MARK: Plan de la cassette pour Claude
+
+    /// Description exacte de chaque format, zone par zone, en mm : Claude sait où est chaque élément.
+    func anatomie() -> String {
+        let f = { (x: Double) in String(format: "%.1f", x).replacingOccurrences(of: ".0", with: "") }
+        var l: [String] = []
+        let g = gabaritJ
+        l.append("J-CARD (\(design.volets) volets, dos \(design.dos.nom)) : à plat \(f(g.largeur)) × \(f(g.hauteur)) mm, vue de l'extérieur de gauche à droite, fond perdu 3 mm, origine (0,0) en haut à gauche.")
+        for p in g.panneaux {
+            let zone = "\(f(p.x))–\(f(p.x + p.largeur)) mm"
+            switch p.genre {
+            case .rabat:
+                l.append("• Rabat (dos court, \(zone)) : en haut le badge de bande (« \(badge(largeur: p.largeur - 2).replacingOccurrences(of: "\n", with: " / ")) ») ; en bas, de haut en bas : \(design.qr && design.placeQR == .rabat ? "QR code, " : "")\(design.codeSpotify && design.placeCode == .rabat ? "code Spotify, " : "")\(design.codeBarres && design.placeCode == .rabat ? "texte « \(texteCode) » puis code-barres \(design.genreCode.nom) \(numeroCode), " : "")ligne « \(projet.ligneDroits) ».")
+            case .tranche:
+                l.append("• Tranche (\(zone), texte tourné, se lit de haut en bas) : catalogue « \(projet.numeroCatalogue) » en haut, texte « \(texteTranche) » au centre, \(design.codeBarres && design.placeCode == .tranche ? "code-barres" : "logo/nom de la maison de disque « \(projet.maisonDeDisque) »") en bas.")
+            case .recto:
+                if design.orientation == .paysage {
+                    l.append("• Recto (\(zone)), orientation PAYSAGE : composé dans un cadre \(f(g.hauteur)) × \(f(p.largeur)) mm tourné d'un quart de tour ; image carrée \(f(p.largeur)) mm (en bas du recto une fois tourné), titre « \(projet.titre) » et artiste « \(projet.artiste) » dans la colonne de texte (en haut), logo de la maison de disque sous le texte.")
+                } else {
+                    l.append("• Recto (\(zone)), orientation VERTICALE : image carrée \(f(p.largeur)) × \(f(p.largeur)) mm en haut (style « \(v.style.nom) »), titre « \(projet.titre) » (\(v.policeTitre)) vers \(f(p.largeur + 3)) mm, artiste « \(projet.artiste) » dessous, logo « \(projet.maisonDeDisque) » en bas centré à ~\(f(g.hauteur - 5)) mm.")
+                }
+            case .interieur(let i):
+                let b = repartition.exterieur[p]
+                l.append("• Volet intérieur \(i) (\(zone)) : \(b.map { nomBloc($0) } ?? "vide (couleur de fond)").")
+            default: break
+            }
+        }
+        if aUnVerso {
+            l.append("• Verso (imprimé au dos) : " + repartition.verso.map { "derrière \($0.key == .recto ? "le recto" : "la tranche et le rabat") : \(nomBloc($0.value))" }.joined(separator: " ; ") + ".")
+        }
+        if design.placeCode == .libre || design.placeQR == .libre {
+            l.append("• Codes placés librement à x = \(f(design.codeX)) mm, y = \(f(design.codeY)) mm (depuis le coin haut gauche de la J-card), rotation \(Int(design.rotationCode))°.")
+        }
+        if !design.imagesPosees.isEmpty {
+            l.append("• Images posées sur le recto : " + design.imagesPosees.map { "\($0.source) (x \(f($0.x)), y \(f($0.y)), \(f($0.largeur)) × \(f($0.hauteur)) du recto)" }.joined(separator: " ; ") + ".")
+        }
+        l.append("O-CARD (cassingle) \(design.ocard ? "cochée" : "non cochée") : 168,4 × 102,5 mm = patte de colle 15,7 | dos 63,8 (tracklist en haut, QR + code Spotify + code-barres côte à côte en bas) | tranche 12,3 (texte de tranche) | recto 64,3 (même recto que la J-card) | tranche 12,3 (catalogue).")
+        l.append("ÉTIQUETTES DE K7 \(design.etiquettes ? "cochées" : "non cochées") : 89 × 42 mm par face (A et B) ; titre en haut à gauche, grande lettre de face en haut à droite, bande de couleur accent sous le titre, fenêtre des bobines 55 × 13 mm à x 17, y 17 (découpée), petite pochette à gauche de la fenêtre, longueur (\(projet.cassette.longueur.nom)) et NR à droite, en bas « artiste · maison de disque · catalogue » et le type de bande.")
+        l.append("OBI \(design.obi ? "coché" : "non coché") : bande 62 × 108 mm autour du boîtier, côté tranche : dos 22 | tranche 18 (texte « \(obiSpec().texte) » vertical) | recto 22 ; fond couleur accent.")
+        l.append("Couleurs actuelles : fond \(v.palette.fond), texte \(v.palette.texte), accent \(v.palette.accent). Codes : \(design.couleursCode.nom) (barres \(couleursCode.barres) sur \(couleursCode.fond)).")
+        return l.joined(separator: "\n")
+    }
+
+    private func nomBloc(_ b: Bloc) -> String {
+        switch b {
+        case .tracklist: "tracklist des faces A et B avec les durées"
+        case .notes: "notes de présentation"
+        case .credits: "crédits"
+        case .notesEtCredits: "notes puis crédits"
+        }
+    }
 }

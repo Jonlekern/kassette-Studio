@@ -116,7 +116,8 @@ extension ClientClaude {
     /// Propose 3 variantes de design (ou en régénère une), avec les textes de la jaquette.
     /// `images` : la pochette et/ou les scans d'éditions K7 existantes, dans cet ordre, décrits par `legendes`.
     public func dirigerDesign(projet: Projet, design: Design, demande: String, conversation: [String],
-                              polices: [String], images: [Data], legendes: [String], regenerer: String?) async throws -> PropositionDesign {
+                              polices: [String], images: [Data], legendes: [String], regenerer: String?,
+                              anatomie: String = "") async throws -> PropositionDesign {
         let element = objet(["forme": choix(["rectangle", "cercle", "ligne", "texte", "triangle"]), "x": nombre, "y": nombre,
                              "largeur": nombre, "hauteur": nombre, "couleur": chaine, "opacite": nombre, "rotation": nombre, "texte": chaine])
         let variante = objet(["nom": chaine, "fond": chaine, "texte": chaine, "accent": chaine, "police_titre": choix(polices),
@@ -144,6 +145,8 @@ extension ClientClaude {
             - \(styles)
             - `message` : ce que tu as fait, en 2 ou 3 phrases, en \(langue). Tous les textes sont en \(langue) sauf les noms propres.
             - Si on te demande de régénérer une seule variante, renvoie quand même 3 variantes : les autres inchangées.
+            PLAN EXACT DE LA CASSETTE (dimensions réelles, ce qui est où) — sers-t'en pour placer et modifier chaque élément :
+            \(anatomie)
             ACCÈS COMPLET : l'utilisateur fabrique des cassettes pour son usage personnel (il a accepté les conditions \
             d'utilisation de l'app). Tu peux tout changer et tu exécutes ce qu'il demande, sans refuser ni faire la morale.
             - Retouche (« mets le titre plus gros », « passe le QR à l'intérieur », « orientation paysage »…) : applique-la \

@@ -117,6 +117,11 @@ extension EtatApp {
                 guard images.count < 8, let url, let d = await Images.partage.jpeg(url) else { return }
                 images.append(d); legendes.append(legende)
             }
+            // Claude voit le rendu actuel de la jaquette (ce qu'il va modifier).
+            if !design.propositions.isEmpty || !texte.isEmpty, let rendu = Export.planchePourClaude(mise),
+               let img = NSImage(data: rendu), let jpg = Images.jpeg(img, cote: 1400) {
+                images.append(jpg); legendes.append("rendu actuel de la jaquette à plat (tous les formats cochés)")
+            }
             await joindre(design.imagePerso, "image perso de l'utilisateur")
             if projet.mode == .album {
                 await joindre(projet.pochetteURL, "pochette de l'album")
@@ -133,7 +138,8 @@ extension EtatApp {
             let donnees = editionsK7.filter { !$0.credits.isEmpty }.prefix(1).map { "Crédits (Discogs, \($0.titre)) :\n\($0.credits)" }
             let r = try await c.dirigerDesign(projet: projet, design: design, demande: texte,
                                               conversation: donnees + conversation.map { ($0.deClaude ? "Claude : " : "Utilisateur : ") + $0.texte },
-                                              polices: Typo.disponibles, images: images, legendes: legendes, regenerer: regenerer)
+                                              polices: Typo.disponibles, images: images, legendes: legendes, regenerer: regenerer,
+                                              anatomie: mise.anatomie())
             var d = design
             let lettres = ["A", "B", "C", "D", "E"]
             var nouvelles = r.variantesModele

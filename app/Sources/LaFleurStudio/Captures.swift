@@ -125,6 +125,7 @@ enum Captures {
             }
             dl.imagesPosees = []; etat.design = dl
         }
+        journal.append("Plan de la cassette envoyé à Claude :\n" + etat.mise.anatomie())
         journal.append("Polices disponibles : " + Typo.disponibles.joined(separator: ", "))
         try? journal.joined(separator: "\n").write(to: dossier.appendingPathComponent("journal.txt"), atomically: true, encoding: .utf8)
         try? FileManager.default.removeItem(at: tmp)

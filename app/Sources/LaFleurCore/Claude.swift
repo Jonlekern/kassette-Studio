@@ -48,7 +48,8 @@ public struct ClientClaude: Sendable {
             "fallbacks": "default",
             "thinking": ["type": "adaptive"],
             "output_config": ["effort": effort, "format": ["type": "json_schema", "schema": schema]],
-            "system": systeme,
+            // Le prompt système (avec le plan de la cassette) est mis en cache : les demandes suivantes coûtent presque rien.
+            "system": [["type": "text", "text": systeme, "cache_control": ["type": "ephemeral"]]],
         ]
         if !rechercheWeb.isEmpty {
             corps["tools"] = [["type": "web_search_20250305", "name": "web_search", "max_uses": 5, "allowed_domains": rechercheWeb]]
