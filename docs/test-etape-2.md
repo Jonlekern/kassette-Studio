@@ -25,6 +25,14 @@ OK, ou ce qui ne va pas (+ capture dans `docs/captures/`). Les retours vont dans
 12. Aperçu 3D : la K7 tourne à la souris.
 13. Exporter : PDF (ouvre-le : fond perdu, traits de coupe et pointillés de pliage), PNG 600 DPI.
 
+14b. Codes → Place « Libre (à glisser) » : glisse les codes dans l'aperçu de la J-card, change la rotation.
+14c. Maison de disque autre que LAFLEURSTUDIO → « Importer un logo… » : l'avertissement « usage perso »
+     s'affiche, puis le logo remplace le nom sur le recto et la tranche.
+14d. Case « Lien vers les paroles » : une ligne « Paroles : genius.com » apparaît dans les crédits.
+14e. Avec Discogs : « Reprendre crédits et notes » sur une édition remplit les crédits.
+14f. « Cassette depuis le dossier » avec des MP3/M4A qui ont une pochette intégrée : la pochette apparaît
+     sur la jaquette sans Spotify.
+
 ## B. Impression
 
 14. Réglages → Impression : « Imprimer la règle ». Mesure, tape la valeur, OK. Le message vert affiche
