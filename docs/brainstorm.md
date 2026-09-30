@@ -12,6 +12,7 @@ Projet indépendant : aucun lien avec le site lafleurstudio.ch.
 
 | Sujet | Décision |
 |---|---|
+| Nom de l'app | **LaFleurStudio** (logo vectoriel dans `ressources/`) |
 | Plateforme | App macOS native |
 | Deux modes | **Album** (l'ordre de l'album est gardé, simple découpe A/B) et **Mixtape** (plusieurs artistes, Claude compose et équilibre) |
 | Maison de disque | Champ « maison de disque » sur la jaquette et le code-barres. Exemple : **LAFLEURSTUDIO**, catalogue LFS-001, LFS-002… |
@@ -140,6 +141,26 @@ Conseil par défaut, qui marche avec n'importe quelle imprimante :
 - Toujours imprimer à **100 %** (jamais « ajuster à la page »). Export PDF avec fond perdu pour une
   impression en boutique.
 
+## Premier démarrage et clé API Claude
+
+- Au premier lancement, une fenêtre « Bienvenue dans LaFleurStudio » (avec le logo) demande quatre
+  choses : **clé API Claude** (fournie par l'utilisateur, bouton « Tester »), **connexion Spotify**,
+  **dossier audio**, **sortie vers la platine**. Tout reste modifiable dans Réglages.
+- À côté du champ de la clé, un bouton **ⓘ** ouvre un guide :
+  - **Pourquoi Claude** : l'assistant intégré ; il propose, l'utilisateur décide.
+  - **Son rôle** : mixtape (sélection + équilibre des faces), design (couleurs, polices, variantes),
+    textes (tranche, notes, crédits, catalogue), vérification avant impression, conseils d'enregistrement.
+  - **Où trouver une clé** : platform.claude.com → compte → un peu de crédit (Billing) → API Keys →
+    Create Key → copier la clé `sk-ant-…` → coller et tester.
+  - **Coût et données** : paiement à l'usage, quelques centimes par cassette ; la clé reste dans le
+    trousseau du Mac ; Claude reçoit titres, durées, infos d'album et une image de la jaquette, jamais
+    les fichiers audio.
+
+## Collection
+
+Un écran liste toutes les K7 faites (LFS-001, LFS-002…) avec leur jaquette, pour les rouvrir,
+les dupliquer ou les réimprimer.
+
 ## Ce que Claude fait mieux que Tapercraft
 
 - Faces A/B : Tapercraft coupe la liste en deux par nombre de titres (`Math.ceil(n / 2)`), sans
@@ -149,6 +170,13 @@ Conseil par défaut, qui marche avec n'importe quelle imprimante :
 - Textes : tranche, liner notes, crédits écrits par Claude (pas de paroles complètes : droits d'auteur).
 - Enregistrement : Tapercraft ne fait que le papier.
 - Export : gratuit et natif, pas de souci Safari.
+
+## Ordre de construction proposé
+
+1. Mixtape + Enregistrement (pour graver une vraie K7 au plus vite)
+2. J-card
+3. Étiquettes de K7
+4. O-card, obi strip, collection
 
 ## Questions ouvertes
 
