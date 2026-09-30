@@ -74,6 +74,21 @@ Claude s'en sert pour :
   bon Dolby, et adapte ses conseils de niveau (un Type I sature plus vite qu'un Type II) ;
 - **la platine à l'écran** : l'étiquette de la K7 affiche le type et la longueur.
 
+## Artwork des mixtapes
+
+Claude ne génère pas de photos ni d'images réalistes. Pour une mixtape, il propose :
+
+1. **Collage des covers** des morceaux : grille, mosaïque, bande façon planche-contact, pile de
+   pochettes… (usage perso, voir conditions).
+2. **Design graphique dessiné par Claude** : il écrit le visuel en vectoriel (SVG) : formes, motifs,
+   dégradés, typographie en gros, dans les couleurs tirées des covers. Net à n'importe quelle taille.
+3. **Style « K7 maison »** : fausse écriture au feutre, papier, scotch, tampons, stickers, grain,
+   comme les mixtapes faites à la main des années 80-90.
+4. **Ta propre image** (photo, dessin, scan) : Claude propose le cadrage, les couleurs et la place
+   du texte autour.
+
+Dans tous les cas : 3 variantes, et on ajuste en lui parlant (« plus sombre », « plus 90s »).
+
 ## Code-barres
 
 - **Place par défaut** : en bas du rabat du J-card, centré.
