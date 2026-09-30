@@ -100,10 +100,14 @@ Rien ne part à l'impression tant qu'une alerte est ouverte, sauf si on la force
 
 ## Cassette personnalisée sur l'écran d'enregistrement
 
-La K7 dessinée dans la platine reprend les données du projet : étiquette dans les couleurs du design,
-mini-pochette, titre, artiste, face en cours (A/B), marque et modèle, type de bande, Dolby, numéro de
-catalogue et maison de disque, longueur. Elle se met à jour dès qu'on change quelque chose (design,
-face, type de bande…), et les bobines tournent pendant l'enregistrement.
+- La K7 dessinée dans la platine utilise **l'étiquette faite dans le label designer** (écran
+  « Étiquettes de K7 ») : c'est le même dessin, pas une copie. On change l'étiquette, la K7 de la platine
+  change aussi. La face affichée (A/B) suit la face qu'on enregistre.
+- **Les bobines tournent pendant l'enregistrement**, et la bande passe petit à petit de la bobine de
+  gauche à celle de droite, au rythme du temps écoulé sur la face.
+- **Tout s'arrête net à la fin** : quand le dernier morceau de la face est fini (ou sur STOP), le son est
+  coupé, les bobines s'arrêtent et l'app affiche « Arrête la platine, retourne la cassette ». Sur PAUSE,
+  les bobines se figent aussi.
 
 ## Ce que Claude fait mieux que Tapercraft
 
