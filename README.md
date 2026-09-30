@@ -2,7 +2,12 @@
   <img src="docs/images/icone.png" width="96" alt="Icône LaFleurStudio">
 </p>
 
-<h1 align="center">LaFleurStudio</h1>
+<h1 align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo-clair.svg">
+    <img src="docs/images/logo-sombre.svg" width="520" alt="LaFleurStudio">
+  </picture>
+</h1>
 
 <p align="center">
   <b>Fabrique de vraies cassettes audio, de A à Z, sur ton Mac.</b><br>
