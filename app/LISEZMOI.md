@@ -79,3 +79,15 @@ pour une impression en boutique.
 Audio (sortie vers la platine), Platine (simple ou auto-reverse, durée réelle, délai d'inversion avec
 « Mesurer », blancs, marge, compte à rebours), Impression (calibrage), Claude (clé, recherche web sur des
 sites de musique choisis), Spotify, Sources (jeton Discogs gratuit), Langue, Conditions.
+
+## Langues
+
+Français, anglais, russe, allemand : Réglages → Langue, puis « Relancer l'app maintenant ». Claude répond
+aussi dans la langue choisie.
+
+## Pas encore fait
+
+- Platine double cassette (copie d'une K7) : prévu plus tard.
+- Modèles de planches d'étiquettes prédécoupées d'une marque précise (pour l'instant : papier autocollant
+  pleine page + traits de coupe).
+- Ligne ℗ exacte venant de Spotify : l'app écrit « ℗ © année maison de disque ».
