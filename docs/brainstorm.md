@@ -74,6 +74,8 @@ Claude s'en sert pour :
 
 ## QR code et code Spotify
 
+- **Au choix de l'utilisateur** : trois cases à cocher, code-barres, QR code, code Spotify. On en met
+  un seul, deux ou les trois, et Claude replace les autres éléments en conséquence.
 - **Générateur de QR code** intégré : lien Spotify de l'album (rempli automatiquement), lien perso
   (Bandcamp, site, Instagram…) ou texte libre. Mêmes couleurs que le code-barres (blanc, design, perso),
   taille et place réglables (recto, rabat, intérieur).
