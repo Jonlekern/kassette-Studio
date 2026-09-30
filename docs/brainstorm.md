@@ -33,6 +33,7 @@ Projet indépendant : aucun lien avec le site lafleurstudio.ch.
   l'autre) et un bouton **×** pour le retirer. Retirer un morceau le sort de la cassette sans rien
   supprimer sur le Mac ni sur Spotify ; ⌘Z annule.
 - Les durées et le remplissage de la bande se recalculent aussitôt.
+- Un morceau retiré sort de la playlist de la cassette : il n'est **pas joué pendant l'enregistrement**.
 
 ## Le lecteur d'enregistrement
 
