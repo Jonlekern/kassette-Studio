@@ -146,7 +146,7 @@ private struct Platine: View {
                 .font(.system(size: 14, design: .monospaced))
                 Spacer()
                 Touche(symbole: "circle.fill", couleur: W98.rouge, aide: "Enregistrer (démarrer la face)", enfoncee: moteur.etat == .lecture) { moteur.demarrer() }
-                    .disabled(moteur.etat != .pret)
+                    .disabled(moteur.etat != .pret || moteur.pistes.isEmpty)
                 Touche(symbole: "pause.fill", aide: moteur.etat == .pause ? "Reprendre" : "Pause", enfoncee: moteur.etat == .pause) {
                     moteur.etat == .pause ? moteur.reprendre() : moteur.pause()
                 }
