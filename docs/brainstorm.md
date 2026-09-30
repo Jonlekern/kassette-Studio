@@ -12,7 +12,8 @@ Projet indépendant : aucun lien avec le site lafleurstudio.ch.
 
 | Sujet | Décision |
 |---|---|
-| Nom de l'app | **LaFleurStudio** (logo vectoriel dans `ressources/`) |
+| Nom de l'app | **LaFleurStudio** |
+| Logo | Une seule version vectorielle (`ressources/logo-lafleurstudio.svg`, LAFLEURSTUDIO ©) en `currentColor` : l'app la colore automatiquement (noir, blanc, couleurs du design de chaque jaquette) |
 | Plateforme | App macOS native |
 | Deux modes | **Album** (l'ordre de l'album est gardé, simple découpe A/B) et **Mixtape** (plusieurs artistes, Claude compose et équilibre) |
 | Maison de disque | Champ « maison de disque » sur la jaquette et le code-barres. Exemple : **LAFLEURSTUDIO**, catalogue LFS-001, LFS-002… |
