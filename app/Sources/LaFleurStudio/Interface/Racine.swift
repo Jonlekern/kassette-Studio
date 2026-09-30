@@ -1,0 +1,71 @@
+import LaFleurCore
+import SwiftUI
+
+enum Ecran: Hashable { case mixtape, jaquette, enregistrer, collection }
+
+struct Racine: View {
+    @EnvironmentObject var etat: EtatApp
+    var body: some View {
+        ZStack {
+            W98.bureau.ignoresSafeArea()
+            if etat.prefs.premierDemarrageFini {
+                FenetrePrincipale().padding(16)
+            } else {
+                ScrollView { PremierDemarrage().padding(24) }
+            }
+        }
+        .w98()
+    }
+}
+
+struct FenetrePrincipale: View {
+    @EnvironmentObject var etat: EtatApp
+    @EnvironmentObject var moteur: MoteurEnregistrement
+    @State private var ecran: Ecran = .mixtape
+
+    var titre: String {
+        let t = etat.projet.titre.isEmpty ? "Nouvelle cassette" : etat.projet.titre
+        return "LaFleurStudio — « \(t) » · \(etat.projet.numeroCatalogue) · \(etat.projet.cassette.longueur.nom)"
+    }
+
+    var body: some View {
+        Fenetre(titre: titre) {
+            VStack(alignment: .leading, spacing: 0) {
+                Onglets(onglets: [(Ecran.mixtape, "1. Mixtape"), (.jaquette, "2. Jaquette"), (.enregistrer, "3. Enregistrer"),
+                                  (.collection, "4. Collection")], selection: $ecran)
+                    .padding(.horizontal, 8).padding(.top, 8).zIndex(1)
+                Group {
+                    switch ecran {
+                    case .mixtape: EcranMixtape()
+                    case .jaquette: BientotDisponible(texte: "Jaquettes, étiquettes, O-card et obi arrivent à l'étape 2.")
+                    case .enregistrer: EcranEnregistrer()
+                    case .collection: EcranCollection(ouvrir: { etat.ouvrir($0); ecran = .mixtape })
+                    }
+                }
+                .padding(12).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .relief().padding(.horizontal, 8)
+                HStack(spacing: 2) {
+                    if etat.occupe { ProgressView().controlSize(.small).padding(.leading, 4) }
+                    Text(etat.statut).lineLimit(1).padding(.horizontal, 6).frame(maxWidth: .infinity, alignment: .leading).frame(height: 20).creux(W98.gris)
+                    Text(etat.spotifyConnecte ? "Spotify : connecté" : "Spotify : non connecté").padding(.horizontal, 6).frame(height: 20).creux(W98.gris)
+                    Text(etat.cleClaude.isEmpty ? "Claude : pas de clé" : "Claude : prêt").padding(.horizontal, 6).frame(height: 20).creux(W98.gris)
+                }
+                .padding(8)
+            }
+        }
+        .sheet(item: Binding(get: { etat.questions.first }, set: { _ in })) { q in
+            QuestionAssociation(question: q).environmentObject(etat)
+        }
+    }
+}
+
+struct BientotDisponible: View {
+    let texte: String
+    var body: some View {
+        VStack(spacing: 8) {
+            Text("Bientôt").font(W98.lcd)
+            Text(texte)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
