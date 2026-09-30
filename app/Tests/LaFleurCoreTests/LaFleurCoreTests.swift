@@ -131,7 +131,7 @@ import AVFoundation
 final class MinutageAudioTests: XCTestCase {
     let taux = 44_100.0
 
-    /// Fichier WAV d'un son continu (amplitude 0,5) de la durée voulue.
+    /// Fichier WAV d'un son continu qui ne repasse jamais par zéro de la durée voulue.
     func fichierTest(_ nom: String, duree: TimeInterval, dossier: URL) throws -> URL {
         let url = dossier.appendingPathComponent(nom)
         let format = AVAudioFormat(standardFormatWithSampleRate: taux, channels: 2)!
@@ -139,7 +139,7 @@ final class MinutageAudioTests: XCTestCase {
         let n = AVAudioFrameCount(duree * taux)
         let b = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: n)!
         b.frameLength = n
-        for c in 0..<2 { for i in 0..<Int(n) { b.floatChannelData![c][i] = 0.5 * Float(sin(Double(i) * 0.05)) + 0.3 } }
+        for c in 0..<2 { for i in 0..<Int(n) { b.floatChannelData![c][i] = 0.2 * Float(sin(Double(i) * 0.05)) + 0.3 } }
         try f.write(from: b)
         return url
     }
