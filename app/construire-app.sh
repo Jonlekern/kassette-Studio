@@ -20,14 +20,8 @@ rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN" "$APP/Contents/MacOS/LaFleurStudio"
 
-# Icône : la cassette pixel art de lafleurstudio.ch, déclinée dans toutes les tailles macOS.
-ICONES="$(mktemp -d)/AppIcon.iconset"
-mkdir -p "$ICONES"
-for t in 16 32 128 256 512; do
-  sips -z $t $t Ressources/icone-1024.png --out "$ICONES/icon_${t}x${t}.png" >/dev/null
-  sips -z $((t * 2)) $((t * 2)) Ressources/icone-1024.png --out "$ICONES/icon_${t}x${t}@2x.png" >/dev/null
-done
-iconutil -c icns "$ICONES" -o "$APP/Contents/Resources/AppIcon.icns"
+# Icône : la cassette pixel art de lafleurstudio.ch, dessinée net à chaque taille (pas de flou de réduction).
+iconutil -c icns Ressources/AppIcon.iconset -o "$APP/Contents/Resources/AppIcon.icns"
 
 cat > "$APP/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
