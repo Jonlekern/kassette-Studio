@@ -40,7 +40,7 @@ struct FenetrePrincipale: View {
                 Group {
                     switch ecran {
                     case .mixtape: EcranMixtape()
-                    case .jaquette: BientotDisponible(texte: "Jaquettes, étiquettes, O-card et obi arrivent à l'étape 2.")
+                    case .jaquette: EcranJaquette()
                     case .enregistrer: EcranEnregistrer()
                     case .collection: EcranCollection(ouvrir: { etat.ouvrir($0); ecran = .mixtape })
                     }

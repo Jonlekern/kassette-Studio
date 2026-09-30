@@ -43,6 +43,13 @@ final class EtatApp: ObservableObject {
     @Published var questions: [QuestionFichier] = []
     @Published private(set) var fichiers: [InfosFichier] = []
 
+    // Jaquette
+    @Published var conversation: [MessageDesign] = []
+    @Published var editionsK7: [EditionK7] = []
+    @Published var avisClaude: AvisRendu?
+    @Published var policesDisponibles: [String] = Typo.disponibles
+    @Published var jetonDiscogs: String { didSet { Trousseau.ecrire("discogs", jetonDiscogs) } }
+
     private var spotify: ClientSpotify?
     private let retour = RetourConnexion()
 
@@ -60,6 +67,7 @@ final class EtatApp: ObservableObject {
         projet = courant
         collection = projets
         cleClaude = Trousseau.lire("claude") ?? ""
+        jetonDiscogs = Trousseau.lire("discogs") ?? ""
         spotifyConnecte = Trousseau.lireJSON("spotify-jetons", ClientSpotify.Jetons.self) != nil
         try? s.enregistrer(p)
         // Une cassette neuve est enregistrée tout de suite : son numéro n'est jamais perdu.
@@ -82,7 +90,7 @@ final class EtatApp: ObservableObject {
         switch prefs.langue { case "en": "English"; case "ru": "русский"; case "de": "Deutsch"; default: "français" }
     }
 
-    private func claude() throws -> ClientClaude {
+    func claude() throws -> ClientClaude {
         guard !cleClaude.isEmpty else { throw ClientClaude.Erreur.http(401, "ajoute ta clé API Claude dans Réglages") }
         return ClientClaude(cleAPI: cleClaude, langue: langueClaude)
     }
@@ -99,10 +107,14 @@ final class EtatApp: ObservableObject {
         prefs = p
         projet = nouveau
         commentaireClaude = ""; propositions = []; questions = []
+        conversation = []; editionsK7 = []; avisClaude = nil
         rafraichirCollection()
     }
 
-    func ouvrir(_ p: Projet) { projet = p; commentaireClaude = ""; propositions = []; questions = [] }
+    func ouvrir(_ p: Projet) {
+        projet = p; commentaireClaude = ""; propositions = []; questions = []
+        conversation = []; editionsK7 = []; avisClaude = nil
+    }
 
     func dupliquer(_ p: Projet) {
         var prefs = self.prefs

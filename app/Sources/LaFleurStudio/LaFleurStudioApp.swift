@@ -11,6 +11,8 @@ struct LaFleurStudioApp: App {
         // Lancée avec `swift run`, l'app doit se déclarer comme une vraie app à fenêtres.
         NSApplication.shared.setActivationPolicy(.regular)
         NSApplication.shared.activate(ignoringOtherApps: true)
+        // Polices libres de l'app et polices importées par l'utilisateur.
+        Typo.enregistrer()
     }
 
     var body: some Scene {
