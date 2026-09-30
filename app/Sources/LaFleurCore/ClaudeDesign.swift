@@ -154,7 +154,8 @@ extension ClientClaude {
             une première proposition ou quand on te demande d'autres pistes.
             - Champs modifiables et valeurs : \(ChampsDesign.aide)
             - Images : pour mettre une image, un logo ou un écusson (ex. « l'écusson Sony »), ajoute-la dans `images` : \
-            `requete` = mots-clés pour Wikimedia Commons (en anglais, ex. « Sony logo »), `url` = adresse directe d'un \
+            `requete` = mots-clés (en anglais pour un logo, ex. « Sony logo » ; pour la pochette d'un album, « Artiste - Album », \
+            cherchée d'abord dans Cover Art Archive), `url` = adresse directe d'un \
             fichier image si tu la connais, sinon "". `usage` : « recto » (image principale du recto), « logo » (logo de la \
             maison de disque, recto et tranche) ou « element » (posé sur le recto aux coordonnées x, y, largeur, hauteur \
             de 0 à 1). L'app télécharge l'image et la pose tout de suite.

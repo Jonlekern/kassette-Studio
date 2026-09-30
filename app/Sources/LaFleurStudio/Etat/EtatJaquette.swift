@@ -176,6 +176,14 @@ extension EtatApp {
     func poserImage(_ di: PropositionDesign.DemandeImage) async {
         var candidats: [(URL, String)] = []
         if let u = URL(string: di.url), u.scheme?.hasPrefix("http") == true { candidats.append((u, u.host ?? "web")) }
+        // Pochette d'album : d'abord la vraie cover (Cover Art Archive, via MusicBrainz).
+        if di.usage == "recto", let albums = try? await musicBrainz.chercher(di.requete) {
+            for a in albums.prefix(5) {
+                if let u = URL(string: "https://coverartarchive.org/release/\(a.id)/front-1200") {
+                    candidats.append((u, "Cover Art Archive · \(a.artiste) – \(a.titre)"))
+                }
+            }
+        }
         if let trouves = try? await Commons.chercher(di.requete) {
             candidats += trouves.map { ($0.image, "Wikimedia Commons · \($0.titre)\($0.licence.isEmpty ? "" : " · \($0.licence)")") }
         }
