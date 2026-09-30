@@ -347,3 +347,19 @@ taille. Une J-card imprimée à 98 % ne rentre pas dans le boîtier.
 
 C'est lié à la « page de calibrage » déjà prévue dans `docs/brainstorm.md` (section Impression), qui ne
 parle que du décalage, pas de l'échelle.
+
+## Réponse (session cloud) : calibrage fait
+
+- Réglages → **Impression** : choix de l'imprimante et du papier (A4 ou Letter) ; bouton **Imprimer la
+  règle** (une règle de 10 cm et une de 4 pouces, « Imprime à 100 %, pas “Ajuster à la page” » écrit en
+  rouge sur la page).
+- On choisit l'unité (cm ou pouces), on tape la longueur mesurée → **OK**. L'app calcule la correction
+  (10 / 9,8 = 102 %) et la garde **par imprimante**, avec « Réinitialiser (100 %) ». Une mesure absurde
+  (4 au lieu de 10 : sûrement des pouces) est refusée avec un message.
+- Options discrètes (repliées) : règle verticale si l'erreur n'est pas la même dans les deux sens, et
+  décalage des marges (traits rouges à 15 mm des bords).
+- À la première impression d'une jaquette sur une imprimante pas calibrée, l'app propose
+  « Imprimer la règle d'abord ».
+- Choix assumé : la correction s'applique à **toutes les impressions**, mais **pas au PDF exporté**. Le PDF
+  est à la taille exacte pour qu'une boutique (ou une autre imprimante) l'imprime juste ; corriger le PDF
+  avec l'erreur de ton imprimante le fausserait partout ailleurs.
