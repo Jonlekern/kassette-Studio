@@ -32,40 +32,71 @@ public struct ClientClaude: Sendable {
     }
 
     /// Envoie une demande et décode la réponse JSON imposée par `schema`.
+    /// `images` : JPEG ou PNG joints au message (pochettes, scans de K7, rendu de la jaquette).
+    /// `rechercheWeb` : domaines où Claude peut chercher (vide = pas de recherche).
     public func demander<T: Decodable>(_ type: T.Type, systeme: String, message: String,
-                                       schema: [String: Any], effort: String = "medium") async throws -> T {
-        var req = URLRequest(url: URL(string: "https://api.anthropic.com/v1/messages")!)
-        req.httpMethod = "POST"
-        req.timeoutInterval = 600
-        req.setValue("application/json", forHTTPHeaderField: "content-type")
-        req.setValue(cleAPI, forHTTPHeaderField: "x-api-key")
-        req.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
-        // Si les garde-fous refusent une demande, l'API la rejoue sur le modèle de repli recommandé.
-        req.setValue("server-side-fallback-2026-07-01", forHTTPHeaderField: "anthropic-beta")
-        let corps: [String: Any] = [
+                                       schema: [String: Any], effort: String = "medium",
+                                       images: [Data] = [], rechercheWeb: [String] = []) async throws -> T {
+        var contenu: [[String: Any]] = images.map {
+            ["type": "image", "source": ["type": "base64", "media_type": Self.typeImage($0), "data": $0.base64EncodedString()]]
+        }
+        contenu.append(["type": "text", "text": message])
+        var messages: [[String: Any]] = [["role": "user", "content": contenu]]
+        var corps: [String: Any] = [
             "model": modele,
             "max_tokens": 16000,
             "fallbacks": "default",
             "thinking": ["type": "adaptive"],
             "output_config": ["effort": effort, "format": ["type": "json_schema", "schema": schema]],
             "system": systeme,
-            "messages": [["role": "user", "content": message]],
         ]
-        req.httpBody = try JSONSerialization.data(withJSONObject: corps)
-
-        let (data, rep) = try await URLSession.shared.data(for: req)
-        let code = (rep as? HTTPURLResponse)?.statusCode ?? 0
-        guard code == 200 else {
-            let msg = ((try? JSONSerialization.jsonObject(with: data)) as? [String: Any])
-                .flatMap { ($0["error"] as? [String: Any])?["message"] as? String } ?? String(decoding: data, as: UTF8.self)
-            throw Erreur.http(code, msg)
+        if !rechercheWeb.isEmpty {
+            corps["tools"] = [["type": "web_search_20250305", "name": "web_search", "max_uses": 5, "allowed_domains": rechercheWeb]]
         }
-        let r = try JSONDecoder().decode(ReponseMessages.self, from: data)
-        if r.stop_reason == "refusal" { throw Erreur.refus(r.stop_details?.category ?? "sans catégorie") }
-        if r.stop_reason == "max_tokens" { throw Erreur.tronquee }
-        let texte = r.content.filter { $0.type == "text" }.compactMap(\.text).joined()
-        guard let json = texte.data(using: .utf8), !texte.isEmpty else { throw Erreur.reponseVide }
-        do { return try JSONDecoder().decode(T.self, from: json) } catch { throw Erreur.reponseVide }
+
+        // La recherche web peut mettre le tour en pause : on relance avec ce qui a déjà été fait.
+        for _ in 0..<5 {
+            corps["messages"] = messages
+            var req = URLRequest(url: URL(string: "https://api.anthropic.com/v1/messages")!)
+            req.httpMethod = "POST"
+            req.timeoutInterval = 600
+            req.setValue("application/json", forHTTPHeaderField: "content-type")
+            req.setValue(cleAPI, forHTTPHeaderField: "x-api-key")
+            req.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
+            // Si les garde-fous refusent une demande, l'API la rejoue sur le modèle de repli recommandé.
+            req.setValue("server-side-fallback-2026-07-01", forHTTPHeaderField: "anthropic-beta")
+            req.httpBody = try JSONSerialization.data(withJSONObject: corps)
+
+            let (data, rep) = try await URLSession.shared.data(for: req)
+            let code = (rep as? HTTPURLResponse)?.statusCode ?? 0
+            guard code == 200 else {
+                let msg = ((try? JSONSerialization.jsonObject(with: data)) as? [String: Any])
+                    .flatMap { ($0["error"] as? [String: Any])?["message"] as? String } ?? String(decoding: data, as: UTF8.self)
+                throw Erreur.http(code, msg)
+            }
+            let r = try JSONDecoder().decode(ReponseMessages.self, from: data)
+            if r.stop_reason == "refusal" { throw Erreur.refus(r.stop_details?.category ?? "sans catégorie") }
+            if r.stop_reason == "max_tokens" { throw Erreur.tronquee }
+            if r.stop_reason == "pause_turn",
+               let brut = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any], let blocs = brut["content"] {
+                messages.append(["role": "assistant", "content": blocs])
+                continue
+            }
+            // Seul le texte qui suit le dernier bloc d'outil est la réponse JSON.
+            var texte = ""
+            for b in r.content { if b.type == "text" { texte += b.text ?? "" } else { texte = "" } }
+            guard let json = texte.data(using: .utf8), !texte.isEmpty else { throw Erreur.reponseVide }
+            do { return try JSONDecoder().decode(T.self, from: json) } catch { throw Erreur.reponseVide }
+        }
+        throw Erreur.reponseVide
+    }
+
+    static func typeImage(_ d: Data) -> String {
+        let o = [UInt8](d.prefix(4))
+        if o.starts(with: [0x89, 0x50]) { return "image/png" }
+        if o.starts(with: [0x47, 0x49]) { return "image/gif" }
+        if o.count == 4, o[0] == 0x52, o[1] == 0x49 { return "image/webp" }
+        return "image/jpeg"
     }
 
     private struct ReponseMessages: Decodable {
@@ -91,11 +122,11 @@ public struct OrdreFaces: Decodable, Sendable {
     public let commentaire: String
 }
 
-private func objet(_ proprietes: [String: Any]) -> [String: Any] {
+func objet(_ proprietes: [String: Any]) -> [String: Any] {
     ["type": "object", "properties": proprietes, "required": Array(proprietes.keys).sorted(), "additionalProperties": false]
 }
-private let chaine: [String: Any] = ["type": "string"]
-private let entiers: [String: Any] = ["type": "array", "items": ["type": "integer"]]
+let chaine: [String: Any] = ["type": "string"]
+let entiers: [String: Any] = ["type": "array", "items": ["type": "integer"]]
 
 private func ligne(_ i: Int, _ p: Piste) -> String {
     "\(i). \(p.morceau.artiste) - \(p.morceau.titre) (\(formaterDuree(p.duree)))"

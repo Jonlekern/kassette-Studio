@@ -23,6 +23,9 @@ cp "$BIN" "$APP/Contents/MacOS/LaFleurStudio"
 # Icône : la cassette pixel art de lafleurstudio.ch, dessinée net à chaque taille (pas de flou de réduction).
 iconutil -c icns Ressources/AppIcon.iconset -o "$APP/Contents/Resources/AppIcon.icns"
 
+# Polices libres (licences OFL et Apache jointes), chargées automatiquement par macOS au lancement.
+cp -R Ressources/Polices "$APP/Contents/Resources/Polices"
+
 cat > "$APP/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -41,6 +44,7 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
   <key>LSApplicationCategoryType</key><string>public.app-category.music</string>
   <key>NSHighResolutionCapable</key><true/>
   <key>CFBundleIconFile</key><string>AppIcon</string>
+  <key>ATSApplicationFontsPath</key><string>Polices</string>
 </dict>
 </plist>
 PLIST

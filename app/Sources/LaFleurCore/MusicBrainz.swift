@@ -71,6 +71,31 @@ public actor ClientMusicBrainz {
         return try JSONDecoder().decode(ReleaseAPI.self, from: d).detail
     }
 
+    /// Une image du Cover Art Archive (recto, dos, tranche, J-card scanné…).
+    public struct ImageArchive: Identifiable, Hashable, Sendable {
+        public let id: String
+        public let url: URL
+        public let vignette: URL
+        public let types: [String]
+        public let source: URL
+    }
+
+    /// Les scans d'une édition (Cover Art Archive), sans limite de débit côté MusicBrainz.
+    public func images(_ id: String) async throws -> [ImageArchive] {
+        var req = URLRequest(url: URL(string: "https://coverartarchive.org/release/\(id)")!)
+        req.setValue("LaFleurStudio/0.1 ( https://lafleurstudio.ch )", forHTTPHeaderField: "User-Agent")
+        let (data, rep) = try await URLSession.shared.data(for: req)
+        let code = (rep as? HTTPURLResponse)?.statusCode ?? 0
+        if code == 404 { return [] }
+        guard code == 200 else { throw Erreur.http(code) }
+        let source = URL(string: "https://musicbrainz.org/release/\(id)")!
+        return try JSONDecoder().decode(ArchiveAPI.self, from: data).images.compactMap { i in
+            guard let u = URL(string: i.image.replacingOccurrences(of: "http://", with: "https://")) else { return nil }
+            let v = (i.thumbnails?["500"] ?? i.thumbnails?["large"]).flatMap { URL(string: $0.replacingOccurrences(of: "http://", with: "https://")) } ?? u
+            return ImageArchive(id: "\(i.id)", url: u, vignette: v, types: i.types ?? [], source: source)
+        }
+    }
+
     /// Décodage exposé pour les tests.
     public static func decoderDetail(_ data: Data) throws -> Detail { try JSONDecoder().decode(ReleaseAPI.self, from: data).detail }
 }
@@ -101,6 +126,23 @@ private struct MediumAPI: Decodable {
     enum CodingKeys: String, CodingKey { case format, position, tracks, trackCount = "track-count" }
 }
 private struct CoverAPI: Decodable { let front: Bool? }
+private struct ArchiveAPI: Decodable {
+    struct I: Decodable {
+        let id: IdSouple
+        let image: String
+        let thumbnails: [String: String]?
+        let types: [String]?
+    }
+    let images: [I]
+}
+/// Le Cover Art Archive renvoie les identifiants tantôt en nombre, tantôt en texte.
+private struct IdSouple: Decodable, CustomStringConvertible {
+    let description: String
+    init(from d: Decoder) throws {
+        let c = try d.singleValueContainer()
+        if let n = try? c.decode(Int64.self) { description = String(n) } else { description = try c.decode(String.self) }
+    }
+}
 
 private func nomCredit(_ c: [CreditAPI]?) -> String {
     (c ?? []).map { $0.name + ($0.joinphrase ?? "") }.joined()

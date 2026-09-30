@@ -46,6 +46,34 @@ public struct Preferences: Codable, Equatable, Sendable {
     public var langue = "fr"
     public var prochainNumero = 1
     public var prefixeCatalogue = "LFS"
+    /// Décalage de l'imprimante mesuré sur la page de calibrage (mm, positif = vers la droite / vers le bas).
+    public var decalageX = 0.0
+    public var decalageY = 0.0
+    public var calibrationFaite = false
+    enum CodingKeys: String, CodingKey {
+        case conditionsAcceptees, spotifyClientID, dossierAudio, sortieAudioUID, platine, egaliserVolume, rechercheWebClaude, langue, prochainNumero, prefixeCatalogue, decalageX, decalageY, calibrationFaite
+    }
+
+    /// Décodage tolérant : un réglage absent (ancienne version) prend sa valeur par défaut.
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        let d = Preferences()
+        func v<T: Decodable>(_ k: CodingKeys, _ defaut: T) -> T { ((try? c.decodeIfPresent(T.self, forKey: k)) ?? nil) ?? defaut }
+        conditionsAcceptees = v(.conditionsAcceptees, d.conditionsAcceptees)
+        spotifyClientID = v(.spotifyClientID, d.spotifyClientID)
+        dossierAudio = v(.dossierAudio, d.dossierAudio)
+        sortieAudioUID = v(.sortieAudioUID, d.sortieAudioUID)
+        platine = v(.platine, d.platine)
+        egaliserVolume = v(.egaliserVolume, d.egaliserVolume)
+        rechercheWebClaude = v(.rechercheWebClaude, d.rechercheWebClaude)
+        langue = v(.langue, d.langue)
+        prochainNumero = v(.prochainNumero, d.prochainNumero)
+        prefixeCatalogue = v(.prefixeCatalogue, d.prefixeCatalogue)
+        decalageX = v(.decalageX, d.decalageX)
+        decalageY = v(.decalageY, d.decalageY)
+        calibrationFaite = v(.calibrationFaite, d.calibrationFaite)
+    }
+
     public init() {}
 
     public var premierDemarrageFini: Bool { conditionsAcceptees }
