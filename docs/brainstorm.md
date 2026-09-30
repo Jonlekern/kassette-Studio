@@ -34,6 +34,23 @@ Projet indépendant : aucun lien avec le site lafleurstudio.ch.
    coupure à la milliseconde (c'est l'app qui joue les fichiers).
 5. Fin de face A : « stoppe la platine, retourne la K7 », puis face B.
 
+## Type de cassette (connu de Claude)
+
+On dit à l'app (et donc à Claude) quelle cassette on utilise :
+
+- **Bande** : Type I · Normal (ferro), Type II · Chrome (CrO₂), Type IV · Métal
+- **Réducteur de bruit** : Dolby B, Dolby C ou aucun
+- **Marque / modèle** en texte libre (ex. « TDK SA60 »)
+- **Longueur** : C60, C90, custom
+
+Claude s'en sert pour :
+
+- **le design** : badge d'époque sur le rabat ou la tranche (« TYPE II · CrO₂ · HIGH POSITION · 70 µs ·
+  DOLBY B NR »), dessiné en texte, sans reprendre les logos déposés des marques ;
+- **l'enregistrement** : il rappelle de mettre la platine sur la bonne position de bande et d'activer le
+  bon Dolby, et adapte ses conseils de niveau (un Type I sature plus vite qu'un Type II) ;
+- **la platine à l'écran** : l'étiquette de la K7 affiche le type et la longueur.
+
 ## Code-barres
 
 - **Place par défaut** : en bas du rabat du J-card, centré.
