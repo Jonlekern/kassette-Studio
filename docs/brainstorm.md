@@ -27,6 +27,19 @@ Projet indépendant : aucun lien avec le site lafleurstudio.ch.
 | Look des éditeurs | Comme la mise en page du site lafleurstudio : fenêtres Win98 |
 | Écran d'enregistrement | Platine K7 Win98 : VU-mètre à aiguilles, compteur de bande, bobines qui tournent, REC / PLAY / STOP |
 
+## Chargement du dossier audio
+
+- L'app **scanne le dossier choisi et ses sous-dossiers** (MP3, FLAC, WAV, AIFF, M4A/AAC) et lit les infos
+  de chaque fichier : titre, artiste, album, numéro de piste, durée, cover intégrée. Les nouveaux fichiers
+  ajoutés au dossier sont repérés tout seuls.
+- **Ordre automatique** :
+  - mode **album avec Spotify** : l'ordre de l'album sur Spotify, chaque titre associé à son fichier ;
+  - mode **album sans Spotify** (juste un dossier) : numéro de disque puis numéro de piste des tags, sinon
+    le numéro au début du nom de fichier (« 01 - … »), sinon l'ordre alphabétique ;
+  - mode **mixtape** : l'ordre proposé par Claude (ou le sien), modifiable à la main.
+- Si l'ordre ou une association est douteux (deux pistes 03, pas de numéro…), l'app **le demande
+  clairement** au lieu de deviner.
+
 ## Gestion des morceaux
 
 - Chaque morceau des faces A/B a une poignée **⋮⋮** (glisser pour réordonner ou passer d'une face à
