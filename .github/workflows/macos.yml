@@ -1,0 +1,23 @@
+name: Compilation macOS
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  compiler:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - name: Version de Swift
+        run: swift --version
+      - name: Compiler
+        run: swift build 2>&1 | tee build.log; exit ${PIPESTATUS[0]}
+      - name: Tests
+        run: swift test 2>&1 | tee test.log; exit ${PIPESTATUS[0]}
+      - name: Erreurs de compilation
+        if: failure()
+        run: grep -h -E "error:|warning: unre" build.log test.log 2>/dev/null | sort -u | head -80 || true
