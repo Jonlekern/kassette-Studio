@@ -99,16 +99,21 @@ struct EcranJaquette: View {
     }
 
     private var barreApercu: some View {
-        HStack(spacing: 4) {
-            ForEach(formatsCoches, id: \.0) { f in
-                Button(LocalizedStringKey(f.1)) { apercu = f.0 }.buttonStyle(apercu == f.0 ? .w98Gras : .w98)
+        // Formats sur une ligne, zoom sur la suivante : ça tient même en russe ou en allemand.
+        VStack(alignment: .leading, spacing: 4) {
+            HStack(spacing: 4) {
+                ForEach(formatsCoches, id: \.0) { f in
+                    Button(LocalizedStringKey(f.1)) { apercu = f.0 }.buttonStyle(apercu == f.0 ? .w98Gras : .w98).fixedSize()
+                }
             }
-            Spacer()
-            Text("Zoom")
-            Slider(value: Binding(get: { zoom }, set: { zoom = $0; ajuster = false }), in: 1.5...8).frame(width: 110)
-            Button("Ajuster") { ajuster = true }.buttonStyle(ajuster ? .w98Gras : .w98).help("Tout l'objet dans l'aperçu")
-            Text("\(Int(zoom / Typo.ptParMM * 100)) %").frame(width: 44, alignment: .trailing)
-            Button("Aperçu 3D") { montrer3D = true }.buttonStyle(.w98).disabled(!etat.design.jcard)
+            HStack(spacing: 4) {
+                Text("Zoom").fixedSize()
+                Slider(value: Binding(get: { zoom }, set: { zoom = $0; ajuster = false }), in: 1.5...8).frame(width: 110)
+                Text("\(Int(zoom / Typo.ptParMM * 100)) %").fixedSize()
+                Button("Ajuster") { ajuster = true }.buttonStyle(ajuster ? .w98Gras : .w98).fixedSize().help("Tout l'objet dans l'aperçu")
+                Spacer(minLength: 4)
+                Button("Aperçu 3D") { montrer3D = true }.buttonStyle(.w98).fixedSize().disabled(!etat.design.jcard)
+            }
         }
     }
 
@@ -194,10 +199,10 @@ struct EcranJaquette: View {
             }
 
             Groupe(titre: "Couleurs et polices") {
-                HStack {
-                    ColorPicker("Fond", selection: couleur(\.variante.palette.fond), supportsOpacity: false)
-                    ColorPicker("Texte", selection: couleur(\.variante.palette.texte), supportsOpacity: false)
-                    ColorPicker("Accent", selection: couleur(\.variante.palette.accent), supportsOpacity: false)
+                HStack(spacing: 10) {
+                    ColorPicker("Fond", selection: couleur(\.variante.palette.fond), supportsOpacity: false).fixedSize()
+                    ColorPicker("Texte", selection: couleur(\.variante.palette.texte), supportsOpacity: false).fixedSize()
+                    ColorPicker("Accent", selection: couleur(\.variante.palette.accent), supportsOpacity: false).fixedSize()
                 }
                 Picker("Titre", selection: lien(\.variante.policeTitre)) { polices }
                 Picker("Texte", selection: lien(\.variante.policeTexte)) { polices }
@@ -321,9 +326,9 @@ struct EcranJaquette: View {
                     }
                 }
                 if d.couleursCode == .perso {
-                    HStack {
-                        ColorPicker("Barres", selection: couleur(\.barresPerso), supportsOpacity: false)
-                        ColorPicker("Fond", selection: couleur(\.fondPerso), supportsOpacity: false)
+                    HStack(spacing: 10) {
+                        ColorPicker("Barres", selection: couleur(\.barresPerso), supportsOpacity: false).fixedSize()
+                        ColorPicker("Fond", selection: couleur(\.fondPerso), supportsOpacity: false).fixedSize()
                     }
                 }
                 if alertesCode.isEmpty {

@@ -53,12 +53,12 @@ extension EtatApp {
     // MARK: Éditions K7 existantes (première proposition d'un album)
 
     func chercherEditionsK7() {
-        guard !projet.titre.isEmpty else { statut = "Donne d'abord un titre à la cassette."; return }
-        lancer("Recherche des vraies éditions cassette de « \(projet.titre) »…") { [self] in
+        guard !projet.titre.isEmpty else { statut = String(localized: "Donne d'abord un titre à la cassette."); return }
+        lancer(String(localized: "Recherche des vraies éditions cassette de « \(projet.titre) »…")) { [self] in
             try await trouverEditionsK7()
             let n = editionsK7.count
-            statut = n == 0 ? "Aucune édition cassette trouvée : Claude partira de la pochette."
-                            : "\(n) édition\(n > 1 ? "s" : "") cassette trouvée\(n > 1 ? "s" : "")"
+            statut = n == 0 ? String(localized: "Aucune édition cassette trouvée : Claude partira de la pochette.")
+                            : String(localized: "Éditions cassette trouvées : \(n)")
         }
     }
 
@@ -97,13 +97,13 @@ extension EtatApp {
         let texte = demande.trimmingCharacters(in: .whitespacesAndNewlines)
         if !texte.isEmpty { conversation.append(MessageDesign(deClaude: false, texte: texte)) }
         if let r = regenerer, texte.isEmpty { conversation.append(MessageDesign(deClaude: false, texte: "Régénère la variante \(r).")) }
-        lancer(regenerer == nil ? "Claude prépare le design…" : "Claude refait la variante \(regenerer!)…") { [self] in
+        lancer(regenerer == nil ? String(localized: "Claude prépare le design…") : String(localized: "Claude refait la variante \(regenerer!)…")) { [self] in
             let c = try claude()
             // Album, première proposition : d'abord les vraies éditions cassette.
             if projet.mode == .album && design.propositions.isEmpty && !editionsCherchees && !projet.titre.isEmpty {
-                statut = "Recherche des vraies éditions cassette…"
+                statut = String(localized: "Recherche des vraies éditions cassette…")
                 try? await trouverEditionsK7()
-                statut = "Claude prépare le design…"
+                statut = String(localized: "Claude prépare le design…")
             }
             await prechargerImages()
             var images: [Data] = [], legendes: [String] = []
@@ -147,7 +147,7 @@ extension EtatApp {
             if d.texteCode == nil && !r.texte_code.isEmpty && r.texte_code != projet.texteCodeAuto { d.texteCode = r.texte_code }
             design = d
             conversation.append(MessageDesign(deClaude: true, texte: r.message))
-            statut = "Claude a proposé \(nouvelles.count) variantes"
+            statut = String(localized: "Claude a proposé \(nouvelles.count) variantes")
         }
     }
 
@@ -156,8 +156,8 @@ extension EtatApp {
     // MARK: Infos d'édition (recherche web de Claude)
 
     func chercherInfosWeb() {
-        guard prefs.rechercheWebClaude else { statut = "La recherche web de Claude est désactivée (Réglages → Claude)."; return }
-        lancer("Claude cherche les infos de l'album sur le web…") { [self] in
+        guard prefs.rechercheWebClaude else { statut = String(localized: "La recherche web de Claude est désactivée (Réglages → Claude)."); return }
+        lancer(String(localized: "Claude cherche les infos de l'album sur le web…")) { [self] in
             let i = try await claude().chercherInfos(projet: projet)
             if !i.maison_de_disque.isEmpty {
                 projet.labelOrigine = i.distributeur.isEmpty ? i.maison_de_disque : "\(i.maison_de_disque) / \(i.distributeur)"
@@ -171,7 +171,7 @@ extension EtatApp {
                           i.credits.isEmpty ? nil : "crédits"].compactMap { $0 }
             conversation.append(MessageDesign(deClaude: true, texte: (trouve.isEmpty ? "Rien de sûr trouvé : les cases restent à remplir." : "Trouvé : " + trouve.joined(separator: ", ") + ".")
                                               + (i.sources.isEmpty ? "" : "\nSources : " + i.sources.joined(separator: " · "))))
-            statut = "Infos de l'album mises à jour"
+            statut = String(localized: "Infos de l'album mises à jour")
         }
     }
 
@@ -211,7 +211,7 @@ extension EtatApp {
         if alertes.contains(where: { $0.id.hasPrefix("code-inverse") || $0.id.hasPrefix("code-contraste") }) { d.couleursCode = .blanc }
         design = d
         if let avis = avisClaude { appliquer(avis.corrections) }
-        statut = alertesBloquantes.isEmpty ? "Tout est corrigé ✓" : "Il reste \(alertesBloquantes.count) alerte(s) à régler à la main"
+        statut = alertesBloquantes.isEmpty ? String(localized: "Tout est corrigé ✓") : String(localized: "Alertes à régler à la main : \(alertesBloquantes.count)")
     }
 
     /// Textes de tranche de plus en plus courts : initiale du prénom, sans article, titre seul, titre coupé.
@@ -259,13 +259,13 @@ extension EtatApp {
     func ignorer(_ a: Alerte) { var d = design; d.alertesForcees.insert(a.id); design = d }
 
     func verifierAvecClaude() {
-        lancer("Claude regarde la jaquette…") { [self] in
+        lancer(String(localized: "Claude regarde la jaquette…")) { [self] in
             let c = try claude()
             await prechargerImages()
             guard let png = Export.planchePourClaude(mise) else { throw Souci(message: "Impossible de faire l'image de la jaquette.") }
             let avis = try await c.verifierRendu(png: png, alertes: alertes, projet: projet, design: design)
             avisClaude = avis
-            statut = avis.ok && avis.corrections.isEmpty ? "Vérification de Claude : tout est bon ✓" : "Claude propose \(avis.corrections.count) correction(s)"
+            statut = avis.ok && avis.corrections.isEmpty ? String(localized: "Vérification de Claude : tout est bon ✓") : String(localized: "Corrections proposées par Claude : \(avis.corrections.count)")
         }
     }
 
@@ -287,7 +287,7 @@ extension EtatApp {
             let data = Export.pdf(Export.pages(mise), mise: mise, decalageX: 0, decalageY: 0)
             do {
                 try data.write(to: url)
-                statut = "PDF enregistré (fond perdu, traits de coupe et de pliage)"
+                statut = String(localized: "PDF enregistré (fond perdu, traits de coupe et de pliage)")
                 NSWorkspace.shared.activateFileViewerSelecting([url])
             } catch { statut = "⚠︎ " + error.localizedDescription }
         }
@@ -306,7 +306,7 @@ extension EtatApp {
                 let nom = "\(nomFichier) - \(p.nom.components(separatedBy: " (").first ?? p.nom).png".replacingOccurrences(of: "/", with: "-")
                 if (try? data.write(to: dossier.appendingPathComponent(nom))) != nil { n += 1 }
             }
-            statut = "\(n) image\(n > 1 ? "s" : "") PNG 600 DPI enregistrée\(n > 1 ? "s" : "")"
+            statut = n > 1 ? String(localized: "\(n) images PNG 600 DPI enregistrées") : String(localized: "\(n) image PNG 600 DPI enregistrée")
             NSWorkspace.shared.open(dossier)
         }
     }
@@ -345,7 +345,7 @@ extension EtatApp {
         do {
             try FileManager.default.copyItem(at: src, to: dest)
             var d = design; d.imagePerso = dest; d.variante.style = .imagePerso; design = d
-            statut = "Image ajoutée au recto"
+            statut = String(localized: "Image ajoutée au recto")
         } catch { statut = "⚠︎ " + error.localizedDescription }
     }
 
@@ -366,7 +366,7 @@ extension EtatApp {
         do {
             try FileManager.default.copyItem(at: src, to: dest)
             var d = design; d.logoMaison = dest; d.afficherLogoMaison = true; design = d
-            statut = "Logo importé (usage perso uniquement)"
+            statut = String(localized: "Logo importé (usage perso uniquement)")
         } catch { statut = "⚠︎ " + error.localizedDescription }
     }
 
@@ -379,6 +379,6 @@ extension EtatApp {
         var familles: [String] = []
         for u in panneau.urls { familles += (try? Typo.importer(u)) ?? [] }
         policesDisponibles = Typo.disponibles
-        statut = familles.isEmpty ? "Aucune police lisible dans ces fichiers" : "Police importée : " + Set(familles).sorted().joined(separator: ", ")
+        statut = familles.isEmpty ? String(localized: "Aucune police lisible dans ces fichiers") : String(localized: "Police importée : \(Set(familles).sorted().joined(separator: ", "))")
     }
 }

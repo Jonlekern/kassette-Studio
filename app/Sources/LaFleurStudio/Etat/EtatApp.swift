@@ -32,7 +32,7 @@ final class EtatApp: ObservableObject {
     @Published var cleClaude: String { didSet { Trousseau.ecrire("claude", cleClaude) } }
     @Published private(set) var spotifyConnecte: Bool
 
-    @Published var statut = "Prêt"
+    @Published var statut = String(localized: "Prêt")
     @Published var occupe = false
     @Published var commentaireClaude = ""
     @Published var propositions: [Proposition] = []
@@ -149,7 +149,7 @@ final class EtatApp: ObservableObject {
 
     func connecterSpotify() {
         spotify = nil
-        lancer("Connexion à Spotify dans ton navigateur…") { [self] in
+        lancer(String(localized: "Connexion à Spotify dans ton navigateur…")) { [self] in
             let c = try clientSpotify()
             let demande = c.preparerConnexion()
             async let reponse = retour.attendre(port: ClientSpotify.portRedirection)
@@ -161,7 +161,7 @@ final class EtatApp: ObservableObject {
             }
             try await c.terminerConnexion(code: code, verificateur: demande.verificateur)
             spotifyConnecte = true
-            statut = "Spotify connecté ✓"
+            statut = String(localized: "Spotify connecté ✓")
         }
     }
 
@@ -175,18 +175,18 @@ final class EtatApp: ObservableObject {
     func chercherAlbums(_ requete: String) {
         guard !requete.trimmingCharacters(in: .whitespaces).isEmpty else { return }
         if ClientSpotify.analyserLien(requete) != nil { importerLien(requete); return }
-        lancer("Recherche sur Spotify…") { [self] in
+        lancer(String(localized: "Recherche sur Spotify…")) { [self] in
             albumsTrouves = try await clientSpotify().chercherAlbums(requete)
-            statut = albumsTrouves.isEmpty ? "Rien trouvé" : "\(albumsTrouves.count) albums"
+            statut = albumsTrouves.isEmpty ? String(localized: "Rien trouvé") : String(localized: "Albums trouvés : \(albumsTrouves.count)")
         }
     }
 
     func chargerPlaylists() {
-        lancer("Chargement de tes playlists…") { [self] in playlists = try await clientSpotify().mesPlaylists() }
+        lancer(String(localized: "Chargement de tes playlists…")) { [self] in playlists = try await clientSpotify().mesPlaylists() }
     }
 
     func importerAlbum(_ a: ClientSpotify.AlbumResume) {
-        lancer("Import de « \(a.titre) »…") { [self] in
+        lancer(String(localized: "Import de « \(a.titre) »…")) { [self] in
             let morceaux = try await clientSpotify().morceauxDAlbum(a.id)
             projet.titre = a.titre; projet.artiste = a.artiste; projet.pochetteURL = a.pochetteURL
             projet.spotifyAlbumID = a.id; projet.mode = .album
@@ -195,7 +195,7 @@ final class EtatApp: ObservableObject {
     }
 
     func importerPlaylist(_ p: ClientSpotify.Playlist) {
-        lancer("Import de « \(p.name) »…") { [self] in
+        lancer(String(localized: "Import de « \(p.name) »…")) { [self] in
             let morceaux = try await clientSpotify().morceauxDePlaylist(p.id)
             if projet.titre.isEmpty { projet.titre = p.name }
             projet.mode = .mixtape
@@ -204,7 +204,7 @@ final class EtatApp: ObservableObject {
     }
 
     func importerLien(_ lien: String) {
-        lancer("Import du lien Spotify…") { [self] in
+        lancer(String(localized: "Import du lien Spotify…")) { [self] in
             let morceaux = try await clientSpotify().importer(lien: lien)
             if let m = morceaux.first, ClientSpotify.analyserLien(lien)?.0 == "album" {
                 projet.titre = m.album; projet.artiste = m.artiste; projet.pochetteURL = m.pochetteURL; projet.mode = .album
@@ -237,14 +237,14 @@ final class EtatApp: ObservableObject {
 
     func chercherMusicBrainz(_ texte: String) {
         guard !texte.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-        lancer("Recherche sur MusicBrainz…") { [self] in
+        lancer(String(localized: "Recherche sur MusicBrainz…")) { [self] in
             albumsMusicBrainz = try await musicBrainz.chercher(texte)
-            statut = albumsMusicBrainz.isEmpty ? "Rien trouvé sur MusicBrainz (les petits artistes n'y sont pas toujours)" : "\(albumsMusicBrainz.count) éditions trouvées"
+            statut = albumsMusicBrainz.isEmpty ? String(localized: "Rien trouvé sur MusicBrainz (les petits artistes n'y sont pas toujours)") : String(localized: "Éditions trouvées : \(albumsMusicBrainz.count)")
         }
     }
 
     func importerMusicBrainz(_ a: ClientMusicBrainz.Album) {
-        lancer("Import de « \(a.titre) » depuis MusicBrainz…") { [self] in
+        lancer(String(localized: "Import de « \(a.titre) » depuis MusicBrainz…")) { [self] in
             let d = try await musicBrainz.detail(a.id)
             projet.titre = a.titre; projet.artiste = a.artiste; projet.mode = .album
             projet.annee = a.annee; projet.labelOrigine = a.maisonDeDisque; projet.catalogueOrigine = a.catalogue
@@ -267,27 +267,27 @@ final class EtatApp: ObservableObject {
 
     func relireDossier() async {
         guard let d = prefs.dossierAudio else { fichiers = []; return }
-        statut = "Lecture du dossier audio…"
+        statut = String(localized: "Lecture du dossier audio…")
         fichiers = await DossierAudio.lireTout(d)
     }
 
     /// Cassette faite uniquement à partir du dossier (sans Spotify), dans l'ordre des pistes.
     func importerDossierSeul() {
-        lancer("Lecture du dossier…") { [self] in
+        lancer(String(localized: "Lecture du dossier…")) { [self] in
             await relireDossier()
-            guard !fichiers.isEmpty else { statut = "Aucun fichier audio dans ce dossier"; return }
+            guard !fichiers.isEmpty else { statut = String(localized: "Aucun fichier audio dans ce dossier"); return }
             let pistes = DossierAudio.pistes(depuis: fichiers)
             if projet.titre.isEmpty { projet.titre = pistes.first?.morceau.album ?? "" }
             if projet.artiste.isEmpty { projet.artiste = pistes.first?.morceau.artiste ?? "" }
             repartirDansLOrdre(pistes)
-            statut = "\(pistes.count) fichiers chargés dans l'ordre des pistes"
+            statut = String(localized: "\(pistes.count) fichiers chargés dans l'ordre des pistes")
         }
     }
 
     /// Associe chaque morceau à son fichier ; les cas douteux deviennent des questions.
     func associerFichiers() async {
         await relireDossier()
-        guard !fichiers.isEmpty else { statut = prefs.dossierAudio == nil ? "Choisis ton dossier audio" : "Aucun fichier audio dans le dossier"; return }
+        guard !fichiers.isEmpty else { statut = prefs.dossierAudio == nil ? String(localized: "Choisis ton dossier audio") : String(localized: "Aucun fichier audio dans le dossier"); return }
         var nouvelles: [QuestionFichier] = []
         var trouves = 0
         func traiter(_ face: inout [Piste]) {
@@ -309,7 +309,8 @@ final class EtatApp: ObservableObject {
         projet = p
         questions = nouvelles
         let total = projet.toutes.count, associes = projet.toutes.filter { $0.fichier != nil }.count
-        statut = "\(associes) / \(total) morceaux associés à un fichier" + (nouvelles.isEmpty ? "" : " · \(nouvelles.count) à confirmer")
+        statut = nouvelles.isEmpty ? String(localized: "\(associes) / \(total) morceaux associés à un fichier")
+            : String(localized: "\(associes) / \(total) morceaux associés à un fichier · \(nouvelles.count) à confirmer")
     }
 
     /// Réponse à une question : un fichier choisi, ou nil pour retirer le morceau de la cassette.
@@ -344,7 +345,7 @@ final class EtatApp: ObservableObject {
     func retirer(_ id: UUID) {
         if let i = projet.faceA.firstIndex(where: { $0.id == id }) { dernierRetire = (projet.faceA.remove(at: i), .a, i) }
         if let i = projet.faceB.firstIndex(where: { $0.id == id }) { dernierRetire = (projet.faceB.remove(at: i), .b, i) }
-        if let r = dernierRetire { statut = "« \(r.piste.morceau.titre) » retiré de la cassette (il ne sera pas enregistré)" }
+        if let r = dernierRetire { statut = String(localized: "« \(r.piste.morceau.titre) » retiré de la cassette (il ne sera pas enregistré)") }
         commentaireClaude = ""
     }
 
@@ -356,7 +357,7 @@ final class EtatApp: ObservableObject {
         if r.face == .a { projet.faceA.insert(r.piste, at: min(r.index, projet.faceA.count)) }
         else { projet.faceB.insert(r.piste, at: min(r.index, projet.faceB.count)) }
         dernierRetire = nil
-        statut = "« \(r.piste.morceau.titre) » remis à sa place"
+        statut = String(localized: "« \(r.piste.morceau.titre) » remis à sa place")
     }
 
     func monter(_ id: UUID, de pas: Int) {
@@ -389,21 +390,21 @@ final class EtatApp: ObservableObject {
     func equilibrerAvecClaude() {
         let tout = projet.toutes
         guard !tout.isEmpty else { return }
-        lancer("Claude répartit les faces…") { [self] in
+        lancer(String(localized: "Claude répartit les faces…")) { [self] in
             let o = try await claude().equilibrer(tout, cassette: projet.cassette, reglages: prefs.platine,
                                                   garderOrdre: projet.mode == .album)
             let r = Faces.appliquerOrdre(tout, indicesA: o.face_a, indicesB: o.face_b, projet.cassette, prefs.platine)
             projet.faceA = r.faceA; projet.faceB = r.faceB
             commentaireClaude = o.commentaire + (r.horsBande.isEmpty ? "" : " (\(r.horsBande.count) morceau(x) ne tiennent pas et sont retirés.)")
-            statut = "Faces réparties par Claude ✓"
+            statut = String(localized: "Faces réparties par Claude ✓")
         }
     }
 
     func composer(ambiance: String) {
-        lancer("Claude compose la sélection…") { [self] in
+        lancer(String(localized: "Claude compose la sélection…")) { [self] in
             let prop = try await claude().composer(ambiance: ambiance, cassette: projet.cassette, reglages: prefs.platine, deja: projet.toutes)
             if projet.titre.isEmpty { projet.titre = prop.titre }
-            statut = "Recherche des titres sur Spotify…"
+            statut = String(localized: "Recherche des titres sur Spotify…")
             let sp = try clientSpotify()
             var liste: [Proposition] = []
             for idee in prop.morceaux {
@@ -411,7 +412,7 @@ final class EtatApp: ObservableObject {
                 liste.append(Proposition(idee: idee, morceau: m, gardee: m != nil))
             }
             propositions = liste
-            statut = "\(liste.filter { $0.morceau != nil }.count) titres trouvés : coche ceux que tu gardes"
+            statut = String(localized: "\(liste.filter { $0.morceau != nil }.count) titres trouvés : coche ceux que tu gardes")
         }
     }
 
