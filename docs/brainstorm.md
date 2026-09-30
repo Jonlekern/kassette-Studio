@@ -109,6 +109,37 @@ Rien ne part à l'impression tant qu'une alerte est ouverte, sauf si on la force
   coupé, les bobines s'arrêtent et l'app affiche « Arrête la platine, retourne la cassette ». Sur PAUSE,
   les bobines se figent aussi.
 
+## Matériel et réglages
+
+- **Mac** : Apple Silicon (le Mac de Johnny est un M6).
+- **Sortie audio** : menu Réglages → Audio qui liste toutes les sorties vues par le Mac (prise jack,
+  cartes son USB, HDMI…), avec un VU-mètre de test. L'app joue seulement sur la sortie choisie, sans
+  changer la sortie du reste du Mac. Le Bluetooth et AirPlay sont signalés comme déconseillés (retard,
+  compression).
+- **Platine** : menu Réglages → Platine.
+  - **Simple, sans auto-reverse** (cas de Johnny) : après la face A, l'app s'arrête et dit « retourne la
+    cassette », puis on lance la face B.
+  - **Auto-reverse** : la platine se retourne toute seule en fin de bande. L'app doit donc laisser tourner
+    la bande jusqu'au bout de la face A (en silence après le dernier morceau), attendre le délai
+    d'inversion, puis lancer la face B toute seule. Réglages : **durée réelle d'une face** (une C60 fait
+    souvent un peu plus de 30 min) et **délai d'inversion** en secondes, avec un bouton « Mesurer » : on
+    lance la bande et on clique au moment où la platine se retourne.
+  - **Double cassette** : prévu pour plus tard (copie d'une K7).
+
+## Impression
+
+Conseil par défaut, qui marche avec n'importe quelle imprimante :
+
+- **J-card, O-card, obi** : papier mat ou satiné de 170 à 250 g/m², A4. Assez rigide pour tenir dans le
+  boîtier, assez souple pour se plier sans casser.
+- **Étiquettes de K7** : papier autocollant A4 pleine page, mat. L'app imprime les étiquettes avec des
+  traits de coupe : pas besoin de planches prédécoupées d'une marque précise (mais des modèles de planches
+  prédécoupées courantes peuvent être ajoutés).
+- **Page de calibrage** : avant la première impression, l'app imprime une page de test avec des règles.
+  On mesure et on corrige le décalage de l'imprimante une fois pour toutes.
+- Toujours imprimer à **100 %** (jamais « ajuster à la page »). Export PDF avec fond perdu pour une
+  impression en boutique.
+
 ## Ce que Claude fait mieux que Tapercraft
 
 - Faces A/B : Tapercraft coupe la liste en deux par nombre de titres (`Math.ceil(n / 2)`), sans
