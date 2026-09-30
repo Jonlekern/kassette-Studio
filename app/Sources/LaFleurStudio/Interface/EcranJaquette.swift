@@ -30,7 +30,7 @@ struct EcranJaquette: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
-            ScrollView { colonneReglages.padding(.trailing, 6) }.frame(width: 280)
+            ScrollView { colonneReglages.padding(.trailing, 6).frame(width: 274, alignment: .leading) }.frame(width: 280)
             VStack(alignment: .leading, spacing: 6) {
                 barreApercu
                 GeometryReader { g in
@@ -47,7 +47,7 @@ struct EcranJaquette: View {
                 .background(W98.grisFonce).creux(W98.grisFonce)
                 Text(dimensions).lineLimit(1)
             }
-            ScrollView { colonneClaude.padding(.trailing, 6) }.frame(width: 310)
+            ScrollView { colonneClaude.padding(.trailing, 6).frame(width: 304, alignment: .leading) }.frame(width: 310)
         }
         .onAppear {
             if etat.projet.design == nil { etat.design = etat.designParDefaut }
@@ -199,11 +199,9 @@ struct EcranJaquette: View {
             }
 
             Groupe(titre: "Couleurs et polices") {
-                HStack(spacing: 10) {
-                    ColorPicker("Fond", selection: couleur(\.variante.palette.fond), supportsOpacity: false).fixedSize()
-                    ColorPicker("Texte", selection: couleur(\.variante.palette.texte), supportsOpacity: false).fixedSize()
-                    ColorPicker("Accent", selection: couleur(\.variante.palette.accent), supportsOpacity: false).fixedSize()
-                }
+                ColorPicker("Fond", selection: couleur(\.variante.palette.fond), supportsOpacity: false)
+                ColorPicker("Texte", selection: couleur(\.variante.palette.texte), supportsOpacity: false)
+                ColorPicker("Accent", selection: couleur(\.variante.palette.accent), supportsOpacity: false)
                 Picker("Titre", selection: lien(\.variante.policeTitre)) { polices }
                 Picker("Texte", selection: lien(\.variante.policeTexte)) { polices }
                 Toggle("Titre en italique", isOn: lien(\.variante.titreItalique)).toggleStyle(.checkbox)
@@ -337,10 +335,8 @@ struct EcranJaquette: View {
                     }
                 }
                 if d.couleursCode == .perso {
-                    HStack(spacing: 10) {
-                        ColorPicker("Barres", selection: couleur(\.barresPerso), supportsOpacity: false).fixedSize()
-                        ColorPicker("Fond", selection: couleur(\.fondPerso), supportsOpacity: false).fixedSize()
-                    }
+                    ColorPicker("Barres", selection: couleur(\.barresPerso), supportsOpacity: false)
+                    ColorPicker("Fond", selection: couleur(\.fondPerso), supportsOpacity: false)
                 }
                 if alertesCode.isEmpty {
                     Text(d.codeBarres ? "✓ \(d.genreCode.nom) valide · scannable · les chiffres suivent les barres" : "✓ Codes scannables").foregroundStyle(W98.vert)
