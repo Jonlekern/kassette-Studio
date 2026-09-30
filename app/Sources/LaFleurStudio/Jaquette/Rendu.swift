@@ -189,13 +189,14 @@ struct RectoVue: View {
         let b = mise.bandeauRecto
         let pw = paysage ? perduHaut : perduDroite, ph = paysage ? perduDroite : perduHaut
         let cadre = ZStack(alignment: .topLeading) {
-            ImageRecto(mise: mise, largeur: w + pw, hauteur: h - b + (paysage ? 0 : ph), u: u)
+            // En paysage, l'image touche le haut et le bas du recto : fond perdu des deux côtés.
+            ImageRecto(mise: mise, largeur: w + (paysage ? 2 * pw : pw), hauteur: h - b + (paysage ? 0 : ph), u: u)
                 .offset(x: paysage ? -pw * u : 0, y: paysage ? 0 : -ph * u)
             ImagesPosees(images: mise.design.imagesPosees, largeur: w, hauteur: h, u: u)
             Rectangle().fill(Color(hex: p.fond))
-                .frame(width: (w + pw) * u, height: b * u)
+                .frame(width: (w + (paysage ? 2 * pw : pw)) * u, height: b * u)
                 .offset(x: paysage ? -pw * u : 0, y: (h - b) * u)
-            Rectangle().fill(Color(hex: p.accent)).frame(width: (w + pw) * u, height: 0.8 * u)
+            Rectangle().fill(Color(hex: p.accent)).frame(width: (w + (paysage ? 2 * pw : pw)) * u, height: 0.8 * u)
                 .offset(x: paysage ? -pw * u : 0, y: (h - b) * u)
             if paysage {
                 VStack(alignment: .leading, spacing: 1 * u) {
