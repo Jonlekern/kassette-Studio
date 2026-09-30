@@ -20,6 +20,7 @@ struct PremierDemarrage: View {
                             Champ(invite: "sk-ant-…", texte: $etat.cleClaude, secret: true)
                             Button("Tester") { tester() }.buttonStyle(.w98)
                             Text(testCle).foregroundStyle(testCle == "OK" ? W98.vert : W98.rouge).bold()
+                                .frame(width: 150, alignment: .leading).lineLimit(1)
                             Button("i") { aide.toggle() }.buttonStyle(.w98).accessibilityLabel("Aide sur la clé API Claude")
                         }
                     }
@@ -53,6 +54,7 @@ struct PremierDemarrage: View {
     }
 
     private func tester() {
+        guard !etat.cleClaude.trimmingCharacters(in: .whitespaces).isEmpty else { testCle = "Colle d'abord ta clé"; return }
         testCle = "…"
         Task {
             do { try await ClientClaude(cleAPI: etat.cleClaude).testerCle(); testCle = "OK" }

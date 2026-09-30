@@ -15,7 +15,8 @@
 
 ### Option B : compiler sur ton Mac
 
-Il faut les outils de développement (`xcode-select --install`).
+Il faut **Xcode** (App Store), pas seulement les outils en ligne de commande : SwiftUI et les tests
+en ont besoin. Après l'installation : `sudo xcode-select -s /Applications/Xcode.app`.
 
 ```bash
 git clone https://github.com/Jonlekern/kassette-Studio.git

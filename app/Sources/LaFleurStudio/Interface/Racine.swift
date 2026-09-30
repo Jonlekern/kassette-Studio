@@ -11,10 +11,11 @@ struct Racine: View {
             if etat.prefs.premierDemarrageFini {
                 FenetrePrincipale().padding(16)
             } else {
-                ScrollView { PremierDemarrage().padding(24) }
+                ScrollView { PremierDemarrage().padding(24).frame(maxWidth: .infinity) }
             }
         }
         .w98()
+        .sansEffetDeBord()
     }
 }
 
@@ -67,5 +68,17 @@ struct BientotDisponible: View {
             Text(texte)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+extension View {
+    /// macOS 26+ ajoute un fondu flou en haut des listes défilantes (bande claire sous la barre de titre) :
+    /// on le retire pour garder l'aspect Windows 98.
+    @ViewBuilder func sansEffetDeBord() -> some View {
+        if #available(macOS 26.0, *) {
+            scrollEdgeEffectHidden(true, for: .all)
+        } else {
+            self
+        }
     }
 }

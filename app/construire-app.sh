@@ -5,6 +5,13 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+# SwiftUI (macros) et XCTest ne sont livrés qu'avec Xcode, pas avec les seuls outils en ligne de commande.
+if [[ "$(xcode-select -p 2>/dev/null)" != *Xcode*.app* ]]; then
+  echo "✗ Il faut Xcode (App Store), puis : sudo xcode-select -s /Applications/Xcode.app" >&2
+  echo "  (sinon, télécharge l'app compilée par GitHub : voir LISEZMOI.md, option A)" >&2
+  exit 1
+fi
+
 swift build -c release
 BIN="$(swift build -c release --show-bin-path)/LaFleurStudio"
 

@@ -105,3 +105,15 @@ plantage, aucun message** dans la sortie standard ni dans les erreurs.
 | `captures/01-premier-demarrage.jpg` | Écran de bienvenue au premier lancement |
 | `captures/02-tester-cle-vide.jpg` | « Clé refusée » après « Tester » sans clé |
 | `captures/03-aide-cle-api.jpg` | Fenêtre d'aide du bouton « i » |
+
+## Réponse de la session cloud (corrections)
+
+1. **Compiler sans Xcode** : pas un bug, SwiftUI et XCTest demandent Xcode. `app/LISEZMOI.md` (option B)
+   dit maintenant d'installer Xcode, et `construire-app.sh` s'arrête avec un message clair s'il manque.
+2. **« Tester » sans clé** : l'API n'est plus appelée, l'app affiche « Colle d'abord ta clé ». Le message
+   a une largeur fixe, le bouton ne bouge plus.
+3. **Bande teal plus claire en haut** : c'est l'effet de bord flou que macOS 26+ ajoute aux zones
+   défilantes. Il est désactivé dans toute l'app (`sansEffetDeBord()`), et la zone défilante du premier
+   démarrage prend toute la largeur. À vérifier sur la prochaine version.
+
+Suite du test : clé Claude, Spotify, dossier, sortie, puis Mixtape et Enregistrer (voir « Pas encore testé »).
