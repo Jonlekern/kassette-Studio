@@ -269,6 +269,11 @@ struct BlocVue: View {
             case .credits:
                 TexteMM(spec: mise.creditsSpec(largeur: l, hauteur: hauteur - 10), u: u, alignement: .leading)
                 Spacer(minLength: 0)
+            case .notesEtCredits:
+                TexteMM(spec: mise.notesSpec(largeur: l, hauteur: hauteur - 10), u: u, alignement: .leading)
+                Spacer().frame(height: 4 * u)
+                TexteMM(spec: mise.creditsSpec(largeur: l, hauteur: hauteur - 10), u: u, alignement: .leading)
+                Spacer(minLength: 0)
             }
         }
         .padding(.horizontal, 4 * u).padding(.vertical, 5 * u)
@@ -314,8 +319,9 @@ struct JCardVue: View {
                     // Verso : les volets sont vus de dos, donc dans l'ordre inverse.
                     ForEach(g.panneaux, id: \.self) { pan in
                         if let b = rep.verso[pan.genre] {
-                            BlocVue(mise: mise, bloc: b, largeur: pan.largeur, hauteur: g.hauteur, u: u)
-                                .offset(x: (g.largeur - pan.x - pan.largeur) * u)
+                            let w = mise.largeurVerso(pan.genre)
+                            BlocVue(mise: mise, bloc: b, largeur: w, hauteur: g.hauteur, u: u)
+                                .offset(x: (g.largeur - pan.x - w) * u)
                         }
                     }
                 }

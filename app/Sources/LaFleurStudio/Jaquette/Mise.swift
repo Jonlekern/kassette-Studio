@@ -160,7 +160,7 @@ struct Mise {
 
     // MARK: Blocs intérieurs
 
-    enum Bloc: Hashable { case tracklist, notes, credits }
+    enum Bloc: Hashable { case tracklist, notes, credits, notesEtCredits }
 
     /// Ce qui va dans les volets intérieurs, dans l'ordre.
     var blocs: [Bloc] {
@@ -181,11 +181,23 @@ struct Mise {
         var verso: [Panneau.Genre: Bloc] = [:]
         var reste = blocs
         for pan in voletsInterieurs where !reste.isEmpty { ext[pan] = reste.removeFirst() }
-        for g in [Panneau.Genre.recto, .rabat] where !reste.isEmpty && gabaritJ.panneau(g) != nil { verso[g] = reste.removeFirst() }
+        // Verso : derrière le recto, puis derrière la tranche et le rabat réunis (ou la tranche seule sans rabat).
+        let fond: Panneau.Genre = gabaritJ.panneau(.rabat) != nil ? .rabat : .tranche
+        for g in [Panneau.Genre.recto, fond] where !reste.isEmpty {
+            // Dernière place : notes et crédits ensemble plutôt que d'en perdre un.
+            if g == fond && reste == [.notes, .credits] { verso[g] = .notesEtCredits; reste = [] } else { verso[g] = reste.removeFirst() }
+        }
         return (ext, verso)
     }
 
     var aUnVerso: Bool { !repartition.verso.isEmpty }
+
+    /// Largeur d'un emplacement du verso : derrière le rabat, on compte aussi la tranche.
+    func largeurVerso(_ g: Panneau.Genre) -> CGFloat {
+        let gj = gabaritJ
+        let w = gj.panneau(g)?.largeur ?? 0
+        return g == .rabat ? w + (gj.panneau(.tranche)?.largeur ?? 0) : w
+    }
 
     // MARK: Couleurs des codes
 
@@ -228,13 +240,18 @@ struct Mise {
             }
             let rep = repartition
             var places: [(Bloc, CGFloat)] = rep.exterieur.map { ($0.value, $0.key.largeur) }
-            for (genre, b) in rep.verso { places.append((b, g.panneau(genre)?.largeur ?? 0)) }
+            for (genre, b) in rep.verso { places.append((b, largeurVerso(genre))) }
             for (b, w) in places {
                 let l = w - 8, h = g.hauteur - 10
                 switch b {
                 case .tracklist: z += tracklistSpecs(largeur: l, hauteur: h)
                 case .notes: z.append(notesSpec(largeur: l, hauteur: h))
                 case .credits: z.append(creditsSpec(largeur: l, hauteur: h))
+                case .notesEtCredits:
+                    let n = notesSpec(largeur: l, hauteur: h)
+                    let hn = Typo.hauteurMM(n.texte, n.nsFont(), largeur: l) + 4
+                    z.append(n)
+                    z.append(creditsSpec(largeur: l, hauteur: max(1, h - hn)))
                 }
             }
         }
