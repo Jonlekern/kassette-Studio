@@ -32,6 +32,20 @@ Projet indépendant : aucun lien avec le site lafleurstudio.ch.
    coupure à la milliseconde (c'est l'app qui joue les fichiers).
 5. Fin de face A : « stoppe la platine, retourne la K7 », puis face B.
 
+## Code-barres
+
+- **Place par défaut** : en bas du rabat du J-card, centré, sur un fond blanc (lisible sur n'importe
+  quelle couleur de jaquette). Autres places : sur la tranche, ou libre (on le glisse où on veut).
+- **Types** : EAN-13, UPC-A, Code 128 (accepte des lettres, pratique pour un numéro de catalogue),
+  QR code.
+- **Personnalisation** : le numéro (la clé de contrôle EAN est calculée toute seule), une ligne de texte
+  au-dessus (ex. « LAFLEUR TAPES · LFT-001 »), les couleurs des barres et du fond, la taille,
+  la rotation, afficher ou non les chiffres.
+- **Numéro par défaut** : un EAN commençant par 2 (plage réservée à l'usage interne, qui ne correspond
+  à aucun vrai produit), avec numérotation automatique des K7 : LFT-001, LFT-002…
+- Claude peut proposer le texte et le numéro de catalogue, et la vérification avant impression contrôle
+  que le code-barres reste scannable (taille minimale, contraste, pas de débordement).
+
 ## Vérification avant impression (Claude)
 
 Exemple réel trouvé sur la maquette : le texte de la tranche « JEREMY SADIK · AN AFTERNOON AT THE LAKE »
