@@ -61,7 +61,7 @@ struct EcranJaquette: View {
             if a == .imprimer && etat.calibration == nil {
                 Button("Imprimer la règle d'abord") { etat.imprimerCalibrage() }
             }
-            Button(etat.alertesBloquantes.isEmpty ? "Continuer" : "\(a == .imprimer ? "Imprimer" : "Exporter") quand même") { lancer(a) }
+            Button(etat.alertesBloquantes.isEmpty ? "Continuer" : (a == .imprimer ? "Imprimer quand même" : "Exporter quand même")) { lancer(a) }
             Button("Annuler", role: .cancel) {}
         } message: { _ in
             Text(messageExport)
@@ -224,7 +224,7 @@ struct EcranJaquette: View {
                 Groupe(titre: "Vraies éditions cassette") {
                     Text("Claude part de leurs scans pour la première proposition.").foregroundStyle(W98.ombre)
                         .fixedSize(horizontal: false, vertical: true)
-                    Button("Chercher sur MusicBrainz\(etat.jetonDiscogs.isEmpty ? "" : " et Discogs")") { etat.chercherEditionsK7() }
+                    Button(etat.jetonDiscogs.isEmpty ? "Chercher sur MusicBrainz" : "Chercher sur MusicBrainz et Discogs") { etat.chercherEditionsK7() }
                         .buttonStyle(.w98).disabled(etat.occupe)
                     ForEach(etat.editionsK7) { e in
                         VStack(alignment: .leading, spacing: 3) {
@@ -303,7 +303,7 @@ struct EcranJaquette: View {
                     }
                 }
                 if alertesCode.isEmpty {
-                    Text("✓ \(d.codeBarres ? "\(d.genreCode.nom) valide · " : "")scannable · les chiffres suivent les barres").foregroundStyle(W98.vert)
+                    Text(d.codeBarres ? "✓ \(d.genreCode.nom) valide · scannable · les chiffres suivent les barres" : "✓ Codes scannables").foregroundStyle(W98.vert)
                         .fixedSize(horizontal: false, vertical: true)
                 } else {
                     ForEach(alertesCode) { a in
@@ -414,7 +414,9 @@ struct EcranJaquette: View {
                     Button("PNG 600 DPI") { action = .png }.buttonStyle(.w98)
                     Button("Imprimer…") { action = .imprimer }.buttonStyle(.w98Gras)
                 }
-                Text("\(formatsCoches.filter { $0.0 != .verso }.count) format\(formatsCoches.filter { $0.0 != .verso }.count > 1 ? "s" : "") coché\(formatsCoches.filter { $0.0 != .verso }.count > 1 ? "s" : "") · papier 170 à 250 g/m² · étiquettes sur papier autocollant")
+                let n = formatsCoches.filter { $0.0 != .verso }.count
+                Text(n > 1 ? "\(n) formats cochés · papier 170 à 250 g/m² · étiquettes sur papier autocollant"
+                           : "\(n) format coché · papier 170 à 250 g/m² · étiquettes sur papier autocollant")
                     .foregroundStyle(W98.ombre).fixedSize(horizontal: false, vertical: true)
             }
         }

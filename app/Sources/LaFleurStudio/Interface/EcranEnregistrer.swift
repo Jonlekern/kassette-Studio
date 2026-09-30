@@ -32,7 +32,7 @@ struct EcranEnregistrer: View {
                     Toggle("Sortie du Mac → LINE IN de la platine", isOn: $checklist[0]).toggleStyle(.checkbox)
                     Toggle("Niveau réglé avec la tonalité", isOn: $checklist[1]).toggleStyle(.checkbox)
                     Toggle("Bande rembobinée", isOn: $checklist[2]).toggleStyle(.checkbox)
-                    Toggle("Platine sur \(c.bande.nom)\(c.reducteur == .aucun ? "" : ", \(c.reducteur.nom)")", isOn: $checklist[3]).toggleStyle(.checkbox)
+                    Toggle("Platine sur \([c.bande.nom, c.reducteur == .aucun ? nil : c.reducteur.nom].compactMap { $0 }.joined(separator: ", "))", isOn: $checklist[3]).toggleStyle(.checkbox)
                     Toggle("Mode Concentration activé", isOn: $checklist[4]).toggleStyle(.checkbox)
                     Button(moteur.tonaliteActive ? "Couper la tonalité" : "Tonalité 1 kHz") { moteur.basculerTonalite() }
                         .buttonStyle(.w98).disabled(enCours)

@@ -54,19 +54,27 @@ struct Mise {
     var texteCode: String { design.texteCode ?? projet.texteCodeAuto }
     var numeroCode: String { design.numeroCode.isEmpty ? projet.numeroCodeAuto : design.numeroCode }
 
-    var badge: String {
+    /// Morceaux du badge de bande, façon K7 d'époque.
+    var morceauxBadge: [String] {
         let c = projet.cassette
-        let position: String
+        let position: [String]
         switch c.bande {
-        case .typeI: position = "NORMAL POSITION · 120 µs"
-        case .typeII: position = "HIGH POSITION · 70 µs"
-        case .typeIV: position = "METAL POSITION · 70 µs"
+        case .typeI: position = ["NORMAL POSITION", "120 µs"]
+        case .typeII: position = ["HIGH POSITION", "70 µs"]
+        case .typeIV: position = ["METAL POSITION", "70 µs"]
         }
-        let nr = c.reducteur == .aucun ? "" : "\(c.reducteur.nom.uppercased()) NR"
-        let lignes = [c.bande.badge] + position.components(separatedBy: " · ") + (nr.isEmpty ? [] : [nr])
-        // Deux éléments par ligne au plus, pour tenir dans un rabat étroit.
-        return stride(from: 0, to: lignes.count, by: 2).map { lignes[$0..<min($0 + 2, lignes.count)].joined(separator: " · ") }
-            .joined(separator: "\n")
+        return [c.bande.badge] + position + (c.reducteur == .aucun ? [] : ["\(c.reducteur.nom.uppercased()) NR"])
+    }
+
+    /// Badge sur autant de lignes qu'il faut pour tenir dans `largeur` (mm) : on regroupe tant que ça rentre.
+    func badge(largeur: CGFloat) -> String {
+        let f = Typo.nsFont(v.policeTexte, 5 * e("badge"), gras: true)
+        var lignes: [String] = []
+        for m in morceauxBadge {
+            if let d = lignes.last, Typo.largeurMM(d + " · " + m, f) <= largeur { lignes[lignes.count - 1] = d + " · " + m }
+            else { lignes.append(m) }
+        }
+        return lignes.joined(separator: "\n")
     }
 
     /// Lignes de la tracklist : (face, numéro, titre, durée).
@@ -97,8 +105,9 @@ struct Mise {
     }
 
     func badgeSpec(largeur: CGFloat) -> SpecTexte {
-        let n = badge.components(separatedBy: "\n").count
-        return SpecTexte(zone: "badge", texte: badge, famille: v.policeTexte, pt: 5 * e("badge"), gras: true,
+        let lignesBadge = self.badge(largeur: largeur)
+        let n = lignesBadge.components(separatedBy: "\n").count
+        return SpecTexte(zone: "badge", texte: lignesBadge, famille: v.policeTexte, pt: 5 * e("badge"), gras: true,
                          largeur: largeur, hauteur: CGFloat(n) * 2.6, lignes: n, couleur: p.texte, fond: p.fond)
     }
 

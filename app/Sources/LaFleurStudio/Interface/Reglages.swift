@@ -136,8 +136,13 @@ struct Reglages: View {
                     .padding(.top, 4)
                 }
                 if let c {
-                    Text("✓ \(etat.imprimanteCourante) : \(String(format: "%.1f", c.echelleX * 100)) %\(c.echelleY != c.echelleX ? " × \(String(format: "%.1f", c.echelleY * 100)) %" : "")\(c.decalageX != 0 || c.decalageY != 0 ? ", décalage \(String(format: "%+.1f", c.decalageX)) / \(String(format: "%+.1f", c.decalageY)) mm" : ""). Appliqué à toutes les impressions sur cette imprimante.")
+                    let echelle = c.echelleY != c.echelleX
+                        ? String(format: "%.1f × %.1f", c.echelleX * 100, c.echelleY * 100) : String(format: "%.1f", c.echelleX * 100)
+                    Text("✓ \(etat.imprimanteCourante) : échelle \(echelle) %. Appliquée à toutes les impressions sur cette imprimante.")
                         .foregroundStyle(W98.vert).fixedSize(horizontal: false, vertical: true)
+                    if c.decalageX != 0 || c.decalageY != 0 {
+                        Text("Décalage : \(String(format: "%+.1f", c.decalageX)) mm horizontal, \(String(format: "%+.1f", c.decalageY)) mm vertical.")
+                    }
                     Button("Réinitialiser (100 %)") { etat.prefs.calibrations[etat.imprimanteCourante] = nil }.buttonStyle(.w98)
                 } else {
                     Text("Cette imprimante n'est pas encore calibrée : elle imprime sans correction.").foregroundStyle(W98.ombre)

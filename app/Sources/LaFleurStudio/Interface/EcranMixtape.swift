@@ -43,7 +43,7 @@ private struct Sources: View {
                                         AsyncImage(url: a.pochetteURL) { $0.resizable() } placeholder: { W98.grisFonce }.frame(width: 32, height: 32)
                                         VStack(alignment: .leading) {
                                             Text(a.titre).bold().lineLimit(1)
-                                            Text("\(a.artiste)\(a.annee.map { " · \($0)" } ?? "") · \(a.nombreTitres) titres").lineLimit(1)
+                                            Text("\([a.artiste, a.annee].compactMap { $0 }.joined(separator: " · ")) · \(a.nombreTitres) titres").lineLimit(1)
                                         }
                                         Spacer(minLength: 0)
                                     }

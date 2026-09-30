@@ -170,16 +170,23 @@ extension ClientClaude {
 
     /// Cherche sur le web (sites de musique choisis) la maison de disque, le catalogue, l'année et les crédits.
     public func chercherInfos(projet: Projet) async throws -> InfosAlbum {
-        try await demander(InfosAlbum.self,
-            systeme: """
+        let schema = objet(["maison_de_disque": chaine, "distributeur": chaine, "catalogue": chaine, "annee": chaine,
+                            "credits": chaine, "sources": liste(chaine)])
+        let systeme = """
             Tu cherches les informations d'édition d'un album pour sa jaquette de cassette : maison de disque (puis le \
             distributeur s'il y en a un), numéro de catalogue, année, crédits (production, mixage, musiciens). \
             N'invente rien : une info introuvable vaut "". `sources` : les adresses des pages utilisées. Réponds en \(langue).
-            """,
-            message: "Album « \(projet.titre) » de \(projet.artiste)\(projet.annee.map { " (\($0))" } ?? "").\nTitres : "
-                + projet.toutes.map(\.morceau.titre).joined(separator: ", "),
-            schema: objet(["maison_de_disque": chaine, "distributeur": chaine, "catalogue": chaine, "annee": chaine,
-                           "credits": chaine, "sources": liste(chaine)]),
-            effort: "medium", rechercheWeb: sitesMusique)
+            """
+        let message = "Album « \(projet.titre) » de \(projet.artiste)\(projet.annee.map { " (\($0))" } ?? "").\nTitres : "
+            + projet.toutes.map(\.morceau.titre).joined(separator: ", ")
+        do {
+            return try await demander(InfosAlbum.self, systeme: systeme, message: message, schema: schema,
+                                      effort: "medium", rechercheWeb: sitesMusique)
+        } catch Erreur.http(400, _) {
+            // Recherche web indisponible pour ce compte : Claude répond seulement ce qu'il sait avec certitude.
+            return try await demander(InfosAlbum.self,
+                                      systeme: systeme + " La recherche web n'est pas disponible : ne donne que ce dont tu es certain, sources vides.",
+                                      message: message, schema: schema, effort: "medium")
+        }
     }
 }
