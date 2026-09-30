@@ -80,8 +80,8 @@ final class MoteurEnregistrement: ObservableObject {
         case fichierManquant(String), sortie
         var errorDescription: String? {
             switch self {
-            case .fichierManquant(let t): "Pas de fichier audio pour « \(t) ». Associe-le dans l'écran Mixtape."
-            case .sortie: "Impossible d'utiliser cette sortie audio."
+            case .fichierManquant(let t): String(localized: "Pas de fichier audio pour « \(t) ». Associe-le dans l'écran Mixtape.")
+            case .sortie: String(localized: "Impossible d'utiliser cette sortie audio.")
             }
         }
     }

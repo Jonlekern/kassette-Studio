@@ -28,7 +28,7 @@ public actor ClientMusicBrainz {
     public enum Erreur: LocalizedError {
         case http(Int)
         public var errorDescription: String? {
-            switch self { case .http(let c): "MusicBrainz a répondu \(c). Réessaie dans un instant." }
+            switch self { case .http(let c): String(localized: "MusicBrainz a répondu \(c). Réessaie dans un instant.") }
         }
     }
 

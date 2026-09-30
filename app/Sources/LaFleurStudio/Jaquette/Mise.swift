@@ -285,20 +285,22 @@ struct Mise {
                                                largeurModule: Double(largeurModule(c)))
             } else {
                 a.append(Alerte(id: "code-numero", zone: "code", gravite: .bloquante,
-                                message: "Numéro « \(numeroCode) » impossible en \(design.genreCode.nom) (\(design.genreCode == .code128 ? "caractères ASCII seulement" : "chiffres seulement, 12 ou 13 pour l'EAN, 11 ou 12 pour l'UPC")."))
+                                message: design.genreCode == .code128
+                                    ? String(localized: "Numéro « \(numeroCode) » impossible en Code 128 : caractères ASCII seulement.")
+                                    : String(localized: "Numéro « \(numeroCode) » impossible en \(design.genreCode.nom) : chiffres seulement, 12 ou 13 pour l'EAN, 11 ou 12 pour l'UPC.")))
             }
         }
         if design.qr {
             if contenuQR.isEmpty {
                 a.append(Alerte(id: "qr-vide", zone: "code", gravite: .bloquante,
-                                message: design.contenuQR == .spotify ? "QR code : pas de lien Spotify pour cette cassette. Choisis « Lien perso » ou « Texte »." : "QR code vide : écris le lien ou le texte."))
+                                message: design.contenuQR == .spotify ? String(localized: "QR code : pas de lien Spotify pour cette cassette. Choisis « Lien perso » ou « Texte ».") : String(localized: "QR code vide : écris le lien ou le texte.")))
             } else {
                 a += Verification.verifierCode(nom: "QR code", barres: barres, fond: fond, largeurModule: 0.5)
             }
         }
         if design.codeSpotify && projet.uriSpotify == nil {
             a.append(Alerte(id: "spotify-absent", zone: "code", gravite: .bloquante,
-                            message: "Code Spotify : cette cassette n'a pas été importée depuis Spotify."))
+                            message: String(localized: "Code Spotify : cette cassette n'a pas été importée depuis Spotify.")))
         }
         return a.filter { !design.alertesForcees.contains($0.id) }
     }

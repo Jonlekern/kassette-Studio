@@ -14,10 +14,10 @@ public actor ClientSpotify {
         case nonConnecte, http(Int, String), lienInconnu, premiumRequis
         public var errorDescription: String? {
             switch self {
-            case .nonConnecte: "Pas connecté à Spotify (Réglages → Spotify)."
-            case .http(let code, let msg): "Spotify a répondu \(code) : \(msg)"
-            case .lienInconnu: "Lien non reconnu : colle un lien Spotify de playlist, d'album ou de morceau."
-            case .premiumRequis: "Spotify refuse l'accès : son API demande un compte Premium. Sans Premium, utilise « Cassette depuis le dossier »."
+            case .nonConnecte: String(localized: "Pas connecté à Spotify (Réglages → Spotify).")
+            case .http(let code, let msg): String(localized: "Spotify a répondu \(code) : \(msg)")
+            case .lienInconnu: String(localized: "Lien non reconnu : colle un lien Spotify de playlist, d'album ou de morceau.")
+            case .premiumRequis: String(localized: "Spotify refuse l'accès : son API demande un compte Premium. Sans Premium, utilise « Cassette depuis le dossier ».")
             }
         }
     }

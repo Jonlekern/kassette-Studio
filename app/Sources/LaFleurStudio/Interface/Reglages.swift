@@ -13,7 +13,7 @@ struct Reglages: View {
             VStack(alignment: .leading, spacing: 0) {
                 ForEach(rubriques, id: \.self) { r in
                     Button { rubrique = r } label: {
-                        Text(r).padding(.horizontal, 8).padding(.vertical, 5).frame(maxWidth: .infinity, alignment: .leading)
+                        Text(tr(r)).padding(.horizontal, 8).padding(.vertical, 5).frame(maxWidth: .infinity, alignment: .leading)
                             .background(rubrique == r ? W98.bleu : .clear).foregroundStyle(rubrique == r ? .white : .black)
                     }
                     .buttonStyle(.plain)
@@ -22,7 +22,7 @@ struct Reglages: View {
             }
             .padding(2).frame(width: 150).creux()
             VStack(alignment: .leading, spacing: 12) {
-                Text(rubrique).font(.custom("Arial", size: 15).bold())
+                Text(tr(rubrique)).font(.custom("Arial", size: 15).bold())
                 switch rubrique {
                 case "Audio": audio
                 case "Platine": platine

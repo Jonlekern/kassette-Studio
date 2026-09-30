@@ -132,8 +132,8 @@ private struct Platine: View {
                 CassetteDessin(projet: etat.projet, face: face, tourne: moteur.etat == .lecture,
                                progression: moteur.deroule.fin > 0 ? moteur.position / moteur.deroule.fin : 0)
                     .frame(width: 281, height: 179).padding(8).creux(Color(white: 0.12))
-                VUMetre(canal: "GAUCHE", dbfs: moteur.niveaux.gauche)
-                VUMetre(canal: "DROITE", dbfs: moteur.niveaux.droite)
+                VUMetre(canal: String(localized: "GAUCHE"), dbfs: moteur.niveaux.gauche)
+                VUMetre(canal: String(localized: "DROITE"), dbfs: moteur.niveaux.droite)
             }
             HStack(spacing: 16) {
                 Text(String(format: "%04d", Int(moteur.position)))
@@ -163,16 +163,16 @@ private struct Platine: View {
             let p = pistes.indices.contains(i) ? pistes[i] : nil
             let debut = moteur.deroule.debut(piste: i) ?? 0
             return "\(i + 1)/\(pistes.count) \(p?.morceau.titre.uppercased() ?? "")  \(formaterDuree(moteur.position - debut)) / \(formaterDuree(p?.duree ?? 0))"
-        case .amorce?: return "BLANC DE DÉBUT DE BANDE"
-        case .blanc?: return "BLANC ENTRE LES MORCEAUX"
-        case .finDeBande?: return "BOUT DE BANDE DANS \(formaterDuree((moteur.segment?.fin ?? 0) - moteur.position))"
-        case .inversion?: return "INVERSION DE LA PLATINE…"
+        case .amorce?: return String(localized: "BLANC DE DÉBUT DE BANDE")
+        case .blanc?: return String(localized: "BLANC ENTRE LES MORCEAUX")
+        case .finDeBande?: return String(localized: "BOUT DE BANDE DANS \(formaterDuree((moteur.segment?.fin ?? 0) - moteur.position))")
+        case .inversion?: return String(localized: "INVERSION DE LA PLATINE…")
         case nil:
             switch moteur.etat {
-            case .compteARebours(let s): return "RELÂCHE LA PAUSE… \(s)"
+            case .compteARebours(let s): return String(localized: "RELÂCHE LA PAUSE… \(s)")
             case .pause: return "PAUSE"
-            case .finDeFace: return "FACE \(face.rawValue) TERMINÉE"
-            default: return "PRÊT · \(pistes.count) MORCEAUX"
+            case .finDeFace: return String(localized: "FACE \(face.rawValue) TERMINÉE")
+            default: return String(localized: "PRÊT · \(pistes.count) MORCEAUX")
             }
         }
     }

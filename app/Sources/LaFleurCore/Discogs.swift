@@ -22,9 +22,9 @@ public actor ClientDiscogs {
         case pasDeJeton, http(Int)
         public var errorDescription: String? {
             switch self {
-            case .pasDeJeton: "Ajoute ton jeton Discogs dans Réglages → Sources."
-            case .http(401): "Jeton Discogs refusé : vérifie-le dans Réglages → Sources."
-            case .http(let c): "Discogs a répondu \(c). Réessaie dans un instant."
+            case .pasDeJeton: String(localized: "Ajoute ton jeton Discogs dans Réglages → Sources.")
+            case .http(401): String(localized: "Jeton Discogs refusé : vérifie-le dans Réglages → Sources.")
+            case .http(let c): String(localized: "Discogs a répondu \(c). Réessaie dans un instant.")
             }
         }
     }

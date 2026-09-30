@@ -370,25 +370,43 @@ public enum Verification {
     /// Largeur minimale d'un module de code-barres (mm) pour rester scannable.
     public static let moduleMin = 0.2
 
+    /// Nom lisible (et traduit) d'une zone de la jaquette.
+    public static func nomZone(_ id: String) -> String {
+        switch id {
+        case "tranche": String(localized: "tranche")
+        case "titre": String(localized: "titre")
+        case "artiste": String(localized: "artiste")
+        case "badge": String(localized: "badge de bande")
+        case "code": String(localized: "texte du code-barres")
+        case "droits": String(localized: "ligne ℗/©")
+        case "tracklist": String(localized: "tracklist")
+        case "notes": String(localized: "notes")
+        case "credits": String(localized: "crédits")
+        case "etiquette": String(localized: "étiquette")
+        case "obi": String(localized: "obi")
+        default: id
+        }
+    }
+
     public static func verifier(_ zones: [ZoneTexte]) -> [Alerte] {
         var a: [Alerte] = []
         for z in zones where !z.texte.isEmpty {
             if z.largeurTexte > z.largeurZone + 0.05 {
                 a.append(Alerte(id: "deborde-\(z.nom)", zone: z.nom, gravite: .bloquante,
-                                message: "« \(z.texte) » dépasse de la zone \(z.nom) de \(String(format: "%.1f", z.largeurTexte - z.largeurZone)) mm."))
+                                message: String(localized: "« \(z.texte) » dépasse de la zone \(nomZone(z.nom)) de \(String(format: "%.1f", z.largeurTexte - z.largeurZone)) mm.")))
             }
             if z.hauteurTexte > z.hauteurZone + 0.05 {
                 a.append(Alerte(id: "hauteur-\(z.nom)", zone: z.nom, gravite: .bloquante,
-                                message: "Le texte de la zone \(z.nom) est trop haut : il sort de \(String(format: "%.1f", z.hauteurTexte - z.hauteurZone)) mm."))
+                                message: String(localized: "Le texte de la zone \(nomZone(z.nom)) est trop haut : il sort de \(String(format: "%.1f", z.hauteurTexte - z.hauteurZone)) mm.")))
             }
             if z.taillePt < tailleMin {
                 a.append(Alerte(id: "petit-\(z.nom)", zone: z.nom, gravite: .conseil,
-                                message: "Texte de la zone \(z.nom) en \(String(format: "%.1f", z.taillePt)) pt : illisible une fois imprimé (5 pt minimum)."))
+                                message: String(localized: "Texte de la zone \(nomZone(z.nom)) en \(String(format: "%.1f", z.taillePt)) pt : illisible une fois imprimé (5 pt minimum).")))
             }
             let c = contraste(z.couleurTexte, z.couleurFond)
             if c < 3 {
                 a.append(Alerte(id: "contraste-\(z.nom)", zone: z.nom, gravite: .conseil,
-                                message: "Contraste faible dans la zone \(z.nom) (\(String(format: "%.1f", c)):1) : le texte se lira mal."))
+                                message: String(localized: "Contraste faible dans la zone \(nomZone(z.nom)) (\(String(format: "%.1f", c)):1) : le texte se lira mal.")))
             }
         }
         return a
@@ -399,14 +417,14 @@ public enum Verification {
         var a: [Alerte] = []
         if luminance(barres) >= luminance(fond) {
             a.append(Alerte(id: "code-inverse-\(nom)", zone: nom, gravite: .bloquante,
-                            message: "\(nom) : barres plus claires que le fond, la plupart des lecteurs ne le liront pas."))
+                            message: String(localized: "\(nom) : barres plus claires que le fond, la plupart des lecteurs ne le liront pas.")))
         } else if contraste(barres, fond) < 4 {
             a.append(Alerte(id: "code-contraste-\(nom)", zone: nom, gravite: .bloquante,
-                            message: "\(nom) : contraste trop faible entre les barres et le fond (\(String(format: "%.1f", contraste(barres, fond))):1)."))
+                            message: String(localized: "\(nom) : contraste trop faible entre les barres et le fond (\(String(format: "%.1f", contraste(barres, fond))):1).")))
         }
         if largeurModule < moduleMin {
             a.append(Alerte(id: "code-petit-\(nom)", zone: nom, gravite: .conseil,
-                            message: "\(nom) très petit (module de \(String(format: "%.2f", largeurModule)) mm) : il risque de ne pas se scanner."))
+                            message: String(localized: "\(nom) très petit (module de \(String(format: "%.2f", largeurModule)) mm) : il risque de ne pas se scanner.")))
         }
         return a
     }

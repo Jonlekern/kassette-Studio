@@ -108,7 +108,7 @@ private struct Sources: View {
                     }
                 }
                 Groupe(titre: "Dossier audio") {
-                    Text(etat.prefs.dossierAudio?.path(percentEncoded: false) ?? "Aucun dossier").lineLimit(1).truncationMode(.middle)
+                    Text(etat.prefs.dossierAudio?.path(percentEncoded: false) ?? String(localized: "Aucun dossier")).lineLimit(1).truncationMode(.middle)
                         .padding(4).frame(maxWidth: .infinity, alignment: .leading).creux()
                     HStack {
                         Button("Choisir…") { etat.choisirDossier() }.buttonStyle(.w98)

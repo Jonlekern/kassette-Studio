@@ -23,10 +23,10 @@ public struct ClientClaude: Sendable {
         case http(Int, String), refus(String), reponseVide, tronquee
         public var errorDescription: String? {
             switch self {
-            case .http(let code, let msg): "Claude a répondu \(code) : \(msg)"
-            case .refus(let raison): "Claude a refusé la demande (\(raison))."
-            case .reponseVide: "Réponse de Claude vide ou illisible."
-            case .tronquee: "Réponse de Claude coupée (trop longue)."
+            case .http(let code, let msg): String(localized: "Claude a répondu \(code) : \(msg)")
+            case .refus(let raison): String(localized: "Claude a refusé la demande (\(raison)).")
+            case .reponseVide: String(localized: "Réponse de Claude vide ou illisible.")
+            case .tronquee: String(localized: "Réponse de Claude coupée (trop longue).")
             }
         }
     }
