@@ -43,6 +43,10 @@ Projet indépendant : aucun lien avec le site lafleurstudio.ch.
   souvent pas, il le signale. Autres places : sur la tranche, ou libre (on le glisse où on veut).
 - **Types** : EAN-13, UPC-A, Code 128 (accepte des lettres, pratique pour un numéro de catalogue),
   QR code.
+- **Chiffres liés aux barres** : les barres sont toujours calculées à partir du numéro (on tape le
+  numéro, les barres se redessinent). Les chiffres prennent la même couleur et la même taille que les
+  barres et restent placés comme sur un vrai EAN (1 chiffre à gauche, puis 2 groupes de 6 sous
+  chaque moitié).
 - **Personnalisation** : le numéro (la clé de contrôle EAN est calculée toute seule), une ligne de texte
   au-dessus (ex. « LAFLEURSTUDIO · LFS-001 »), les couleurs des barres et du fond, la taille,
   la rotation, afficher ou non les chiffres.
