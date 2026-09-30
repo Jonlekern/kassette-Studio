@@ -48,7 +48,7 @@ struct EcranCollection: View {
                 .padding(16)
             }
             .background(W98.grisFonce).creux(W98.grisFonce)
-            Text("\(etat.collection.count) cassettes · prochain numéro : \(String(format: "%@-%03d", etat.prefs.prefixeCatalogue, etat.prefs.prochainNumero))")
+            Text("\(etat.collection.count) cassette\(etat.collection.count > 1 ? "s" : "") · prochain numéro : \(String(format: "%@-%03d", etat.prefs.prefixeCatalogue, etat.prefs.prochainNumero))")
         }
         .onAppear { etat.rafraichirCollection() }
         .alert("Supprimer \(aSupprimer?.numeroCatalogue ?? "") ?", isPresented: Binding(get: { aSupprimer != nil }, set: { if !$0 { aSupprimer = nil } })) {

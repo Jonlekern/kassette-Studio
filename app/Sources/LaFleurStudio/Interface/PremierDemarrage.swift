@@ -5,6 +5,7 @@ import SwiftUI
 struct PremierDemarrage: View {
     @EnvironmentObject var etat: EtatApp
     @State private var aide = false
+    @State private var aideSpotify = false
     @State private var testCle = ""
     @State private var accepte = false
 
@@ -24,8 +25,9 @@ struct PremierDemarrage: View {
                             Button("i") { aide.toggle() }.buttonStyle(.w98).accessibilityLabel("Aide sur la clé API Claude")
                         }
                     }
-                    Groupe(titre: "2. Spotify") {
+                    Groupe(titre: "2. Spotify (facultatif, Premium obligatoire)") {
                         ReglageSpotify()
+                        Button("Guide pas à pas…") { aideSpotify.toggle() }.buttonStyle(.w98)
                     }
                     Groupe(titre: "3. Dossier audio") {
                         HStack {
@@ -49,7 +51,12 @@ struct PremierDemarrage: View {
                 .padding(16)
             }
             .frame(width: 580)
-            if aide { AideClaude(fermer: { aide = false }).frame(width: 520) }
+            VStack(spacing: 16) {
+                if aide { AideClaude(fermer: { aide = false }).frame(width: 540) }
+                if aideSpotify {
+                    Fenetre(titre: "Guide — connecter Spotify", fermer: { aideSpotify = false }) { GuideSpotify().padding(14) }.frame(width: 540)
+                }
+            }
         }
     }
 
@@ -79,13 +86,7 @@ struct AideClaude: View {
                     Text("• Vérification : repère ce qui déborde, les codes pas scannables, le contraste trop faible.")
                     Text("• Enregistrement : conseils selon ton type de bande et ta platine.")
                 }
-                Groupe(titre: "Où trouver une clé API ?") {
-                    Text("1. Va sur platform.claude.com et crée un compte (ou connecte-toi).")
-                    Link("   Ouvrir platform.claude.com", destination: URL(string: "https://platform.claude.com")!).foregroundStyle(W98.bleu)
-                    Text("2. Ajoute un peu de crédit dans la facturation (Billing).")
-                    Text("3. Ouvre « API Keys », clique « Create Key » et copie la clé qui commence par sk-ant-.")
-                    Text("4. Colle-la ici et clique « Tester ».")
-                }
+                GuideCleClaude()
                 Groupe(titre: "Ce que ça coûte, ce qui est envoyé") {
                     Text("Tu paies à l'usage : préparer une cassette coûte en général quelques centimes. La clé reste dans le trousseau de ton Mac. Claude reçoit les titres, les durées et les infos d'album, jamais tes fichiers audio.")
                 }
@@ -117,8 +118,8 @@ struct ReglageSpotify: View {
                 Text("Client ID")
                 Champ(invite: "Client ID de ton appli Spotify", texte: $etat.prefs.spotifyClientID)
             }
-            Text("developer.spotify.com → Create app → Redirect URI : \(ClientSpotify.redirection) · Web API")
-                .foregroundStyle(W98.ombre).textSelection(.enabled)
+            Text("Spotify n'ouvre son API qu'aux comptes Premium. Sans Premium, l'app marche quand même avec « Cassette depuis le dossier ».")
+                .foregroundStyle(W98.ombre).fixedSize(horizontal: false, vertical: true)
             HStack {
                 if etat.spotifyConnecte {
                     Text("Connecté ✓").foregroundStyle(W98.vert).bold()
@@ -152,7 +153,8 @@ struct ChoixSortie: View {
             }
             Text("L'app joue seulement sur cette sortie ; le reste du Mac ne change pas.").foregroundStyle(W98.ombre)
         }
-        .onAppear { sorties = SortiesAudio.lister() }
+        .onAppear { sorties = SortiesAudio.lister(); moteur.sortieCourante = etat.prefs.sortieAudioUID }
+        .onChange(of: etat.prefs.sortieAudioUID) { moteur.changerSortie(etat.prefs.sortieAudioUID) }
     }
 }
 
@@ -160,5 +162,52 @@ struct ChoixSortie: View {
 struct Logo: View {
     var body: some View {
         LogoForme().aspectRatio(LogoForme.largeur / LogoForme.hauteur, contentMode: .fit).accessibilityLabel("LAFLEURSTUDIO")
+    }
+}
+
+/// Guide pas à pas : obtenir une clé API Claude.
+struct GuideCleClaude: View {
+    var body: some View {
+        Groupe(titre: "Obtenir une clé API Claude, pas à pas") {
+            Text("Attention : l'abonnement Claude (Pro ou Max) ne donne pas de clé API. L'API est un compte à part, payé à l'usage.").bold()
+            Text("1. Va sur platform.claude.com et connecte-toi (ou crée un compte).")
+            Link("   Ouvrir platform.claude.com", destination: URL(string: "https://platform.claude.com")!).foregroundStyle(W98.bleu)
+            Text("2. Ajoute un peu de crédit : Settings → Billing (quelques francs suffisent pour beaucoup de cassettes).")
+            Text("3. Settings → API keys → Create key. Donne-lui un nom (« LaFleurStudio »), garde le workspace « Default ».")
+            Text("4. Copie la clé qui commence par sk-ant-. Elle ne s'affiche qu'une seule fois : si tu la perds, crée-en une autre.")
+            Text("5. Colle-la uniquement ici, dans LaFleurStudio, puis clique « Tester » : « OK » s'affiche.")
+            Text("Ne colle jamais ta clé ailleurs (conversation, message, site) : n'importe qui pourrait l'utiliser à tes frais. Si ça arrive, supprime-la dans API keys et crée-en une nouvelle.")
+                .foregroundStyle(W98.rouge)
+        }
+        .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+/// Guide pas à pas : créer l'appli Spotify et se connecter.
+struct GuideSpotify: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Groupe(titre: "Avant de commencer") {
+                Text("Spotify n'ouvre son API qu'aux comptes Premium. Sans Premium, Spotify bloque l'appli : utilise alors « Cassette depuis le dossier » dans l'onglet Mixtape, qui marche sans Spotify.").bold()
+            }
+            Groupe(titre: "1. Créer l'appli Spotify (une seule fois)") {
+                Text("1. Va sur developer.spotify.com et connecte-toi avec ton compte Spotify.")
+                Link("   Ouvrir developer.spotify.com/dashboard", destination: URL(string: "https://developer.spotify.com/dashboard")!).foregroundStyle(W98.bleu)
+                Text("2. Accepte les conditions des développeurs si Spotify te les montre.")
+                Text("3. Clique « Create app ». Nom : LaFleurStudio. Description : ce que tu veux.")
+                Text("4. Redirect URI : copie exactement l'adresse ci-dessous, puis clique « Add » :")
+                Text(ClientSpotify.redirection).font(.system(size: 12, design: .monospaced)).textSelection(.enabled).padding(4).creux()
+                Text("5. Dans « Which API/SDKs are you planning to use? », coche « Web API ». Accepte et clique « Save ».")
+                Text("6. Ouvre l'appli → Settings : copie le « Client ID ». Ne prends pas le « Client secret », l'app n'en a pas besoin.")
+            }
+            Groupe(titre: "2. Se connecter depuis LaFleurStudio") {
+                Text("1. Colle le Client ID dans LaFleurStudio, puis clique « Se connecter… ».")
+                Text("2. Ton navigateur ouvre une page Spotify qui demande l'accès à tes playlists : clique « Agree » (Accepter).")
+                Text("3. La page affiche « C'est bon, Spotify est connecté », et LaFleurStudio « Connecté ✓ ». Tu peux fermer l'onglet.")
+                Text("Si Spotify refuse l'accès, c'est en général qu'il faut Premium, ou que la Redirect URI ne correspond pas exactement.")
+                    .foregroundStyle(W98.ombre)
+            }
+        }
+        .fixedSize(horizontal: false, vertical: true)
     }
 }

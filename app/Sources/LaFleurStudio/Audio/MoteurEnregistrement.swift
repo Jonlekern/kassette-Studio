@@ -1,5 +1,6 @@
 import AVFoundation
 import AudioToolbox
+import os
 import Foundation
 import LaFleurCore
 
@@ -232,34 +233,67 @@ final class MoteurEnregistrement: ObservableObject {
 
     // MARK: VU-mètre
 
+    /// Niveaux mesurés sur le fil audio (RMS en dBFS), lus par l'affichage à 30 images/s.
+    private let mesure = MesureNiveaux()
+    private var affichageVU: Timer?
+
     private func installerTap() {
+        if affichageVU == nil {
+            affichageVU = Timer.scheduledTimer(withTimeInterval: 1.0 / 30, repeats: true) { [weak self] _ in
+                Task { @MainActor in self?.rafraichirVU() }
+            }
+        }
         guard !tapInstalle else { return }
         tapInstalle = true
-        moteur.mainMixerNode.installTap(onBus: 0, bufferSize: 1024, format: nil) { [weak self] tampon, _ in
-            guard let canaux = tampon.floatChannelData else { return }
+        let mesure = self.mesure
+        moteur.mainMixerNode.installTap(onBus: 0, bufferSize: 1024, format: nil) { tampon, _ in
+            guard let canaux = tampon.floatChannelData, tampon.frameLength > 0 else { return }
             let n = Int(tampon.frameLength), nc = Int(tampon.format.channelCount)
-            func crete(_ c: Int) -> Float {
-                var m: Float = 0
-                for i in 0..<n { m = max(m, abs(canaux[c][i])) }
-                return m > 0 ? 20 * log10(m) : -90
+            func rms(_ c: Int) -> Float {
+                var somme: Float = 0
+                for i in 0..<n { somme += canaux[c][i] * canaux[c][i] }
+                let v = (somme / Float(n)).squareRoot()
+                return v > 0 ? 20 * log10(v) : -90
             }
-            let g = crete(0), d = nc > 1 ? crete(1) : g
-            Task { @MainActor [weak self] in self?.niveaux = (g, d) }
+            mesure.ecrire(rms(0), nc > 1 ? rms(1) : rms(0))
         }
+    }
+
+    /// Balistique d'un vrai VU-mètre (~300 ms) ; aiguilles au repos quand rien ne joue.
+    private func rafraichirVU() {
+        let actif = etat == .lecture || tonaliteActive
+        let (g, d) = actif ? mesure.lire() : (-90, -90)
+        let k: Float = 1 - exp(-1.0 / 30 / 0.3)
+        let ng = niveaux.gauche + (max(g, -60) - niveaux.gauche) * k
+        let nd = niveaux.droite + (max(d, -60) - niveaux.droite) * k
+        if abs(ng - niveaux.gauche) > 0.05 || abs(nd - niveaux.droite) > 0.05 { niveaux = (ng, nd) }
+    }
+
+    // MARK: Sortie audio
+
+    /// Change la sortie (réglages) : le moteur est redirigé tout de suite, sauf pendant un enregistrement.
+    func changerSortie(_ uid: String?) {
+        sortieCourante = uid
+        switch etat { case .lecture, .compteARebours: return; default: break }
+        let relancer = moteur.isRunning
+        moteur.stop()
+        try? choisirSortie(uid)
+        if relancer { moteur.prepare(); try? moteur.start() }
     }
 
     // MARK: Tonalité de réglage
 
-    /// Signal à 1 kHz, −12 dBFS, pour régler le niveau d'entrée de la platine.
+    /// Signal à 1 kHz, −12 dBFS RMS (0 VU sur l'app), pour régler le niveau d'entrée de la platine.
     func basculerTonalite() {
         if source == nil {
             var phase = 0.0
-            let taux = moteur.outputNode.outputFormat(forBus: 0).sampleRate > 0 ? moteur.outputNode.outputFormat(forBus: 0).sampleRate : 48000
+            let taux = 48000.0
             let pas = 2 * Double.pi * 1000 / taux
+            // Amplitude crête 0,355 → −12 dBFS RMS.
             let s = AVAudioSourceNode { _, _, nb, liste -> OSStatus in
                 let tampons = UnsafeMutableAudioBufferListPointer(liste)
                 for i in 0..<Int(nb) {
-                    let v = Float(0.25 * sin(phase))
+                    let v = Float(0.355 * sin(phase))
                     phase += pas
                     if phase > 2 * Double.pi { phase -= 2 * Double.pi }
                     for t in tampons { t.mData?.assumingMemoryBound(to: Float.self)[i] = v }
@@ -272,8 +306,19 @@ final class MoteurEnregistrement: ObservableObject {
             source = s
             installerTap()
         }
-        if !moteur.isRunning { moteur.prepare(); try? moteur.start() }
+        if !moteur.isRunning {
+            try? choisirSortie(sortieCourante)
+            moteur.prepare(); try? moteur.start()
+        }
         tonaliteActive.toggle()
         source?.volume = tonaliteActive ? 1 : 0
     }
+}
+
+/// Dernières mesures du fil audio, partagées avec l'affichage (protégées par un verrou).
+final class MesureNiveaux: @unchecked Sendable {
+    private var verrou = os_unfair_lock()
+    private var gauche: Float = -90, droite: Float = -90
+    func ecrire(_ g: Float, _ d: Float) { os_unfair_lock_lock(&verrou); gauche = g; droite = d; os_unfair_lock_unlock(&verrou) }
+    func lire() -> (Float, Float) { os_unfair_lock_lock(&verrou); defer { os_unfair_lock_unlock(&verrou) }; return (gauche, droite) }
 }

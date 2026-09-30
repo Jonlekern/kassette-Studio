@@ -26,14 +26,14 @@ struct Reglages: View {
                 case "Audio": audio
                 case "Platine": platine
                 case "Claude": claude
-                case "Spotify": Groupe(titre: "Compte Spotify") { ReglageSpotify() }
+                case "Spotify": ScrollView { VStack(alignment: .leading, spacing: 12) { Groupe(titre: "Compte Spotify") { ReglageSpotify() }; GuideSpotify() } }
                 case "Langue": langue
                 default: Groupe(titre: "Conditions d'utilisation") { TexteConditions() }
                 }
                 Spacer()
             }
         }
-        .padding(14).frame(width: 760, height: 520).background(W98.gris).w98()
+        .padding(14).frame(width: 760, height: 560).background(W98.gris).w98().preferredColorScheme(.light)
     }
 
     private var audio: some View {
@@ -85,8 +85,10 @@ struct Reglages: View {
                 Champ(invite: "sk-ant-…", texte: $etat.cleClaude, secret: true)
                 Text("Rangée dans le trousseau du Mac.").foregroundStyle(W98.ombre)
             }
+            GuideCleClaude()
             Groupe(titre: "Recherche web") {
-                Toggle("Claude peut chercher sur des sites choisis (sources citées)", isOn: $etat.prefs.rechercheWebClaude).toggleStyle(.checkbox)
+                Toggle("Claude peut chercher sur des sites choisis (sources citées)", isOn: .constant(false)).toggleStyle(.checkbox).disabled(true)
+                Text("Arrive dans une prochaine étape.").foregroundStyle(W98.ombre)
             }
         }
     }

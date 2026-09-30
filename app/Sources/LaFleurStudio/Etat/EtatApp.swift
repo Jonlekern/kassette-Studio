@@ -60,6 +60,9 @@ final class EtatApp: ObservableObject {
         cleClaude = Trousseau.lire("claude") ?? ""
         spotifyConnecte = Trousseau.lireJSON("spotify-jetons", ClientSpotify.Jetons.self) != nil
         try? s.enregistrer(p)
+        // Une cassette neuve est enregistrée tout de suite : son numéro n'est jamais perdu.
+        try? s.enregistrer(courant)
+        collection = s.projets()
     }
 
     // MARK: Tâches
@@ -301,16 +304,43 @@ final class EtatApp: ObservableObject {
 
     /// Retire le morceau de la cassette : il ne sera pas enregistré. Rien n'est supprimé sur le Mac.
     func retirer(_ id: UUID) {
-        projet.faceA.removeAll { $0.id == id }
-        projet.faceB.removeAll { $0.id == id }
+        if let i = projet.faceA.firstIndex(where: { $0.id == id }) { dernierRetire = (projet.faceA.remove(at: i), .a, i) }
+        if let i = projet.faceB.firstIndex(where: { $0.id == id }) { dernierRetire = (projet.faceB.remove(at: i), .b, i) }
+        if let r = dernierRetire { statut = "« \(r.piste.morceau.titre) » retiré de la cassette (il ne sera pas enregistré)" }
+        commentaireClaude = ""
     }
 
+    /// Dernier morceau retiré, pour pouvoir le remettre à sa place.
+    @Published private(set) var dernierRetire: (piste: Piste, face: Face, index: Int)?
+
+    func annulerRetrait() {
+        guard let r = dernierRetire else { return }
+        if r.face == .a { projet.faceA.insert(r.piste, at: min(r.index, projet.faceA.count)) }
+        else { projet.faceB.insert(r.piste, at: min(r.index, projet.faceB.count)) }
+        dernierRetire = nil
+        statut = "« \(r.piste.morceau.titre) » remis à sa place"
+    }
+
+    func monter(_ id: UUID, de pas: Int) {
+        func bouger(_ l: inout [Piste]) {
+            guard let i = l.firstIndex(where: { $0.id == id }) else { return }
+            let j = i + pas
+            guard l.indices.contains(j) else { return }
+            l.swapAt(i, j)
+        }
+        bouger(&projet.faceA); bouger(&projet.faceB)
+        commentaireClaude = ""
+    }
+
+    /// La fin de la face A continue au début de la face B, et inversement : l'ordre d'écoute est gardé.
     func changerDeFace(_ id: UUID) {
+        commentaireClaude = ""
         if let i = projet.faceA.firstIndex(where: { $0.id == id }) { projet.faceB.insert(projet.faceA.remove(at: i), at: 0) }
         else if let i = projet.faceB.firstIndex(where: { $0.id == id }) { projet.faceA.append(projet.faceB.remove(at: i)) }
     }
 
     func deplacer(_ face: Face, depuis: IndexSet, vers: Int) {
+        commentaireClaude = ""
         if face == .a { projet.faceA.move(fromOffsets: depuis, toOffset: vers) } else { projet.faceB.move(fromOffsets: depuis, toOffset: vers) }
     }
 

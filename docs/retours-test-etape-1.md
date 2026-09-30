@@ -294,3 +294,28 @@ fenêtre est active : à vérifier.
 | `captures/17-stop-vu-colles-a-l-arret.jpg` | Après Stop : remis à zéro, mais VU toujours à +3 |
 | `captures/18-collection-dupliquer.jpg` | Collection : LFS-002 et sa copie LFS-003 |
 | `captures/19-reglages-platine.jpg` | Réglages → Platine |
+
+## Réponse de la session cloud au test 2
+
+- **T2-1 Spotify Premium** : dit clairement au premier démarrage, dans Réglages → Spotify et dans le
+  LISEZMOI ; une réponse 403 de Spotify affiche « son API demande un compte Premium… utilise « Cassette
+  depuis le dossier » ». **Guides pas à pas** ajoutés dans l'app : clé Claude (Pro/Max ≠ API, Billing,
+  API keys → Create key, workspace Default, affichée une fois, ne jamais la coller ailleurs) et Spotify
+  (création de l'appli, Redirect URI, Web API, Client ID, « Agree »). MusicBrainz/Discogs restent prévus
+  comme source sans compte payant.
+- **T2-2 Tonalité sur la mauvaise sortie** : corrigé. La tonalité démarre sur la sortie choisie, et changer
+  de sortie dans le menu redirige le moteur tout de suite (sauf pendant un enregistrement).
+- **T2-3 VU-mètres collés** : corrigé. Mesure en RMS (plus en crête), 0 VU = −12 dBFS RMS = niveau de la
+  tonalité (la tonalité est passée à −12 dBFS RMS), balistique d'un vrai VU (~300 ms), et aiguilles au
+  repos dès que rien ne joue (pause, stop, fin de face).
+- **T2-4** : ⇄ est voulu ainsi : la fin de la face A continue au début de la face B (et la face B revient
+  à la fin de la face A), l'info-bulle le dit. Le message de Claude s'efface dès qu'on modifie les faces
+  à la main. × : bouton « Remettre « titre » » pour annuler le dernier retrait. Les 25:11 au lieu de 25:10
+  viennent des durées réelles des fichiers (elles font foi pour l'enregistrement).
+- **T2-5 Glisser** : à revérifier à la main. En plus : clic droit sur un morceau → Monter / Descendre.
+- **T2-6** : une cassette neuve est enregistrée tout de suite, son numéro n'est plus perdu (les suivantes
+  repartent de la bonne valeur ; tes LFS-002/003 existantes ne sont pas renumérotées). « 1 cassette » au
+  singulier.
+- **T2-7 Textes d'exemple invisibles** : l'app était affichée en mode sombre par macOS (texte d'exemple
+  clair sur fond blanc). Elle est maintenant toujours en mode clair.
+- **Recherche web de Claude** : la case est grisée avec « Arrive dans une prochaine étape ».

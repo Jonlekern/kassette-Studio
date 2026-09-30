@@ -187,7 +187,7 @@ private struct ListeFace: View {
                 .onMove { etat.deplacer(face, depuis: $0, vers: $1) }
             }
             .listStyle(.plain).scrollContentBackground(.hidden).creux()
-            Text("Glisse pour réordonner · ⇄ change de face · × retire").foregroundStyle(W98.grisFonce).font(.custom("Arial", size: 10))
+            Text("Glisse ou clic droit pour réordonner · ⇄ change de face · × retire").foregroundStyle(W98.grisFonce).font(.custom("Arial", size: 10))
         }
         .frame(maxWidth: .infinity)
     }
@@ -212,11 +212,19 @@ private struct LignePiste: View {
                 Text("pas de fichier").foregroundStyle(W98.rouge).help("Aucun fichier audio associé : ce morceau ne peut pas être enregistré.")
             }
             Text(formaterDuree(piste.duree)).monospacedDigit()
-            Button("⇄") { etat.changerDeFace(piste.id) }.buttonStyle(.plain).help("Passer sur l'autre face")
+            Button("⇄") { etat.changerDeFace(piste.id) }.buttonStyle(.plain)
+                .help(face == .a ? "Passer au début de la face B" : "Passer à la fin de la face A")
             Button { etat.retirer(piste.id) } label: { Text("×").bold().foregroundStyle(W98.rouge) }
                 .buttonStyle(.plain).help("Retirer de la cassette (ne sera pas enregistré)").accessibilityLabel("Retirer ce morceau")
         }
         .font(W98.police)
+        .contextMenu {
+            Button("Monter") { etat.monter(piste.id, de: -1) }
+            Button("Descendre") { etat.monter(piste.id, de: 1) }
+            Button(face == .a ? "Passer au début de la face B" : "Passer à la fin de la face A") { etat.changerDeFace(piste.id) }
+            Divider()
+            Button("Retirer de la cassette") { etat.retirer(piste.id) }
+        }
     }
 }
 
@@ -235,6 +243,9 @@ private struct Actions: View {
                     .disabled(etat.occupe || etat.projet.toutes.isEmpty)
                 Button("Garder l'ordre (auto)") { etat.repartirDansLOrdre() }.buttonStyle(.w98).disabled(etat.projet.toutes.isEmpty)
                 Button("Vider les faces") { etat.viderFaces() }.buttonStyle(.w98)
+                if let r = etat.dernierRetire {
+                    Button("Remettre « \(r.piste.morceau.titre) »") { etat.annulerRetrait() }.buttonStyle(.w98).lineLimit(1)
+                }
                 Button("Nouvelle cassette") { etat.nouvelleCassette() }.buttonStyle(.w98)
             }
             Groupe(titre: "Total") {

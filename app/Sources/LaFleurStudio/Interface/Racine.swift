@@ -16,6 +16,8 @@ struct Racine: View {
         }
         .w98()
         .sansEffetDeBord()
+        // Look Windows 98 : toujours en clair, même si le Mac est en mode sombre (textes d'exemple lisibles).
+        .preferredColorScheme(.light)
     }
 }
 

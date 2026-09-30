@@ -11,12 +11,13 @@ public actor ClientSpotify {
     }
 
     public enum Erreur: LocalizedError {
-        case nonConnecte, http(Int, String), lienInconnu
+        case nonConnecte, http(Int, String), lienInconnu, premiumRequis
         public var errorDescription: String? {
             switch self {
             case .nonConnecte: "Pas connecté à Spotify (Réglages → Spotify)."
             case .http(let code, let msg): "Spotify a répondu \(code) : \(msg)"
             case .lienInconnu: "Lien non reconnu : colle un lien Spotify de playlist, d'album ou de morceau."
+            case .premiumRequis: "Spotify refuse l'accès : son API demande un compte Premium. Sans Premium, utilise « Cassette depuis le dossier »."
             }
         }
     }
@@ -96,6 +97,7 @@ public actor ClientSpotify {
             try await Task.sleep(for: .seconds(min(attente, 30)))
             return try await get(type, url, deuxiemeEssai: true)
         }
+        if code == 403 { throw Erreur.premiumRequis }
         guard code == 200 else { throw Erreur.http(code, String(decoding: data, as: UTF8.self)) }
         return try JSONDecoder().decode(T.self, from: data)
     }

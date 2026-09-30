@@ -26,9 +26,17 @@ cd kassette-Studio/app
 
 ## Premier démarrage
 
-1. **Clé API Claude** : bouton **i** pour le guide (platform.claude.com → API Keys).
-2. **Spotify** : crée une appli sur developer.spotify.com → Create app, Redirect URI
-   `http://127.0.0.1:8898/callback`, API « Web API ». Colle le Client ID, puis « Se connecter… ».
+1. **Clé API Claude** (bouton **i** dans l'app pour le guide complet) :
+   - l'abonnement Claude Pro/Max **ne donne pas** de clé API : c'est un compte à part, payé à l'usage ;
+   - platform.claude.com → Settings → Billing (un peu de crédit) → Settings → **API keys** → **Create key**
+     (workspace « Default ») ;
+   - copie la clé `sk-ant-…` (affichée **une seule fois**) et colle-la **uniquement** dans l'app → « Tester ».
+     Ne la colle jamais ailleurs ; si c'est arrivé, supprime-la et crée-en une autre.
+2. **Spotify** (facultatif, **Premium obligatoire** : sans Premium, Spotify bloque son API) :
+   developer.spotify.com/dashboard → Create app → Redirect URI exactement `http://127.0.0.1:8898/callback`
+   → coche « Web API » → Save → Settings → copie le **Client ID** (pas le secret). Dans l'app : colle-le,
+   « Se connecter… », clique « Agree » dans le navigateur. Guide pas à pas dans l'app (« Guide pas à pas… »).
+   Sans Premium : onglet Mixtape → « Cassette depuis le dossier (sans Spotify) ».
 3. **Dossier audio** : le dossier où sont tes fichiers (MP3, FLAC, WAV, AIFF, M4A).
 4. **Sortie vers la platine** : prise jack, carte son USB…
 5. Accepte les conditions → **Commencer**.

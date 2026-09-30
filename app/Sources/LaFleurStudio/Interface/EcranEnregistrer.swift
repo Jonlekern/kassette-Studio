@@ -193,7 +193,7 @@ private struct Touche: View {
     }
 }
 
-/// VU-mètre à aiguille : 0 VU = −18 dBFS.
+/// VU-mètre à aiguille : 0 VU = −12 dBFS RMS (le niveau de la tonalité de réglage).
 private struct VUMetre: View {
     let canal: String
     let dbfs: Float
@@ -230,12 +230,12 @@ private struct VUMetre: View {
                 rouge.addArc(center: c, radius: r, startAngle: .degrees(-74), endAngle: .degrees(-40), clockwise: false)
                 ctx.stroke(rouge, with: .color(W98.rouge), lineWidth: 5)
                 ctx.draw(Text("VU").font(.system(size: 16, weight: .bold)), at: CGPoint(x: c.x, y: c.y - r * 0.35))
-                var aiguille = Path(); aiguille.move(to: c); aiguille.addLine(to: point(Self.angle(Double(dbfs) + 18), r + 4))
+                var aiguille = Path(); aiguille.move(to: c); aiguille.addLine(to: point(Self.angle(Double(dbfs) + 12), r + 4))
                 ctx.stroke(aiguille, with: .color(.black), lineWidth: 2)
                 ctx.fill(Path(ellipseIn: CGRect(x: c.x - 7, y: c.y - 7, width: 14, height: 14)), with: .color(.black))
             }
             .frame(width: 220, height: 150).creux(Color(red: 0.957, green: 0.925, blue: 0.824))
-            .animation(.easeOut(duration: 0.15), value: dbfs)
+            
             Text(canal).bold()
         }
     }
