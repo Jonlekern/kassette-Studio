@@ -135,7 +135,7 @@ sur le son.
 | Point | Résultat |
 |---|---|
 | Icône dans le Finder | ✅ Cassette rose sur fond bleu-vert → `captures/04-icone-finder.png` |
-| Icône dans le Dock | ⏳ Pas vérifiée (je n'ai pas accès au Dock) |
+| Icône dans le Dock | ✅ Vérifiée par Johnny |
 | « Tester » avec clé vide | ✅ « Colle d'abord ta clé », le bouton ne bouge plus → `06` |
 | Bande claire en haut de la fenêtre | ✅ Disparue → `05` |
 | Textes d'exemple des champs clé / Client ID | ⚠️ Parfois absents (voir T2-7) |
@@ -154,7 +154,7 @@ sur le son.
 | Enregistrer : compteur, barre « Bande utilisée », statuts « Fait / En cours » | ✅ |
 | Enregistrer : Pause / Reprendre / Stop | ✅ |
 | **Enregistrer : VU-mètres** | ❌ **Aiguilles collées à +3, même à l'arrêt** (T2-3) → `15`, `17` |
-| Enregistrer : bobines qui tournent | ❓ Impossible à confirmer en capture (fenêtre en arrière-plan) |
+| Enregistrer : bobines qui tournent | ✅ Vérifiées à l'œil par Johnny |
 | Enregistrer : arrêt net en fin de face | ⏳ Pas testé (face de 25 min) |
 | Réglages (⌘,) : les 6 rubriques s'ouvrent | ✅ Audio, Platine, Claude, Spotify, Langue, Conditions → `19` |
 | Réglages gardés après relance | ✅ (égalisation, blanc 3 s, sortie FOX, dernière cassette rouverte) |
@@ -272,8 +272,6 @@ fenêtre est active : à vérifier.
 
 - Réglages → Claude : la case « Claude peut chercher sur des sites choisis (sources citées) » est
   cochée par défaut, alors que le LISEZMOI dit que la recherche web n'est pas encore faite.
-- Pendant l'enregistrement, je n'ai pas pu vérifier que les **bobines tournent** : la fenêtre était en
-  arrière-plan, donc les captures ne sont peut-être pas redessinées. À vérifier à l'œil.
 - L'**arrêt net en fin de face** n'a pas été testé (il faut laisser tourner 25 min).
 
 ## Captures du test 2
