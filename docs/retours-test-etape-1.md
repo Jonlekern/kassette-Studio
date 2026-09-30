@@ -319,3 +319,31 @@ fenêtre est active : à vérifier.
 - **T2-7 Textes d'exemple invisibles** : l'app était affichée en mode sombre par macOS (texte d'exemple
   clair sur fond blanc). Elle est maintenant toujours en mode clair.
 - **Recherche web de Claude** : la case est grisée avec « Arrive dans une prochaine étape ».
+
+---
+
+# Demande de Johnny : calibrer l'échelle d'impression
+
+**Problème** : l'utilisateur n'a aucun moyen de savoir si son imprimante sort les jaquettes à la bonne
+taille. Une J-card imprimée à 98 % ne rentre pas dans le boîtier.
+
+**Ce que Johnny veut, en simple** :
+
+1. Réglages → Impression : on choisit le **format du papier** (A4, Letter…).
+2. « Imprimer la règle » : l'app imprime une page avec **une règle de 10 cm et une de 4 pouces**, pour
+   que chacun mesure avec la règle qu'il a.
+3. On **mesure** la règle imprimée avec une vraie règle.
+4. On **tape la valeur mesurée** dans l'app (« la règle de 10 cm mesure : 9,8 cm »).
+5. **C'est tout** : l'app calcule la correction (10 / 9,8 = 102 %), la garde dans les Réglages et
+   l'applique à toutes les impressions et exports.
+
+**Détails utiles** (à garder discrets, sans compliquer le flux ci-dessus) :
+
+- Écrire sur la page imprimée : « Imprime à 100 %, pas “Ajuster à la page” ».
+- Garder le réglage **par imprimante**, avec un bouton « Réinitialiser (100 %) ».
+- À la première impression d'une jaquette, si rien n'est calibré, proposer d'imprimer la règle d'abord.
+- En option : une règle verticale aussi, si certaines imprimantes n'ont pas la même erreur dans les
+  deux sens.
+
+C'est lié à la « page de calibrage » déjà prévue dans `docs/brainstorm.md` (section Impression), qui ne
+parle que du décalage, pas de l'échelle.
