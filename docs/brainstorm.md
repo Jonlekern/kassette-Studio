@@ -222,6 +222,22 @@ les dupliquer ou les réimprimer.
 - Enregistrement : Tapercraft ne fait que le papier.
 - Export : gratuit et natif, pas de souci Safari.
 
+## Décisions du 30/09
+
+- **Recherche web de Claude** : active par défaut (sites choisis, sources citées, validation par
+  l'utilisateur). Désactivable dans Réglages.
+- **Discogs** : intégré dès le début (clé gratuite dans Réglages).
+- **Égalisation du volume** entre les morceaux : en option (désactivée par défaut).
+- **Polices** : polices libres intégrées (Google Fonts, licence OFL) + import de ses propres polices.
+- **Sauvegarde** : automatique, sur le Mac.
+- **Langues** : français, anglais, russe, allemand. Claude répond dans la langue de l'app.
+- **Spotify** : chaque utilisateur se connecte avec son propre compte Spotify dans l'app. À savoir :
+  une appli Spotify en mode développeur est limitée à quelques utilisateurs (5 depuis 2026) et son
+  propriétaire doit avoir Premium ; pour un usage perso, aucun souci.
+- **Association fichiers ↔ titres Spotify** : par titre, artiste et durée. En cas de doute, l'app
+  pose la question clairement (« Ce fichier est-il bien “Glass” de Jeremy Sadik ? ») avec les
+  candidats, leur durée et un bouton d'écoute, au lieu de choisir en silence.
+
 ## Ordre de construction proposé
 
 1. Mixtape + Enregistrement (pour graver une vraie K7 au plus vite)
