@@ -74,6 +74,19 @@ Claude s'en sert pour :
   bon Dolby, et adapte ses conseils de niveau (un Type I sature plus vite qu'un Type II) ;
 - **la platine à l'écran** : l'étiquette de la K7 affiche le type et la longueur.
 
+## Artwork des albums : première proposition d'après les vraies K7
+
+- Pour un album, Claude cherche d'abord si l'album **existe déjà en cassette** : éditions K7 sur Discogs
+  et MusicBrainz / Cover Art Archive (photos et scans du J-card, de la tranche, des étiquettes).
+- **Première proposition = d'après ces images** : Claude les regarde et reprend la mise en page, les
+  couleurs, les polices et l'emplacement des infos de la vraie K7, adaptés au format choisi. Si le scan
+  est de bonne qualité, il peut aussi être utilisé tel quel (usage perso).
+- S'il n'existe pas d'édition cassette : proposition à partir de la cover de l'album (comme dans les
+  maquettes).
+- Les images trouvées sont montrées avec leur source (lien Discogs / MusicBrainz).
+- Bouton **« Régénérer »** aussi pour les covers et les jaquettes d'album, avec retour aux versions
+  précédentes.
+
 ## Artwork des mixtapes
 
 Claude ne génère pas de photos ni d'images réalistes. Pour une mixtape, il propose :
