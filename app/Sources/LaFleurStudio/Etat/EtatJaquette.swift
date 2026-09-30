@@ -201,7 +201,7 @@ extension EtatApp {
             if !bouge { break }
         }
         // La tranche ne tient pas même à 5 pt : on essaie des versions plus courtes.
-        let tient = { (dd: Design) in !Mise(projet: projet, design: dd).zones().contains { $0.nom == "tranche" && deborde($0) } }
+        let tient = { (dd: Design) in !Mise(projet: self.projet, design: dd).zones().contains { $0.nom == "tranche" && deborde($0) } }
         if !tient(d) {
             for t in versionsCourtes(d.texteTranche ?? projet.trancheAuto) {
                 var essai = d; essai.texteTranche = t

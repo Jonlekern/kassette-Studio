@@ -225,12 +225,13 @@ private struct LignePiste: View {
             Text("⋮⋮").foregroundStyle(W98.grisFonce)
             Text("\(numero)").foregroundStyle(W98.grisFonce).frame(width: 18, alignment: .trailing)
             VStack(alignment: .leading, spacing: 1) {
-                Text(piste.morceau.titre).bold().lineLimit(1)
+                Text(piste.morceau.titre).bold().lineLimit(1).help(piste.morceau.titre)
                 Text(piste.morceau.artiste).foregroundStyle(W98.ombre).lineLimit(1)
             }
             Spacer(minLength: 4)
             if piste.fichier == nil {
-                Text("pas de fichier").foregroundStyle(W98.rouge).help("Aucun fichier audio associé : ce morceau ne peut pas être enregistré.")
+                Text("⚠︎ fichier").foregroundStyle(W98.rouge).fixedSize()
+                    .help("Aucun fichier audio associé : ce morceau ne peut pas être enregistré. Choisis ton dossier audio à gauche.")
             }
             Text(formaterDuree(piste.duree)).monospacedDigit()
             Button("⇄") { etat.changerDeFace(piste.id) }.buttonStyle(.plain)
