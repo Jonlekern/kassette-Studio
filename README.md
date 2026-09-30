@@ -17,5 +17,6 @@ Phase **brainstorming** : on n'écrit pas le code final avant d'avoir tout déci
 
 - [docs/brainstorm.md](docs/brainstorm.md) : les décisions prises et les questions ouvertes
 - [docs/analyse-texs.md](docs/analyse-texs.md) : analyse de Tapercraft (vhs.texs.org), l'outil de référence
+- [maquettes/](maquettes/) : sources des maquettes des écrans (lien de la toile : https://claude.ai/artifact/L2NujxGroozC4qXLw1D9un)
 - [prototype-v0/](prototype-v0/) : premier prototype Swift écrit trop tôt (avant le brainstorming),
   jamais compilé. Des morceaux sont réutilisables (clients Spotify et Claude), le reste sera réécrit.

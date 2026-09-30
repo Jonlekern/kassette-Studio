@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>LaFleurStudio — Aperçu 3D</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&amp;family=Space+Mono&amp;family=VT323&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Arial,sans-serif;font-size:11px;color:#000;background:#008080}
+.relief{background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf}
+.creux{background:#fff;border:1px solid;border-color:#808080 #fff #fff #808080;box-shadow:inset 1px 1px 0 #404040}
+.bouton{font:11px Arial,sans-serif;color:#000;background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf;padding:4px 12px;min-height:24px}
+.groupe{border:1px solid #808080;box-shadow:1px 1px 0 #fff;padding:12px 8px 8px;position:relative}
+.legende{position:absolute;top:-7px;left:8px;background:#c0c0c0;padding:0 4px}
+a{color:#000080}a:hover{color:#1084d0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; background: #008080; padding: 30px; display: flex; justify-content: center; align-items: flex-start">
+<div class="relief" style="width: 860px; display: flex; flex-direction: column; padding: 3px"><div style="height: 20px; display: flex; align-items: center; justify-content: space-between; padding: 0 3px 0 6px; background: linear-gradient(90deg, #000080, #1084d0); color: #fff; font-weight: bold"><span>Aperçu 3D</span><button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold; color: #cc0000" aria-label="Fermer">×</button></div><div style="padding: 16px; display: flex; gap: 20px; align-items: center"><div class="creux" style="background: #1f1f1f; padding: 10px"><div style="perspective: 1200px; width: 520px; height: 420px; display: flex; align-items: center; justify-content: center"><div style="width: 280px; height: 440px; transform: rotateY(-28deg) rotateX(8deg); transform-style: preserve-3d; position: relative"><div style="position: absolute; inset: 0; background: #14283a; color: #e8eef2; padding: 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; box-shadow: 18px 18px 40px rgba(0,0,0,0.45)"><img src="/_blob/9182f963b511a7252a24bcb8714d45da" alt="" style="width: 248px; height: 248px; object-fit: cover; display: block"><b style="font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 500; font-style: italic; line-height: 0.95">An Afternoon<br>at the Lake</b><span style="font-family: 'Space Mono', monospace; font-size: 11px">JEREMY SADIK</span></div><div style="position: absolute; inset: 0; background: linear-gradient(120deg, rgba(255,255,255,0.35), rgba(255,255,255,0) 40%, rgba(255,255,255,0.12) 70%)"></div><div style="position: absolute; top: 0; left: 0; width: 60px; height: 440px; transform: rotateY(90deg) translateX(-30px) translateZ(-30px); transform-origin: left; background: #0f1f2d; color: #e8eef2; display: flex; align-items: center; justify-content: center"><span style="writing-mode: vertical-rl; transform: rotate(180deg); font-family: 'Cormorant Garamond', serif; font-weight: 700; letter-spacing: 2px; font-size: 13px">JEREMY SADIK · AN AFTERNOON AT THE LAKE</span></div></div></div></div><div style="display: flex; flex-direction: column; gap: 12px; width: 240px"><div class="groupe"><span class="legende">Afficher</span><div style="display: flex; flex-direction: column; gap: 6px"><label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> J-card dans le boîtier</label><label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Cassette avec étiquettes</label><label style="display: flex; gap: 6px; align-items: center"><input type="checkbox"> O-card par-dessus</label><label style="display: flex; gap: 6px; align-items: center"><input type="checkbox"> Obi strip</label></div></div><div class="groupe"><span class="legende">Fond</span><div style="display: flex; flex-direction: column; gap: 6px"><div style="display: flex; gap: 4px; flex-wrap: wrap"><button class="bouton">Clair</button><button class="bouton" style="font-weight: bold">Sombre</button><button class="bouton">Fond vert</button><button class="bouton">Dégradé</button></div></div></div><div class="groupe"><span class="legende">Boîtier</span><div style="display: flex; flex-direction: column; gap: 6px"><select class="creux" style="font: 11px Arial; height: 22px; width: 180px"><option>Transparent</option><option>Fumé</option><option>Noir</option></select></div></div><div style="display: flex; gap: 6px"><button class="bouton">Tourner ◀</button><button class="bouton">▶ Tourner</button></div><button class="bouton" style="font-weight: bold">Exporter l'image (PNG)</button></div></div></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

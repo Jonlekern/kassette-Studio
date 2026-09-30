@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>LaFleurStudio — Réglages</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=VT323&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Arial,sans-serif;font-size:11px;color:#000;background:#008080}
+.relief{background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf}
+.creux{background:#fff;border:1px solid;border-color:#808080 #fff #fff #808080;box-shadow:inset 1px 1px 0 #404040}
+.bouton{font:11px Arial,sans-serif;color:#000;background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf;padding:4px 12px;min-height:24px}
+.groupe{border:1px solid #808080;box-shadow:1px 1px 0 #fff;padding:12px 8px 8px;position:relative}
+.legende{position:absolute;top:-7px;left:8px;background:#c0c0c0;padding:0 4px}
+a{color:#000080}a:hover{color:#1084d0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 30px; background: #008080; display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap">
+<div class="relief" style="width: 1220px; display: flex; flex-direction: column; padding: 3px">
+<div style="height: 20px; display: flex; align-items: center; justify-content: space-between; padding: 0 3px 0 6px; background: linear-gradient(90deg, #000080, #1084d0); color: #fff; font-weight: bold">
+<span>Réglages</span>
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold; color: #cc0000" aria-label="Fermer">×</button>
+</div>
+<div style="padding: 14px; display: flex; gap: 14px"><div class="creux" style="width: 150px; display: flex; flex-direction: column; padding: 2px; align-self: stretch"><div style="padding: 5px 8px; background: #000080; color: #fff;">Audio</div><div style="padding: 5px 8px;">Platine</div><div style="padding: 5px 8px;">Claude</div><div style="padding: 5px 8px;">Spotify</div><div style="padding: 5px 8px;">Discogs</div><div style="padding: 5px 8px;">Polices</div><div style="padding: 5px 8px;">Langue</div><div style="padding: 5px 8px;">Conditions</div></div><div style="flex-grow: 1; display: flex; gap: 14px"><div style="flex: 1; display: flex; flex-direction: column; gap: 14px"><b style="font-size: 13px">Audio</b><div class="groupe"><span class="legende">Sortie vers la platine</span><div style="display: flex; flex-direction: column; gap: 7px"><select class="creux" style="font: 11px Arial; height: 22px; width: 330px"><option>Prise jack (sortie casque)</option><option>Carte son USB · Behringer UCA202</option><option>HDMI · écran</option><option>AirPods (déconseillé : retard, compression)</option></select><span style="color: #404040">Toutes les sorties vues par le Mac. L'app joue seulement ici ; le reste du Mac ne change pas.</span><div style="display: flex; gap: 8px; align-items: center"><button class="bouton">Tonalité 1 kHz</button><div style="flex-grow: 1"><div class="creux" style="height: 14px; padding: 1px; display: flex; gap: 2px"><div style="width: 8px; background: #008000"></div><div style="width: 8px; background: #008000"></div><div style="width: 8px; background: #008000"></div><div style="width: 8px; background: #008000"></div><div style="width: 8px; background: #008000"></div><div style="width: 8px; background: #008000"></div><div style="width: 8px; background: #008000"></div><div style="width: 8px; background: #008000"></div><div style="width: 8px; background: #008000"></div><div style="width: 8px; background: #008000"></div><div style="width: 8px; background: #008000"></div><div style="width: 8px; background: #008000"></div><div style="width: 8px; background: #008000"></div><div style="width: 8px; background: #008000"></div><div style="width: 8px; background: #c0a000"></div><div style="width: 8px; background: #c0a000"></div><div style="width: 8px; background: #c0a000"></div><div style="width: 8px; background: #e8e8e8"></div><div style="width: 8px; background: #e8e8e8"></div><div style="width: 8px; background: #e8e8e8"></div></div></div><span>−6 dB</span></div></div></div><div class="groupe"><span class="legende">Lecture</span><div style="display: flex; flex-direction: column; gap: 7px"><label style="display: flex; gap: 6px; align-items: center"><input type="checkbox"> Égaliser le volume entre les morceaux</label><label style="display: flex; gap: 6px; align-items: center">Qualité <select class="creux" style="font: 11px Arial; height: 22px; width: 220px"><option>Fichier d'origine (FLAC, MP3…)</option></select></label></div></div></div><div style="flex: 1; display: flex; flex-direction: column; gap: 14px"><b style="font-size: 13px">Platine</b><div class="groupe"><span class="legende">Type de platine</span><div style="display: flex; flex-direction: column; gap: 7px"><label style="display: flex; gap: 6px; align-items: center"><input type="radio" name="p" checked> Simple, sans auto-reverse : l'app dit de retourner la cassette</label><label style="display: flex; gap: 6px; align-items: center"><input type="radio" name="p"> Auto-reverse : la platine se retourne toute seule</label><label style="display: flex; gap: 6px; align-items: center"><input type="radio" name="p"> Double cassette (bientôt)</label></div></div><div class="groupe"><span class="legende">Auto-reverse</span><div style="display: flex; flex-direction: column; gap: 7px"><div style="display: flex; gap: 8px; align-items: center; color: #808080">Durée réelle d'une face <input class="creux" style="width: 60px; height: 20px; padding: 0 4px; font: 11px Arial" value="30:40"> min</div><div style="display: flex; gap: 8px; align-items: center; color: #808080">Délai d'inversion <input class="creux" style="width: 60px; height: 20px; padding: 0 4px; font: 11px Arial" value="2,4"> s <button class="bouton" disabled>Mesurer…</button></div><span style="color: #808080">Actif seulement avec une platine auto-reverse.</span></div></div><div class="groupe"><span class="legende">Timing</span><div style="display: flex; flex-direction: column; gap: 7px"><div style="display: flex; gap: 8px; align-items: center">Blanc de début de bande <input class="creux" style="width: 60px; height: 20px; padding: 0 4px; font: 11px Arial" value="5"> s</div><div style="display: flex; gap: 8px; align-items: center">Blanc entre les morceaux <input class="creux" style="width: 60px; height: 20px; padding: 0 4px; font: 11px Arial" value="2"> s</div><div style="display: flex; gap: 8px; align-items: center">Marge de fin de face <input class="creux" style="width: 60px; height: 20px; padding: 0 4px; font: 11px Arial" value="30"> s</div><div style="display: flex; gap: 8px; align-items: center">Compte à rebours <input class="creux" style="width: 60px; height: 20px; padding: 0 4px; font: 11px Arial" value="5"> s</div></div></div></div></div></div><div style="display: flex; gap: 6px; justify-content: flex-end; padding: 0 14px 12px"><button class="bouton">Annuler</button><button class="bouton" style="font-weight: bold">OK</button></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

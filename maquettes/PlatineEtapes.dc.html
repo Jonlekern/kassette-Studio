@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>LaFleurStudio — Étapes de la platine</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=VT323&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Arial,sans-serif;font-size:11px;color:#000;background:#008080}
+.relief{background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf}
+.creux{background:#fff;border:1px solid;border-color:#808080 #fff #fff #808080;box-shadow:inset 1px 1px 0 #404040}
+.bouton{font:11px Arial,sans-serif;color:#000;background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf;padding:4px 12px;min-height:24px}
+.groupe{border:1px solid #808080;box-shadow:1px 1px 0 #fff;padding:12px 8px 8px;position:relative}
+.legende{position:absolute;top:-7px;left:8px;background:#c0c0c0;padding:0 4px}
+a{color:#000080}a:hover{color:#1084d0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 30px; background: #008080; display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap">
+<div class="relief" style="width: 590px; display: flex; flex-direction: column; padding: 3px">
+<div style="height: 20px; display: flex; align-items: center; justify-content: space-between; padding: 0 3px 0 6px; background: linear-gradient(90deg, #000080, #1084d0); color: #fff; font-weight: bold">
+<span>1 · Compte à rebours — Face A</span>
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold; color: #cc0000" aria-label="Fermer">×</button>
+</div>
+<div style="padding: 14px; display: flex; flex-direction: column; gap: 10px"><div style="font-family: 'VT323', monospace; font-size: 34px; color: #000; line-height: 1">RELÂCHE LA PAUSE… 3</div><span>Platine en ENREGISTREMENT + PAUSE ? Relâche la pause maintenant.</span><span style="color: #404040">Ensuite : 5 s de blanc de début de bande, puis « Sun Cream at the Lake ».</span><div style="display: flex; gap: 6px; justify-content: flex-end"><button class="bouton">Annuler</button></div></div>
+</div><div class="relief" style="width: 590px; display: flex; flex-direction: column; padding: 3px">
+<div style="height: 20px; display: flex; align-items: center; justify-content: space-between; padding: 0 3px 0 6px; background: linear-gradient(90deg, #000080, #1084d0); color: #fff; font-weight: bold">
+<span>2 · Pause</span>
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold; color: #cc0000" aria-label="Fermer">×</button>
+</div>
+<div style="padding: 14px; display: flex; flex-direction: column; gap: 10px"><div style="font-family: 'VT323', monospace; font-size: 34px; color: #000; line-height: 1">PAUSE · 12:16</div><span>Le son est coupé et les bobines sont arrêtées à 12:16 sur la face A.</span><span style="color: #404040">Mets aussi la platine en pause. « Reprendre » relance au même endroit après un compte à rebours.</span><div style="display: flex; gap: 6px; justify-content: flex-end"><button class="bouton">Arrêter la face</button><button class="bouton" style="font-weight: bold">Reprendre</button></div></div>
+</div><div class="relief" style="width: 590px; display: flex; flex-direction: column; padding: 3px">
+<div style="height: 20px; display: flex; align-items: center; justify-content: space-between; padding: 0 3px 0 6px; background: linear-gradient(90deg, #000080, #1084d0); color: #fff; font-weight: bold">
+<span>3 · Fin de la face A</span>
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold; color: #cc0000" aria-label="Fermer">×</button>
+</div>
+<div style="padding: 14px; display: flex; flex-direction: column; gap: 10px"><div style="font-family: 'VT323', monospace; font-size: 34px; color: #000080; line-height: 1">FACE A TERMINÉE</div><span>« Glass » est terminé. Face A : 25:10 enregistrés sur 30:00.</span><span><b>Arrête la platine, retourne la cassette</b>, puis remets-la en ENREGISTREMENT + PAUSE.</span><div style="display: flex; gap: 6px; justify-content: flex-end"><button class="bouton">Réécouter la fin</button><button class="bouton" style="font-weight: bold">Lancer la face B</button></div></div>
+</div><div class="relief" style="width: 590px; display: flex; flex-direction: column; padding: 3px">
+<div style="height: 20px; display: flex; align-items: center; justify-content: space-between; padding: 0 3px 0 6px; background: linear-gradient(90deg, #000080, #1084d0); color: #fff; font-weight: bold">
+<span>4 · Auto-reverse — attente</span>
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold; color: #cc0000" aria-label="Fermer">×</button>
+</div>
+<div style="padding: 14px; display: flex; flex-direction: column; gap: 10px"><div style="font-family: 'VT323', monospace; font-size: 34px; color: #000; line-height: 1">BOUT DE BANDE DANS 4:48</div><span>Dernier morceau de la face A terminé. La bande continue jusqu'au bout : 4:50 de silence.</span><span style="color: #404040">Puis 2,4 s d'inversion, et la face B démarre toute seule sur « Mushroom Forest ».</span><div style="display: flex; gap: 6px; justify-content: flex-end"><button class="bouton">Arrêter</button></div></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

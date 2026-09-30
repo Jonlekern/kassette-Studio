@@ -1,0 +1,164 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Jaquette.dc.html": {
+      "h": 800,
+      "title": "2 · Jaquette",
+      "w": 1280,
+      "x": 1360,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "h": 800,
+      "title": "1 · Mixtape",
+      "w": 1280,
+      "x": 0,
+      "y": 0
+    },
+    "Platine.dc.html": {
+      "h": 800,
+      "title": "3 · Enregistrement",
+      "w": 1280,
+      "x": 2720,
+      "y": 0
+    },
+    "Etiquette.dc.html": {
+      "h": 800,
+      "title": "2b · Étiquettes de K7",
+      "w": 1280,
+      "x": 4080,
+      "y": 0
+    },
+    "EtiquetteK7.dc.html": {
+      "h": 224,
+      "title": "Composant · étiquette de K7",
+      "w": 312,
+      "x": 4080,
+      "y": 920
+    },
+    "Demarrage.dc.html": {
+      "h": 800,
+      "title": "0 · Premier démarrage",
+      "w": 1280,
+      "x": -1360,
+      "y": 0
+    },
+    "Ocard.dc.html": {
+      "h": 800,
+      "title": "2c · O-card cassingle",
+      "w": 1280,
+      "x": 5440,
+      "y": 0
+    },
+    "Reglages.dc.html": {
+      "h": 800,
+      "title": "R · Réglages",
+      "w": 1280,
+      "x": -1360,
+      "y": 1000
+    },
+    "PlatineEtapes.dc.html": {
+      "h": 800,
+      "title": "3b · Étapes de la platine",
+      "w": 1280,
+      "x": 0,
+      "y": 1000
+    },
+    "Alertes.dc.html": {
+      "h": 800,
+      "title": "V · Vérification avant impression",
+      "w": 1280,
+      "x": 1360,
+      "y": 1000
+    },
+    "Collection.dc.html": {
+      "h": 800,
+      "title": "4 · Collection",
+      "w": 1280,
+      "x": 2720,
+      "y": 1000
+    },
+    "Mixtape.dc.html": {
+      "h": 800,
+      "title": "1b · Mode mixtape",
+      "w": 1280,
+      "x": 4080,
+      "y": 1000
+    },
+    "Introuvables.dc.html": {
+      "h": 800,
+      "title": "1c · Associer les fichiers",
+      "w": 1280,
+      "x": 5440,
+      "y": 1000
+    },
+    "JcardInterieur.dc.html": {
+      "h": 800,
+      "title": "2d · Intérieur du J-card",
+      "w": 1280,
+      "x": -1360,
+      "y": 2000
+    },
+    "Obi.dc.html": {
+      "h": 800,
+      "title": "2e · Obi strip",
+      "w": 1280,
+      "x": 0,
+      "y": 2000
+    },
+    "Impression.dc.html": {
+      "h": 800,
+      "title": "I · Impression",
+      "w": 1280,
+      "x": 1360,
+      "y": 2000
+    },
+    "Apercu3D.dc.html": {
+      "h": 800,
+      "title": "2f · Aperçu 3D",
+      "w": 1280,
+      "x": 2720,
+      "y": 2000
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-09-30T15:30:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "titre": {
+      "kind": "title1",
+      "maxW": 8080,
+      "text": "LaFleurStudio — maquettes",
+      "w": 240,
+      "x": -1360,
+      "y": -300
+    }
+  },
+  "order": [
+    "Demarrage.dc.html",
+    "Main.dc.html",
+    "Jaquette.dc.html",
+    "Platine.dc.html",
+    "Etiquette.dc.html",
+    "EtiquetteK7.dc.html",
+    "Ocard.dc.html",
+    "Reglages.dc.html",
+    "PlatineEtapes.dc.html",
+    "Alertes.dc.html",
+    "Collection.dc.html",
+    "Mixtape.dc.html",
+    "Introuvables.dc.html",
+    "JcardInterieur.dc.html",
+    "Obi.dc.html",
+    "Impression.dc.html",
+    "Apercu3D.dc.html"
+  ],
+  "pages": [],
+  "title": "LaFleurStudio — maquettes"
+}

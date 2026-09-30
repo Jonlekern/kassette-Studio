@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>LaFleurStudio — Étiquettes de K7</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&amp;family=Space+Mono&amp;family=VT323&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Arial,sans-serif;font-size:11px;color:#000;background:#008080}
+.relief{background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf}
+.creux{background:#fff;border:1px solid;border-color:#808080 #fff #fff #808080;box-shadow:inset 1px 1px 0 #404040}
+.bouton{font:11px Arial,sans-serif;color:#000;background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf;padding:4px 12px;min-height:24px}
+.groupe{border:1px solid #808080;box-shadow:1px 1px 0 #fff;padding:12px 8px 8px;position:relative}
+.legende{position:absolute;top:-7px;left:8px;background:#c0c0c0;padding:0 4px}
+a{color:#000080}a:hover{color:#1084d0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 20px; background: #008080; display: flex">
+<div class="relief" style="flex-grow: 1; display: flex; flex-direction: column; padding: 3px">
+<div style="height: 20px; display: flex; align-items: center; justify-content: space-between; padding: 0 3px 0 6px; background: linear-gradient(90deg, #000080, #1084d0); color: #fff; font-weight: bold">
+<span>LaFleurStudio — « An Afternoon at the Lake » · Étiquettes de K7</span>
+<div style="display: flex; gap: 2px">
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold" aria-label="Réduire">_</button>
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold" aria-label="Agrandir">□</button>
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold; color: #cc0000" aria-label="Fermer">×</button>
+</div>
+</div>
+<div style="display: flex; gap: 14px; padding: 4px 6px; border-bottom: 1px solid #808080">
+<span><u>F</u>ichier</span><span><u>É</u>dition</span><span><u>A</u>ffichage</span><span><u>C</u>laude</span><span>Aid<u>e</u></span>
+</div>
+<div style="display: flex; gap: 2px; padding: 8px 8px 0">
+<div class="relief" style="padding: 4px 16px; margin-top: 2px">1. Mixtape</div>
+<div class="relief" style="padding: 5px 16px; font-weight: bold; border-bottom-color: #c0c0c0; position: relative; top: 1px">2. Jaquette</div>
+<div class="relief" style="padding: 4px 16px; margin-top: 2px">3. Enregistrer</div>
+</div>
+<div class="relief" style="flex-grow: 1; margin: 0 8px; padding: 12px; display: flex; gap: 12px">
+
+<div style="width: 200px; display: flex; flex-direction: column; gap: 14px">
+<div class="groupe">
+<span class="legende">Format</span>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="padding: 4px 6px">J-card</div>
+<div style="padding: 4px 6px">O-card cassingle</div>
+<div style="padding: 4px 6px; background: #000080; color: #fff">Étiquettes de K7</div>
+<div style="padding: 4px 6px; color: #808080">Obi strip (non coché)</div>
+</div>
+</div>
+<div class="groupe">
+<span class="legende">Étiquettes</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label style="display: flex; justify-content: space-between; align-items: center">Faces <select class="creux" style="font: 11px Arial; height: 20px"><option>A et B</option><option>A seulement</option></select></label>
+<label style="display: flex; justify-content: space-between; align-items: center">Planche <select class="creux" style="font: 11px Arial; height: 20px"><option>A4 · 12</option><option>Letter · 12</option><option>Une seule</option></select></label>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Montrer la fenêtre</label>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Design du J-card</label>
+</div>
+</div>
+<div class="groupe">
+<span class="legende">Contenu</span>
+<div style="display: flex; flex-direction: column; gap: 5px">
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Titre et artiste</label>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Mini-cover</label>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Face (A / B)</label>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Type de bande et Dolby</label>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Maison de disque</label>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox"> Tracklist de la face</label>
+</div>
+</div>
+</div>
+
+<div style="flex-grow: 1; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; gap: 6px; align-items: center">
+<button class="bouton">Face A</button><button class="bouton">Face B</button><button class="bouton">Planche A4</button>
+<span style="margin-left: auto">Zoom : 100 %</span>
+</div>
+<div class="creux" style="flex-grow: 1; background: #808080; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px">
+<div style="box-shadow: 4px 4px 0 #404040; outline: 1px dashed #fff; outline-offset: 5px; border-radius: 10px"><dc-import name="EtiquetteK7" face="A" hint-size="312px,224px"></dc-import></div>
+<div style="box-shadow: 4px 4px 0 #404040; outline: 1px dashed #fff; outline-offset: 5px; border-radius: 10px"><dc-import name="EtiquetteK7" face="B" hint-size="312px,224px"></dc-import></div>
+</div>
+<div style="display: flex; gap: 12px; align-items: center">
+<span>Étiquette 89 × 64 mm · fenêtre centrale laissée libre</span>
+<span style="margin-left: auto">Papier autocollant A4 · 600 DPI</span>
+</div>
+</div>
+
+<div style="width: 300px; display: flex; flex-direction: column; gap: 10px">
+<div class="groupe" style="flex-grow: 1; display: flex; flex-direction: column">
+<span class="legende">Direction artistique · Claude</span>
+<div class="creux" style="flex-grow: 1; padding: 8px; display: flex; flex-direction: column; gap: 8px">
+<div style="align-self: flex-end; max-width: 220px; padding: 6px 8px; background: #000080; color: #fff">Fais les étiquettes de la K7, assorties au J-card.</div>
+<div style="max-width: 250px; padding: 6px 8px; background: #ffffe1; border: 1px solid #808080">C'est fait : mêmes couleurs et mêmes polices que le J-card, ta cover en miniature, la face en gros. Rien d'important n'est placé sous la fenêtre de la K7. Ce sont aussi ces étiquettes qu'on voit sur la K7 de l'écran Enregistrer.</div>
+</div>
+<div style="display: flex; gap: 6px; margin-top: 8px">
+<input class="creux" style="flex-grow: 1; height: 24px; padding: 0 4px; font: 11px Arial" placeholder="Demande à Claude…" aria-label="Message pour Claude">
+<button class="bouton">Envoyer</button>
+</div>
+</div>
+<div class="groupe">
+<span class="legende">Exporter</span>
+<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<button class="bouton" style="font-weight: bold">Planche A4</button>
+<button class="bouton">PNG 600 DPI</button>
+<button class="bouton">Imprimer…</button>
+</div>
+</div>
+</div>
+</div>
+<div style="display: flex; gap: 2px; padding: 4px 8px 2px">
+<div class="creux" style="flex-grow: 1; padding: 2px 6px; background: #c0c0c0">Vérification Claude : rien d'important sous la fenêtre de la K7</div>
+<div class="creux" style="padding: 2px 6px; background: #c0c0c0">Étiquettes 89 × 64 mm</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

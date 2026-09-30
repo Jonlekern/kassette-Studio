@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>LaFleurStudio — Vérification avant impression</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=VT323&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Arial,sans-serif;font-size:11px;color:#000;background:#008080}
+.relief{background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf}
+.creux{background:#fff;border:1px solid;border-color:#808080 #fff #fff #808080;box-shadow:inset 1px 1px 0 #404040}
+.bouton{font:11px Arial,sans-serif;color:#000;background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf;padding:4px 12px;min-height:24px}
+.groupe{border:1px solid #808080;box-shadow:1px 1px 0 #fff;padding:12px 8px 8px;position:relative}
+.legende{position:absolute;top:-7px;left:8px;background:#c0c0c0;padding:0 4px}
+a{color:#000080}a:hover{color:#1084d0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 30px; background: #008080; display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 8px; align-items: center"><div style="display: flex; background: #14283a; color: #e8eef2; box-shadow: 4px 4px 0 #004040">
+<div style="width: 88px; height: 330px; border-right: 1px dashed rgba(232,238,242,0.4)"></div>
+<div style="width: 42px; height: 330px; border-right: 1px dashed rgba(232,238,242,0.4); position: relative; display: flex; align-items: center; justify-content: center"><span style="writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 700; letter-spacing: 2px">JEREMY SADIK · AN AFTERNOON AT THE LAKE</span><div style="position: absolute; left: -3px; right: -3px; top: -10px; bottom: -10px; border: 3px solid #cc0000"></div></div>
+<div style="width: 210px; height: 330px; padding: 12px; box-sizing: border-box"><img src="/_blob/9182f963b511a7252a24bcb8714d45da" alt="" style="width: 186px; height: 186px; object-fit: cover; display: block"></div>
+</div><span style="color: #fff">En rouge : ce qui dépasse</span></div><div class="relief" style="width: 760px; display: flex; flex-direction: column; padding: 3px">
+<div style="height: 20px; display: flex; align-items: center; justify-content: space-between; padding: 0 3px 0 6px; background: linear-gradient(90deg, #000080, #1084d0); color: #fff; font-weight: bold">
+<span>Vérification avant impression · Claude</span>
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold; color: #cc0000" aria-label="Fermer">×</button>
+</div>
+<div style="padding: 12px; display: flex; flex-direction: column; gap: 10px"><span>Claude a vérifié le J-card et les étiquettes avant l'impression.</span><div class="creux" style="display: flex; flex-direction: column"><div style="display: flex; gap: 10px; padding: 8px; border-bottom: 1px dotted #c0c0c0"><div style="width: 22px; height: 22px; border-radius: 50%; background: #cc0000; color: #fff; font-weight: bold; display: flex; align-items: center; justify-content: center; flex-shrink: 0">!</div><div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px"><b>La tranche déborde du J-card</b><span>« JEREMY SADIK · AN AFTERNOON AT THE LAKE » fait 104 mm, la tranche n'en offre que 96.</span><div style="display: flex; gap: 6px; flex-wrap: wrap"><button class="bouton" style="font-weight: bold">Réduire la police</button><button class="bouton">Sur 2 lignes</button><button class="bouton">« J. SADIK · AFTERNOON AT THE LAKE »</button></div></div></div><div style="display: flex; gap: 10px; padding: 8px; border-bottom: 1px dotted #c0c0c0"><div style="width: 22px; height: 22px; border-radius: 50%; background: #b36b00; color: #fff; font-weight: bold; display: flex; align-items: center; justify-content: center; flex-shrink: 0">!</div><div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px"><b>QR code un peu petit</b><span>14 mm de côté : certains téléphones auront du mal. Conseillé : 18 mm minimum.</span><div style="display: flex; gap: 6px; flex-wrap: wrap"><button class="bouton" style="font-weight: bold">Agrandir à 18 mm</button><button class="bouton">Ignorer</button></div></div></div><div style="display: flex; gap: 10px; padding: 8px; border-bottom: 1px dotted #c0c0c0"><div style="width: 22px; height: 22px; border-radius: 50%; background: #b36b00; color: #fff; font-weight: bold; display: flex; align-items: center; justify-content: center; flex-shrink: 0">!</div><div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px"><b>Texte du rabat peu contrasté</b><span>Le gris #8FA6B5 sur le bleu nuit est difficile à lire imprimé petit.</span><div style="display: flex; gap: 6px; flex-wrap: wrap"><button class="bouton" style="font-weight: bold">Passer en blanc écume</button><button class="bouton">Ignorer</button></div></div></div><div style="display: flex; gap: 10px; padding: 8px; border-bottom: 1px dotted #c0c0c0"><div style="width: 22px; height: 22px; border-radius: 50%; background: #006400; color: #fff; font-weight: bold; display: flex; align-items: center; justify-content: center; flex-shrink: 0">✓</div><div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px"><b>Code-barres EAN-13 valide</b><span>Clé de contrôle correcte, taille et contraste suffisants pour être scanné.</span><div style="display: flex; gap: 6px; flex-wrap: wrap"></div></div></div><div style="display: flex; gap: 10px; padding: 8px; border-bottom: 1px dotted #c0c0c0"><div style="width: 22px; height: 22px; border-radius: 50%; background: #006400; color: #fff; font-weight: bold; display: flex; align-items: center; justify-content: center; flex-shrink: 0">✓</div><div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px"><b>Fond perdu et traits de coupe</b><span>Rien d'important à moins de 3 mm des bords.</span><div style="display: flex; gap: 6px; flex-wrap: wrap"></div></div></div></div><div style="display: flex; gap: 6px; align-items: center"><span style="color: #cc0000; font-weight: bold">1 problème bloquant</span><span style="color: #b36b00">· 2 conseils</span><button class="bouton" style="margin-left: auto">Imprimer quand même…</button><button class="bouton" style="font-weight: bold">Tout corriger</button></div></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

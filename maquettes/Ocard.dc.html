@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>LaFleurStudio — O-card</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&amp;family=Space+Mono&amp;family=VT323&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Arial,sans-serif;font-size:11px;color:#000;background:#008080}
+.relief{background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf}
+.creux{background:#fff;border:1px solid;border-color:#808080 #fff #fff #808080;box-shadow:inset 1px 1px 0 #404040}
+.bouton{font:11px Arial,sans-serif;color:#000;background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf;padding:4px 12px;min-height:24px}
+.groupe{border:1px solid #808080;box-shadow:1px 1px 0 #fff;padding:12px 8px 8px;position:relative}
+.legende{position:absolute;top:-7px;left:8px;background:#c0c0c0;padding:0 4px}
+a{color:#000080}a:hover{color:#1084d0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 20px; background: #008080; display: flex">
+<div class="relief" style="flex-grow: 1; display: flex; flex-direction: column; padding: 3px">
+<div style="height: 20px; display: flex; align-items: center; justify-content: space-between; padding: 0 3px 0 6px; background: linear-gradient(90deg, #000080, #1084d0); color: #fff; font-weight: bold">
+<span>LaFleurStudio — « An Afternoon at the Lake » · O-card cassingle</span>
+<div style="display: flex; gap: 2px">
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold" aria-label="Réduire">_</button>
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold" aria-label="Agrandir">□</button>
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold; color: #cc0000" aria-label="Fermer">×</button>
+</div>
+</div>
+<div style="display: flex; gap: 14px; padding: 4px 6px; border-bottom: 1px solid #808080">
+<span><u>F</u>ichier</span><span><u>É</u>dition</span><span><u>A</u>ffichage</span><span><u>C</u>laude</span><span>Aid<u>e</u></span>
+</div>
+<div style="display: flex; gap: 2px; padding: 8px 8px 0">
+<div class="relief" style="padding: 4px 16px; margin-top: 2px">1. Mixtape</div>
+<div class="relief" style="padding: 5px 16px; font-weight: bold; border-bottom-color: #c0c0c0; position: relative; top: 1px">2. Jaquette</div>
+<div class="relief" style="padding: 4px 16px; margin-top: 2px">3. Enregistrer</div>
+</div>
+<div class="relief" style="flex-grow: 1; margin: 0 8px; padding: 12px; display: flex; gap: 12px">
+
+<div style="width: 200px; display: flex; flex-direction: column; gap: 14px">
+<div class="groupe">
+<span class="legende">Format</span>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="padding: 4px 6px">J-card</div>
+<div style="padding: 4px 6px; background: #000080; color: #fff">O-card cassingle</div>
+<div style="padding: 4px 6px">Étiquettes de K7</div>
+<div style="padding: 4px 6px; color: #808080">Obi strip (non coché)</div>
+</div>
+</div>
+<div class="groupe">
+<span class="legende">O-card</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label style="display: flex; justify-content: space-between; align-items: center">Modèle <select class="creux" style="font: 11px Arial; height: 20px"><option>Cassingle</option><option>Norelco</option><option>Sur mesure</option></select></label>
+<span style="color: #404040">Cassingle : autour d'un boîtier fin. Norelco : autour d'un boîtier normal.</span>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Design du J-card</label>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Coupe, pliage, colle</label>
+</div>
+</div>
+<div class="groupe">
+<span class="legende">Panneaux</span>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span>Face : cover, titre, artiste</span>
+<span>Dos : tracklist, ℗, codes</span>
+<span>Tranches : artiste · album · LFS-001</span>
+<span>Rabat : zone de colle, non imprimée</span>
+</div>
+</div>
+</div>
+
+<div style="flex-grow: 1; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; gap: 6px; align-items: center">
+<button class="bouton">À plat</button><button class="bouton">Aperçu 3D</button>
+<span style="margin-left: auto">Zoom : 100 %</span>
+</div>
+<div class="creux" style="flex-grow: 1; background: #808080; display: flex; align-items: center; justify-content: center">
+<div style="display: flex; background: #14283a; color: #e8eef2; box-shadow: 4px 4px 0 #404040; outline: 1px dashed #fff; outline-offset: 6px">
+<div style="width: 53px; height: 348px; box-sizing: border-box; border-right: 1px dashed rgba(232,238,242,0.4); background: repeating-linear-gradient(45deg, #0f1f2d 0 6px, #14283a 6px 12px); display: flex; align-items: center; justify-content: center"><span style="writing-mode: vertical-rl; font-size: 9px; letter-spacing: 2px; color: #8fa6b5">COLLE</span></div>
+<div style="width: 217px; height: 348px; box-sizing: border-box; padding: 12px; border-right: 1px dashed rgba(232,238,242,0.4); display: flex; flex-direction: column; gap: 6px; font-family: 'Space Mono', monospace; font-size: 8px; line-height: 1.5">
+<b style="font-family: 'Cormorant Garamond', serif; font-size: 16px">FACE A</b>
+<span>1 Sun Cream at the Lake · 2 The Muse · 3 Pre-Packaged Sandwich · 4 After Rain · 5 Glad to Know You · 6 Glass</span>
+<b style="font-family: 'Cormorant Garamond', serif; font-size: 16px">FACE B</b>
+<span>1 Mushroom Forest · 2 Parked in the Front of the Mall · 3 Seeking Adventure · 4 The Guy from Paris · 5 Clouds in Budapest · 6 Unknown Number</span>
+<div style="margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end"><span>℗ LAFLEURSTUDIO<br>LFS-001</span><div style="background: #e8eef2; padding: 2px"><svg width="82" height="50" viewBox="0 0 109 66" role="img" aria-label="Code-barres EAN-13 2000126000012" style="display: block; background: #ffffff" fill="#14283a" font-family="Arial"><rect x="7" y="0" width="1" height="56"/><rect x="9" y="0" width="1" height="56"/><rect x="13" y="0" width="2" height="50"/><rect x="16" y="0" width="1" height="50"/><rect x="20" y="0" width="2" height="50"/><rect x="23" y="0" width="1" height="50"/><rect x="25" y="0" width="1" height="50"/><rect x="28" y="0" width="3" height="50"/><rect x="32" y="0" width="2" height="50"/><rect x="36" y="0" width="2" height="50"/><rect x="40" y="0" width="1" height="50"/><rect x="43" y="0" width="2" height="50"/><rect x="49" y="0" width="1" height="50"/><rect x="51" y="0" width="1" height="50"/><rect x="53" y="0" width="1" height="56"/><rect x="55" y="0" width="1" height="56"/><rect x="57" y="0" width="3" height="50"/><rect x="62" y="0" width="1" height="50"/><rect x="64" y="0" width="3" height="50"/><rect x="69" y="0" width="1" height="50"/><rect x="71" y="0" width="3" height="50"/><rect x="76" y="0" width="1" height="50"/><rect x="78" y="0" width="3" height="50"/><rect x="83" y="0" width="1" height="50"/><rect x="85" y="0" width="2" height="50"/><rect x="89" y="0" width="2" height="50"/><rect x="92" y="0" width="2" height="50"/><rect x="95" y="0" width="2" height="50"/><rect x="99" y="0" width="1" height="56"/><rect x="101" y="0" width="1" height="56"/><text x="3" y="63" font-size="9">2</text><text x="31" y="63" font-size="9" text-anchor="middle" letter-spacing="1.6">000126</text><text x="77" y="63" font-size="9" text-anchor="middle" letter-spacing="1.6">000012</text></svg></div></div>
+</div>
+<div style="width: 42px; height: 348px; box-sizing: border-box; border-right: 1px dashed rgba(232,238,242,0.4); display: flex; align-items: center; justify-content: center"><span style="writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 700; letter-spacing: 2px">JEREMY SADIK · LFS-001</span></div>
+<div style="width: 219px; height: 348px; box-sizing: border-box; padding: 12px; border-right: 1px dashed rgba(232,238,242,0.4); display: flex; flex-direction: column; gap: 8px">
+<img src="/_blob/9182f963b511a7252a24bcb8714d45da" alt="Pochette de An Afternoon at the Lake" style="width: 194px; height: 194px; object-fit: cover; display: block">
+<b style="font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 500; font-style: italic; line-height: 0.95">An Afternoon<br>at the Lake</b>
+<span style="font-family: 'Space Mono', monospace; font-size: 9px">JEREMY SADIK</span>
+</div>
+<div style="width: 42px; height: 348px; box-sizing: border-box; border-right: 1px dashed rgba(232,238,242,0.4); display: flex; align-items: center; justify-content: center"><span style="writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 700; letter-spacing: 2px">AN AFTERNOON AT THE LAKE</span></div>
+</div>
+</div>
+<div style="display: flex; gap: 12px; align-items: center">
+<span>Colle 15,7 · Dos 63,8 · Tranche 12,3 · Face 64,3 · Tranche 12,3 mm · hauteur 102,5 mm</span>
+<span style="margin-left: auto">A4 · 600 DPI</span>
+</div>
+</div>
+
+<div style="width: 300px; display: flex; flex-direction: column; gap: 10px">
+<div class="groupe" style="flex-grow: 1; display: flex; flex-direction: column">
+<span class="legende">Direction artistique · Claude</span>
+<div class="creux" style="flex-grow: 1; padding: 8px; display: flex; flex-direction: column; gap: 8px">
+<div style="align-self: flex-end; max-width: 220px; padding: 6px 8px; background: #000080; color: #fff">Fais aussi un O-card pour une édition spéciale.</div>
+<div style="max-width: 250px; padding: 6px 8px; background: #ffffe1; border: 1px solid #808080">C'est fait, dans le même style que le J-card : ta cover sur la face, la tracklist en ligne sur le dos avec ℗ LAFLEURSTUDIO et le code-barres, l'artiste et le numéro LFS-001 sur une tranche, l'album sur l'autre. La zone de colle reste vide.</div>
+</div>
+<div style="display: flex; gap: 6px; margin-top: 8px">
+<input class="creux" style="flex-grow: 1; height: 24px; padding: 0 4px; font: 11px Arial" placeholder="Demande à Claude…" aria-label="Message pour Claude">
+<button class="bouton">Envoyer</button>
+</div>
+</div>
+<div class="groupe">
+<span class="legende">Exporter</span>
+<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<button class="bouton" style="font-weight: bold">PDF A4</button>
+<button class="bouton">PNG 600 DPI</button>
+<button class="bouton">Gabarit vierge</button>
+</div>
+</div>
+</div>
+</div>
+<div style="display: flex; gap: 2px; padding: 4px 8px 2px">
+<div class="creux" style="flex-grow: 1; padding: 2px 6px; background: #c0c0c0">Vérification Claude : textes hors des plis et de la zone de colle</div>
+<div class="creux" style="padding: 2px 6px; background: #c0c0c0">O-card 168 × 102 mm</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

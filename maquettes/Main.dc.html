@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>LaFleurStudio — Mixtape</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=VT323&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Arial,sans-serif;font-size:11px;color:#000;background:#008080}
+.relief{background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf}
+.creux{background:#fff;border:1px solid;border-color:#808080 #fff #fff #808080;box-shadow:inset 1px 1px 0 #404040}
+.bouton{font:11px Arial,sans-serif;color:#000;background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf;padding:4px 12px;min-height:24px}
+.groupe{border:1px solid #808080;box-shadow:1px 1px 0 #fff;padding:12px 8px 8px;position:relative}
+.legende{position:absolute;top:-7px;left:8px;background:#c0c0c0;padding:0 4px}
+a{color:#000080}a:hover{color:#1084d0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 20px; background: #008080; display: flex">
+<div class="relief" style="flex-grow: 1; display: flex; flex-direction: column; padding: 3px">
+<div style="height: 20px; display: flex; align-items: center; justify-content: space-between; padding: 0 3px 0 6px; background: linear-gradient(90deg, #000080, #1084d0); color: #fff; font-weight: bold">
+<span>LaFleurStudio — « An Afternoon at the Lake » · C60</span>
+<div style="display: flex; gap: 2px">
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold" aria-label="Réduire">_</button>
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold" aria-label="Agrandir">□</button>
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold; color: #cc0000" aria-label="Fermer">×</button>
+</div>
+</div>
+<div style="display: flex; gap: 14px; padding: 4px 6px; border-bottom: 1px solid #808080">
+<span><u>F</u>ichier</span><span><u>É</u>dition</span><span><u>A</u>ffichage</span><span><u>C</u>laude</span><span>Aid<u>e</u></span>
+</div>
+<div style="display: flex; gap: 2px; padding: 8px 8px 0">
+<div class="relief" style="padding: 5px 16px; font-weight: bold; border-bottom-color: #c0c0c0; position: relative; top: 1px">1. Mixtape</div>
+<div class="relief" style="padding: 4px 16px; margin-top: 2px">2. Jaquette</div>
+<div class="relief" style="padding: 4px 16px; margin-top: 2px">3. Enregistrer</div>
+</div>
+<div class="relief" style="flex-grow: 1; margin: 0 8px; padding: 12px; display: flex; gap: 12px">
+
+<div style="width: 290px; display: flex; flex-direction: column; gap: 14px">
+<div class="groupe">
+<span class="legende">Spotify</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="rech" style="font-weight: bold">Album, playlist ou lien</label>
+<input id="rech" class="creux" style="height: 22px; padding: 0 4px; font: 11px Arial" value="jeremy sadik">
+<div class="creux" style="display: flex; flex-direction: column">
+<div style="display: flex; gap: 8px; padding: 5px; background: #000080; color: #fff; align-items: center">
+<img src="/_blob/9182f963b511a7252a24bcb8714d45da" alt="" style="width: 32px; height: 32px; flex-shrink: 0">
+<div style="display: flex; flex-direction: column"><b>An Afternoon at the Lake</b><span>Jeremy Sadik · album · 12 titres</span></div>
+</div>
+<div style="display: flex; gap: 8px; padding: 5px; align-items: center">
+<img src="/_blob/ac08dd37d763f0e19b1ca950a430f436" alt="" style="width: 32px; height: 32px; flex-shrink: 0">
+<div style="display: flex; flex-direction: column"><b>Quiet Fire</b><span>Jeremy Sadik · single · 2025</span></div>
+</div>
+<div style="display: flex; gap: 8px; padding: 5px; align-items: center">
+<img src="/_blob/ded4e29214ba88ab95bdf0d81ed5d335" alt="" style="width: 32px; height: 32px; flex-shrink: 0">
+<div style="display: flex; flex-direction: column"><b>Let Him Cook (Remix)</b><span>Jeremy Sadik, StudioLaFleur · single · 2025</span></div>
+</div>
+</div>
+<div style="display: flex; gap: 6px"><button class="bouton">Mes playlists…</button><button class="bouton">Importer .m3u…</button></div>
+</div>
+</div>
+<div class="groupe">
+<span class="legende">Composer avec Claude (mixtape)</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="amb" style="font-weight: bold">Ambiance</label>
+<textarea id="amb" class="creux" style="height: 54px; resize: none; padding: 4px; font: 11px Arial">un best of de mes titres les plus écoutés, sur une C46</textarea>
+<button class="bouton" style="align-self: flex-start">Composer la sélection</button>
+</div>
+</div>
+<div class="groupe">
+<span class="legende">Dossier audio</span>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div class="creux" style="padding: 4px">~/Musique/K7</div>
+<span>12 / 12 morceaux trouvés dans le dossier</span>
+</div>
+</div>
+</div>
+
+<div style="flex-grow: 1; display: flex; flex-direction: column; gap: 10px">
+<div class="groupe">
+<span class="legende">Cassette</span>
+<div style="display: flex; gap: 18px; align-items: center">
+<div class="relief" style="display: flex; padding: 2px; gap: 2px"><span style="padding: 3px 10px; background: #000080; color: #fff; font-weight: bold">Album</span><span style="padding: 3px 10px">Mixtape</span></div>
+<label style="display: flex; gap: 4px; align-items: center"><input type="radio" name="k7" checked> C60 · 30 min/face</label>
+<label style="display: flex; gap: 4px; align-items: center"><input type="radio" name="k7"> C90 · 45 min/face</label>
+<label style="display: flex; gap: 4px; align-items: center"><input type="radio" name="k7"> Custom</label>
+<input class="creux" style="width: 40px; height: 20px; padding: 0 4px; font: 11px Arial" value="23" aria-label="Minutes par face">
+<span>min/face</span>
+<button class="bouton" style="margin-left: auto">Avancé…</button>
+</div>
+<div style="display: flex; gap: 14px; align-items: center; margin-top: 8px">
+<label style="display: flex; gap: 4px; align-items: center">Bande <select class="creux" style="font: 11px Arial; height: 20px"><option>Type II · Chrome</option><option>Type I · Normal</option><option>Type IV · Métal</option></select></label>
+<label style="display: flex; gap: 4px; align-items: center">Réducteur de bruit <select class="creux" style="font: 11px Arial; height: 20px"><option>Dolby B</option><option>Dolby C</option><option>Aucun</option></select></label>
+<label style="display: flex; gap: 4px; align-items: center">Marque / modèle <input class="creux" style="width: 90px; height: 20px; padding: 0 4px; font: 11px Arial" value="TDK SA60"></label>
+<label style="display: flex; gap: 4px; align-items: center; margin-left: auto"><input type="checkbox" checked> Claude l'ajoute au design</label>
+</div>
+</div>
+
+<div style="display: flex; gap: 10px; flex-grow: 1">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between"><b>Face A</b><span>25:10 / 30:00</span></div>
+<div class="creux" style="height: 14px; padding: 1px; display: flex; gap: 2px">
+<sc-for list="{{blocsA}}" as="b" hint-placeholder-count="14"><div style="width: 8px; background: #000080"></div></sc-for>
+</div>
+<div class="creux" style="flex-grow: 1; display: flex; flex-direction: column">
+<sc-for list="{{faceA}}" as="m" hint-placeholder-count="6">
+<div style="display: grid; grid-template-columns: 12px 18px minmax(0, 1fr) 40px 22px; gap: 6px; padding: 5px 6px; border-bottom: 1px dotted #c0c0c0; align-items: center">
+<span style="color: #808080; cursor: grab" aria-hidden="true">⋮⋮</span>
+<span style="color: #808080">{{m.n}}</span>
+<div style="display: flex; flex-direction: column"><b>{{m.titre}}</b><span style="color: #404040">{{m.artiste}}</span></div>
+<span style="text-align: right">{{m.duree}}</span>
+<button class="bouton" style="width: 20px; height: 18px; min-height: 18px; padding: 0; font-weight: bold; color: #cc0000" aria-label="Retirer ce morceau">×</button>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between"><b>Face B</b><span>25:40 / 30:00</span></div>
+<div class="creux" style="height: 14px; padding: 1px; display: flex; gap: 2px">
+<sc-for list="{{blocsB}}" as="b" hint-placeholder-count="15"><div style="width: 8px; background: #000080"></div></sc-for>
+</div>
+<div class="creux" style="flex-grow: 1; display: flex; flex-direction: column">
+<sc-for list="{{faceB}}" as="m" hint-placeholder-count="6">
+<div style="display: grid; grid-template-columns: 12px 18px minmax(0, 1fr) 40px 22px; gap: 6px; padding: 5px 6px; border-bottom: 1px dotted #c0c0c0; align-items: center">
+<span style="color: #808080; cursor: grab" aria-hidden="true">⋮⋮</span>
+<span style="color: #808080">{{m.n}}</span>
+<div style="display: flex; flex-direction: column"><b>{{m.titre}}</b><span style="color: #404040">{{m.artiste}}</span></div>
+<span style="text-align: right">{{m.duree}}</span>
+<button class="bouton" style="width: 20px; height: 18px; min-height: 18px; padding: 0; font-weight: bold; color: #cc0000" aria-label="Retirer ce morceau">×</button>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+
+<div class="creux" style="padding: 8px; background: #ffffe1; display: flex; flex-direction: column; gap: 3px">
+<b>Claude</b>
+<span>Mode album : l'ordre de l'album est gardé. Il tombe pile sur une C60 : 6 titres par face, 30 s d'écart seulement. La face A se termine sur « Glass », la face B s'ouvre sur « Mushroom Forest ». Il reste 4:50 de bande libre en face A et 4:20 en face B.</span>
+</div>
+</div>
+
+<div style="width: 210px; display: flex; flex-direction: column; gap: 14px">
+<div class="groupe">
+<span class="legende">Actions</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<button class="bouton" style="font-weight: bold">Équilibrer avec Claude</button>
+<button class="bouton">Garder l'ordre de l'album</button>
+<button class="bouton">Vider les faces</button>
+<span style="color: #404040">Glisse ⋮⋮ pour réordonner ou changer de face, × pour retirer un morceau.</span>
+</div>
+</div>
+<div class="groupe">
+<span class="legende">À imprimer</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> J-card (3 volets)</label>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox"> O-card cassingle</label>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Étiquettes de K7</label>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox"> Obi strip</label>
+</div>
+</div>
+<div class="groupe">
+<span class="legende">Total</span>
+<div style="display: flex; flex-direction: column; gap: 2px; font-family: 'VT323', monospace; font-size: 22px">
+<span>12 TITRES</span><span>50:20 DE MUSIQUE</span><span>9:10 DE BANDE LIBRE</span>
+</div>
+</div>
+</div>
+</div>
+<div style="display: flex; gap: 2px; padding: 4px 8px 2px">
+<div class="creux" style="flex-grow: 1; padding: 2px 6px; background: #c0c0c0">Prêt</div>
+<div class="creux" style="padding: 2px 6px; background: #c0c0c0">Spotify : connecté</div>
+<div class="creux" style="padding: 2px 6px; background: #c0c0c0">Claude : connecté</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+const faceA = [["Sun Cream at the Lake","5:42","Jeremy Sadik"],["The Muse","5:13","Jeremy Sadik"],["Pre-Packaged Sandwich","4:03","Jeremy Sadik"],["After Rain","3:45","Jeremy Sadik"],["Glad to Know You","2:36","Jeremy Sadik"],["Glass","3:36","Jeremy Sadik"]];
+const faceB = [["Mushroom Forest","5:35","Jeremy Sadik"],["Parked in the Front of the Mall","3:43","Jeremy Sadik"],["Seeking Adventure","5:35","Jeremy Sadik"],["The Guy from Paris","3:04","Jeremy Sadik"],["Clouds in Budapest","3:48","Jeremy Sadik"],["Unknown Number","3:40","Jeremy Sadik"]];
+const f = (l) => l.map((x, i) => ({ n: i + 1, titre: x[0], duree: x[1], artiste: x[2] }));
+return { faceA: f(faceA), faceB: f(faceB), blocsA: new Array(27).fill(0), blocsB: new Array(28).fill(0) };
+}
+}
+</script>
+</body>
+</html>

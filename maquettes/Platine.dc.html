@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>LaFleurStudio — Enregistrement</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=VT323&amp;family=Cormorant+Garamond:ital,wght@1,600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Arial,sans-serif;font-size:11px;color:#000;background:#008080}
+.relief{background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf}
+.creux{background:#fff;border:1px solid;border-color:#808080 #fff #fff #808080;box-shadow:inset 1px 1px 0 #404040}
+.bouton{font:11px Arial,sans-serif;color:#000;background:#c0c0c0;border:1px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -1px -1px 0 #808080,inset 1px 1px 0 #dfdfdf;padding:4px 12px;min-height:24px}
+.touche{width:64px;height:48px;display:flex;align-items:center;justify-content:center;background:#c0c0c0;border:2px solid;border-color:#fff #404040 #404040 #fff;box-shadow:inset -2px -2px 0 #808080}
+.groupe{border:1px solid #808080;box-shadow:1px 1px 0 #fff;padding:12px 8px 8px;position:relative}
+.legende{position:absolute;top:-7px;left:8px;background:#c0c0c0;padding:0 4px}
+a{color:#000080}a:hover{color:#1084d0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 20px; background: #008080; display: flex">
+<div class="relief" style="flex-grow: 1; display: flex; flex-direction: column; padding: 3px">
+<div style="height: 20px; display: flex; align-items: center; justify-content: space-between; padding: 0 3px 0 6px; background: linear-gradient(90deg, #000080, #1084d0); color: #fff; font-weight: bold">
+<span>LaFleurStudio — Enregistrement · Face A</span>
+<div style="display: flex; gap: 2px">
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold" aria-label="Réduire">_</button>
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold" aria-label="Agrandir">□</button>
+<button class="bouton" style="width: 16px; height: 14px; min-height: 14px; padding: 0; font-size: 9px; font-weight: bold; color: #cc0000" aria-label="Fermer">×</button>
+</div>
+</div>
+<div style="display: flex; gap: 14px; padding: 4px 6px; border-bottom: 1px solid #808080">
+<span><u>F</u>ichier</span><span><u>É</u>dition</span><span><u>A</u>ffichage</span><span><u>C</u>laude</span><span>Aid<u>e</u></span>
+</div>
+<div style="display: flex; gap: 2px; padding: 8px 8px 0">
+<div class="relief" style="padding: 4px 16px; margin-top: 2px">1. Mixtape</div>
+<div class="relief" style="padding: 4px 16px; margin-top: 2px">2. Jaquette</div>
+<div class="relief" style="padding: 5px 16px; font-weight: bold; border-bottom-color: #c0c0c0; position: relative; top: 1px">3. Enregistrer</div>
+</div>
+<div class="relief" style="flex-grow: 1; margin: 0 8px; padding: 12px; display: flex; gap: 12px">
+
+<div style="flex-grow: 1; display: flex; flex-direction: column; gap: 12px">
+<div class="relief" style="padding: 16px; display: flex; flex-direction: column; gap: 14px; background: #b8b8b8">
+<div style="display: flex; gap: 16px; align-items: stretch">
+<div class="creux" style="width: 330px; height: 200px; background: #1f1f1f; display: flex; align-items: center; justify-content: center">
+<div style="width: 266px; height: 195px; box-sizing: border-box; background: #2b3036; border-radius: 8px; padding: 6px 6px; border: 2px solid #111">
+<div style="width: 250px; height: 179px"><div style="width: 312px; height: 224px; transform: scale(0.8); transform-origin: top left"><dc-import name="EtiquetteK7" face="A" bobines="{{oui}}" hint-size="312px,224px"></dc-import></div></div>
+</div>
+</div>
+
+<div style="flex-grow: 1; display: flex; gap: 12px">
+<sc-for list="{{vus}}" as="vu" hint-placeholder-count="2">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+<div class="creux" style="height: 150px; background: #f4ecd2; position: relative; overflow: hidden; display: flex; justify-content: center">
+<svg width="220" height="130" viewBox="0 0 220 130" aria-hidden="true"><path d="M42.6 61.4 A88 88 0 0 1 134.3 33.4" fill="none" stroke="#1a1a1a" stroke-width="2"/><path d="M134.3 33.4 A88 88 0 0 1 177.4 61.4" fill="none" stroke="#c8102e" stroke-width="5"/><line x1="42.6" y1="61.4" x2="36.5" y2="56.3" stroke="#1a1a1a" stroke-width="1.5"/><text x="29.6" y="53.5" font-size="9" text-anchor="middle" fill="#1a1a1a" font-family="Arial">-20</text><line x1="59.5" y1="45.9" x2="54.9" y2="39.4" stroke="#1a1a1a" stroke-width="1.5"/><text x="49.8" y="35.0" font-size="9" text-anchor="middle" fill="#1a1a1a" font-family="Arial">-10</text><line x1="74.2" y1="37.6" x2="71.0" y2="30.3" stroke="#1a1a1a" stroke-width="1.5"/><text x="67.3" y="25.1" font-size="9" text-anchor="middle" fill="#1a1a1a" font-family="Arial">-7</text><line x1="88.7" y1="32.6" x2="86.8" y2="24.9" stroke="#1a1a1a" stroke-width="1.5"/><text x="84.6" y="19.1" font-size="9" text-anchor="middle" fill="#1a1a1a" font-family="Arial">-5</text><line x1="103.9" y1="30.2" x2="103.3" y2="22.2" stroke="#1a1a1a" stroke-width="1.5"/><text x="102.7" y="16.3" font-size="9" text-anchor="middle" fill="#1a1a1a" font-family="Arial">-3</text><line x1="122.2" y1="30.9" x2="123.4" y2="22.9" stroke="#1a1a1a" stroke-width="1.5"/><text x="124.6" y="17.0" font-size="9" text-anchor="middle" fill="#1a1a1a" font-family="Arial">-1</text><line x1="134.3" y1="33.4" x2="136.5" y2="25.7" stroke="#1a1a1a" stroke-width="1.5"/><text x="138.9" y="20.1" font-size="9" text-anchor="middle" fill="#1a1a1a" font-family="Arial">0</text><line x1="148.6" y1="38.9" x2="152.1" y2="31.7" stroke="#c8102e" stroke-width="1.5"/><text x="156.0" y="26.6" font-size="9" text-anchor="middle" fill="#c8102e" font-family="Arial">+1</text><line x1="161.7" y1="46.8" x2="166.4" y2="40.3" stroke="#c8102e" stroke-width="1.5"/><text x="171.7" y="36.1" font-size="9" text-anchor="middle" fill="#c8102e" font-family="Arial">+2</text><line x1="177.4" y1="61.4" x2="183.5" y2="56.3" stroke="#c8102e" stroke-width="1.5"/><text x="190.4" y="53.5" font-size="9" text-anchor="middle" fill="#c8102e" font-family="Arial">+3</text><text x="110" y="92" font-size="16" text-anchor="middle" fill="#1a1a1a" font-family="Arial" font-weight="bold">VU</text><line x1="110" y1="118" x2="{{vu.x}}" y2="{{vu.y}}" stroke="#1a1a1a" stroke-width="2"/><circle cx="110" cy="118" r="7" fill="#1a1a1a"/></svg>
+</div>
+<span style="text-align: center; font-weight: bold">{{vu.canal}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; gap: 16px; align-items: center">
+<div class="creux" style="background: #0c1a0c; color: #7dff6a; font-family: 'VT323', monospace; font-size: 40px; padding: 2px 12px; letter-spacing: 4px">1216</div>
+<div style="display: flex; flex-direction: column; font-family: 'VT323', monospace; font-size: 20px; line-height: 1.1">
+<span>12:16 / 25:10 · FACE A</span>
+<span>3/6 PRE-PACKAGED SANDWICH  01:12 / 4:03</span>
+</div>
+<div style="margin-left: auto; display: flex; gap: 6px">
+<button class="touche" aria-label="Enregistrer"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="8" fill="#cc0000"/></svg></button>
+<button class="touche" aria-label="Lecture" style="border-color: #404040 #fff #fff #404040; box-shadow: inset 2px 2px 0 #808080"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M6 3 L19 11 L6 19 Z" fill="#1a1a1a"/></svg></button>
+<button class="touche" aria-label="Pause"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="5" y="4" width="4" height="14" fill="#1a1a1a"/><rect x="13" y="4" width="4" height="14" fill="#1a1a1a"/></svg></button>
+<button class="touche" aria-label="Stop"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><rect x="4" y="4" width="14" height="14" fill="#1a1a1a"/></svg></button>
+</div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between"><b>Bande utilisée</b><span>12:16 / 30:00</span></div>
+<div class="creux" style="height: 16px; padding: 1px; display: flex; gap: 2px">
+<sc-for list="{{blocs}}" as="b" hint-placeholder-count="31"><div style="width: 10px; background: #000080"></div></sc-for>
+</div>
+</div>
+
+<div class="creux" style="flex-grow: 1; display: flex; flex-direction: column">
+<sc-for list="{{pistes}}" as="p" hint-placeholder-count="6">
+<div style="display: grid; grid-template-columns: 70px minmax(0, 1fr) 60px; gap: 8px; padding: 4px 8px; border-bottom: 1px dotted #c0c0c0; background: {{p.fond}}; color: {{p.couleur}}">
+<span>{{p.etat}}</span><span>{{p.titre}}</span><span style="text-align: right">{{p.duree}}</span>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="width: 260px; display: flex; flex-direction: column; gap: 14px">
+<div class="groupe">
+<span class="legende">Face</span>
+<div style="display: flex; gap: 12px">
+<label style="display: flex; gap: 4px; align-items: center"><input type="radio" name="face" checked> Face A</label>
+<label style="display: flex; gap: 4px; align-items: center"><input type="radio" name="face"> Face B</label>
+</div>
+</div>
+<div class="groupe">
+<span class="legende">Avant de lancer</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Sortie du Mac → LINE IN</label>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Niveau réglé à la tonalité</label>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Bande rembobinée</label>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Platine sur Type II (CrO₂), Dolby B</label>
+<label style="display: flex; gap: 6px; align-items: center"><input type="checkbox" checked> Mode Concentration activé</label>
+<button class="bouton" style="align-self: flex-start">Tonalité 1 kHz</button>
+</div>
+</div>
+<div class="groupe">
+<span class="legende">Déroulé</span>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span>1. Compte à rebours 5 s : relâche la pause</span>
+<span>2. Amorce : 5 s de blanc</span>
+<span>3. Les morceaux, 2 s de blanc entre chacun</span>
+<span>4. Arrêt net à la fin de la face</span>
+<span>5. « Retourne la cassette »</span>
+</div>
+</div>
+<div class="creux" style="padding: 8px; background: #ffffe1; display: flex; flex-direction: column; gap: 3px">
+<b>Claude</b>
+<span>Face B : 25:40 sur 30:00. Il restera 4:20 de bande après « Unknown Number », laisse-la tourner jusqu'au bout avant d'éjecter.</span>
+</div>
+</div>
+</div>
+<div style="display: flex; gap: 2px; padding: 4px 8px 2px">
+<div class="creux" style="flex-grow: 1; padding: 2px 6px; background: #c0c0c0">Enregistrement en cours — ne touche pas à la platine</div>
+<div class="creux" style="padding: 2px 6px; background: #c0c0c0">Source : ~/Musique/K7</div>
+<div class="creux" style="padding: 2px 6px; background: #c0c0c0">44,1 kHz · FLAC</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+const l = [["Sun Cream at the Lake","5:42"],["The Muse","5:13"],["Pre-Packaged Sandwich","4:03"],["After Rain","3:45"],["Glad to Know You","2:36"],["Glass","3:36"]];
+const pistes = l.map((x, i) => {
+const etat = i < 2 ? "Fait" : i === 2 ? "En cours" : "À venir";
+return { etat, titre: (i + 1) + ". " + x[0], duree: x[1], fond: i === 2 ? "#000080" : "transparent", couleur: i === 2 ? "#ffffff" : i < 2 ? "#808080" : "#000000" };
+});
+return {
+oui: true,
+pistes,
+blocs: new Array(31).fill(0),
+vus: [{ canal: "GAUCHE", x: 116.8, y: 20.2 }, { canal: "DROITE", x: 106.6, y: 20.1 }]
+};
+}
+}
+</script>
+</body>
+</html>
