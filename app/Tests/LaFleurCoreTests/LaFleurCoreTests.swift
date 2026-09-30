@@ -276,3 +276,22 @@ final class JaquetteTests: XCTestCase {
         XCTAssertEqual(relu.design, d)
     }
 }
+
+final class CalibrageTests: XCTestCase {
+    func testEchelle() {
+        XCTAssertEqual(CalibrationImprimante.echelle(attendu: 10, mesure: 9.8)!, 1.0204, accuracy: 0.0001)
+        XCTAssertEqual(CalibrationImprimante.echelle(attendu: 4, mesure: 4)!, 1)
+        XCTAssertNil(CalibrationImprimante.echelle(attendu: 10, mesure: 4), "4 au lieu de 10 : sûrement des pouces, pas des cm")
+    }
+
+    func testPreferencesTolerantes() throws {
+        // Préférences d'une version précédente (anciens champs, champs manquants) : rien n'est perdu.
+        let json = #"{"conditionsAcceptees": true, "prochainNumero": 7, "decalageX": 1.5, "langue": "de"}"#
+        let p = try JSONDecoder().decode(Preferences.self, from: Data(json.utf8))
+        XCTAssertTrue(p.conditionsAcceptees)
+        XCTAssertEqual(p.prochainNumero, 7)
+        XCTAssertEqual(p.langue, "de")
+        XCTAssertTrue(p.calibrations.isEmpty)
+        XCTAssertEqual(p.platine, ReglagesPlatine())
+    }
+}

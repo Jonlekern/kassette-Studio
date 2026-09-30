@@ -109,9 +109,10 @@ enum Export {
         return png(vue, dpi: 150)
     }
 
-    static func imprimer(_ data: Data, titre: String) {
+    static func imprimer(_ data: Data, titre: String, imprimante: String? = nil) {
         guard let doc = PDFDocument(data: data) else { return }
         let info = (NSPrintInfo.shared.copy() as? NSPrintInfo) ?? NSPrintInfo()
+        if let nom = imprimante, let p = NSPrinter(name: nom) { info.printer = p }
         info.topMargin = 0; info.bottomMargin = 0; info.leftMargin = 0; info.rightMargin = 0
         info.horizontalPagination = .clip; info.verticalPagination = .clip
         info.isHorizontallyCentered = false; info.isVerticallyCentered = false
@@ -234,41 +235,39 @@ struct Regle: View {
     }
 }
 
-/// Page de calibrage : on mesure les règles et les repères au réglet, on entre les valeurs dans Réglages → Impression.
+/// Page de calibrage : une règle de 10 cm et une de 4 pouces (dans les deux sens), à mesurer avec une vraie règle.
 struct PageCalibrage: View {
     var papier: Papier = .a4
     private let u = Typo.ptParMM
     var body: some View {
         ZStack(alignment: .topLeading) {
             Rectangle().fill(Color.white)
-            // Repères de décalage : à 15 mm du bord gauche et du bord haut.
+            VStack(alignment: .leading, spacing: 5) {
+                Text("LaFleurStudio · règle de calibrage (\(papier.nom))").font(.system(size: 14, weight: .bold))
+                Text("Imprime à 100 %, pas « Ajuster à la page ».").font(.system(size: 11, weight: .bold)).foregroundStyle(.red)
+                Text("Mesure la règle de 10 cm (ou celle de 4 pouces) avec une vraie règle, puis tape la valeur dans")
+                Text("LaFleurStudio → Réglages → Impression. C'est tout : l'app corrige toutes tes impressions.")
+            }
+            .font(.system(size: 10)).offset(x: 25 * u, y: 20 * u)
+
+            Text("Règle de 10 cm").font(.system(size: 9, weight: .bold)).offset(x: 25 * u, y: 52 * u)
+            Regle(longueur: 100, pas: 1, tous: 10, moitie: 5, unite: "cm", u: u).offset(x: 25 * u, y: 58 * u)
+            Text("Règle de 4 pouces").font(.system(size: 9, weight: .bold)).offset(x: 25 * u, y: 78 * u)
+            Regle(longueur: 101.6, pas: 25.4 / 8, tous: 8, moitie: 4, unite: "in", u: u).offset(x: 25 * u, y: 84 * u)
+
+            Text("En option, les mêmes règles à la verticale (si ton imprimante n'a pas la même erreur dans les deux sens) :")
+                .font(.system(size: 9)).frame(width: 160 * u, alignment: .leading).offset(x: 25 * u, y: 106 * u)
+            Regle(longueur: 100, pas: 1, tous: 10, moitie: 5, unite: "cm", verticale: true, u: u).offset(x: 30 * u, y: 118 * u)
+            Regle(longueur: 101.6, pas: 25.4 / 8, tous: 8, moitie: 4, unite: "in", verticale: true, u: u).offset(x: 60 * u, y: 118 * u)
+
+            // Repères de décalage (option) : à 15 mm du bord gauche et du bord haut.
             Path { p in
-                p.move(to: CGPoint(x: 15 * u, y: 8 * u)); p.addLine(to: CGPoint(x: 15 * u, y: 28 * u))
-                p.move(to: CGPoint(x: 8 * u, y: 15 * u)); p.addLine(to: CGPoint(x: 28 * u, y: 15 * u))
+                p.move(to: CGPoint(x: 15 * u, y: 8 * u)); p.addLine(to: CGPoint(x: 15 * u, y: 16 * u))
+                p.move(to: CGPoint(x: 8 * u, y: 15 * u)); p.addLine(to: CGPoint(x: 16 * u, y: 15 * u))
             }
             .stroke(Color.red, lineWidth: 0.5)
-            Text("A").font(.system(size: 8, weight: .bold)).foregroundStyle(.red).offset(x: 16.5 * u, y: 20 * u)
-            // Règles horizontales : 15 cm et 6 pouces.
-            Text("Règle horizontale en cm (15 cm)").font(.system(size: 8, weight: .bold)).offset(x: 40 * u, y: 24 * u)
-            Regle(longueur: 150, pas: 1, tous: 10, moitie: 5, unite: "cm", u: u).offset(x: 40 * u, y: 30 * u)
-            Text("Règle horizontale en pouces (6 in)").font(.system(size: 8, weight: .bold)).offset(x: 40 * u, y: 46 * u)
-            Regle(longueur: 152.4, pas: 25.4 / 8, tous: 8, moitie: 4, unite: "in", u: u).offset(x: 40 * u, y: 52 * u)
-            // Règles verticales : 20 cm et 8 pouces.
-            Regle(longueur: 200, pas: 1, tous: 10, moitie: 5, unite: "cm", verticale: true, u: u).offset(x: 22 * u, y: 70 * u)
-            Regle(longueur: 203.2, pas: 25.4 / 8, tous: 8, moitie: 4, unite: "in", verticale: true, u: u).offset(x: 42 * u, y: 70 * u)
-            // Carré de 10 cm pour un contrôle d'un coup d'œil.
-            Rectangle().stroke(Color.black, lineWidth: 0.5).frame(width: 100 * u, height: 100 * u).offset(x: 90 * u, y: 150 * u)
-            Text("Carré de 10 cm × 10 cm (3,94 in)").font(.system(size: 8)).frame(width: 100 * u).offset(x: 90 * u, y: 196 * u)
-            VStack(alignment: .leading, spacing: 5) {
-                Text("LaFleurStudio · page de calibrage (\(papier.nom))").font(.system(size: 12, weight: .bold))
-                Text("Imprime cette page à 100 % (jamais « ajuster à la page »), puis mesure avec une règle :")
-                Text("1. La longueur réelle de la règle horizontale (15 cm ou 6 in).")
-                Text("2. La longueur réelle de la règle verticale (20 cm ou 8 in).")
-                Text("3. La distance entre le bord gauche de la feuille et le trait rouge vertical A (15 mm si tout est parfait).")
-                Text("4. La distance entre le bord haut de la feuille et le trait rouge horizontal A (15 mm si tout est parfait).")
-                Text("Entre les mesures dans Réglages → Impression. L'app corrige ensuite l'échelle et le décalage de toutes tes impressions.")
-            }
-            .font(.system(size: 8.5)).frame(width: 125 * u, alignment: .leading).offset(x: 70 * u, y: 72 * u)
+            Text("Option : les traits rouges sont à 15 mm du bord gauche et du bord haut. S'ils sont décalés, note de combien.")
+                .font(.system(size: 8)).foregroundStyle(Color.gray).frame(width: 100 * u, alignment: .leading).offset(x: 90 * u, y: 125 * u)
         }
         .frame(width: papier.largeur * u, height: papier.hauteur * u, alignment: .topLeading)
         .environment(\.colorScheme, .light)

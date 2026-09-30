@@ -273,17 +273,25 @@ extension EtatApp {
         }
     }
 
+    /// L'imprimante utilisée et sa correction.
+    var imprimanteCourante: String { prefs.imprimante ?? NSPrintInfo.shared.printer.name }
+    var calibration: CalibrationImprimante? { prefs.calibrations[imprimanteCourante] }
+
     func imprimer() {
         Task { @MainActor in
             await prechargerImages()
-            let data = Export.pdf(Export.pages(mise), mise: mise, decalageX: prefs.decalageX, decalageY: prefs.decalageY,
-                                  echelleX: prefs.echelleX, echelleY: prefs.echelleY)
-            Export.imprimer(data, titre: nomFichier)
-            if !prefs.calibrationFaite { statut = "Astuce : imprime une fois la page de calibrage (Réglages → Impression)." }
+            let c = calibration ?? CalibrationImprimante()
+            let data = Export.pdf(Export.pages(mise), mise: mise, decalageX: c.decalageX, decalageY: c.decalageY,
+                                  echelleX: c.echelleX, echelleY: c.echelleY)
+            Export.imprimer(data, titre: nomFichier, imprimante: prefs.imprimante)
         }
     }
 
-    func imprimerCalibrage(_ papier: Papier) { Export.imprimer(Export.calibrage(papier: papier), titre: "LaFleurStudio - calibrage") }
+    var papierCalibrage: Papier { prefs.papierCalibrage == "Letter" ? .letter : .a4 }
+
+    func imprimerCalibrage() {
+        Export.imprimer(Export.calibrage(papier: papierCalibrage), titre: "LaFleurStudio - règle de calibrage", imprimante: prefs.imprimante)
+    }
 
     // MARK: Images et polices
 

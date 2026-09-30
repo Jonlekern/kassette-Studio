@@ -33,6 +33,24 @@ public enum Trousseau {
     }
 }
 
+/// Correction d'une imprimante, mesurée sur la règle imprimée.
+public struct CalibrationImprimante: Codable, Hashable, Sendable {
+    /// Échelle à appliquer (1 = 100 %). Règle de 10 cm imprimée à 9,8 cm → 10 / 9,8 = 102 %.
+    public var echelleX = 1.0
+    public var echelleY = 1.0
+    /// Décalage (mm, positif = vers la droite / vers le bas).
+    public var decalageX = 0.0
+    public var decalageY = 0.0
+    public init() {}
+
+    /// La règle de `attendu` (cm ou in) a été mesurée à `mesure` (même unité).
+    public static func echelle(attendu: Double, mesure: Double) -> Double? {
+        guard mesure > 0, attendu > 0 else { return nil }
+        let e = attendu / mesure
+        return (0.8...1.25).contains(e) ? e : nil
+    }
+}
+
 /// Réglages de l'app (hors secrets).
 public struct Preferences: Codable, Equatable, Sendable {
     public var conditionsAcceptees = false
@@ -46,17 +64,16 @@ public struct Preferences: Codable, Equatable, Sendable {
     public var langue = "fr"
     public var prochainNumero = 1
     public var prefixeCatalogue = "LFS"
-    /// Décalage de l'imprimante mesuré sur la page de calibrage (mm, positif = vers la droite / vers le bas).
-    public var decalageX = 0.0
-    public var decalageY = 0.0
-    public var calibrationFaite = false
-    /// Échelle réelle de l'imprimante (1 = exacte). Ex. une règle de 150 mm imprimée à 148,5 mm → 150 / 148,5.
-    public var echelleX = 1.0
-    public var echelleY = 1.0
-    /// Unité préférée pour mesurer la page de calibrage : "cm" ou "in".
+    /// Calibrage de chaque imprimante (nom de l'imprimante → correction).
+    public var calibrations: [String: CalibrationImprimante] = [:]
+    /// Imprimante choisie pour imprimer les jaquettes (nil = celle par défaut du Mac).
+    public var imprimante: String?
+    /// Papier de la page de calibrage : "A4" ou "Letter".
+    public var papierCalibrage = "A4"
+    /// Unité préférée pour mesurer la règle : "cm" ou "in".
     public var uniteMesure = "cm"
     enum CodingKeys: String, CodingKey {
-        case conditionsAcceptees, spotifyClientID, dossierAudio, sortieAudioUID, platine, egaliserVolume, rechercheWebClaude, langue, prochainNumero, prefixeCatalogue, decalageX, decalageY, calibrationFaite, echelleX, echelleY, uniteMesure
+        case conditionsAcceptees, spotifyClientID, dossierAudio, sortieAudioUID, platine, egaliserVolume, rechercheWebClaude, langue, prochainNumero, prefixeCatalogue, calibrations, imprimante, papierCalibrage, uniteMesure
     }
 
     /// Décodage tolérant : un réglage absent (ancienne version) prend sa valeur par défaut.
@@ -74,11 +91,9 @@ public struct Preferences: Codable, Equatable, Sendable {
         langue = v(.langue, d.langue)
         prochainNumero = v(.prochainNumero, d.prochainNumero)
         prefixeCatalogue = v(.prefixeCatalogue, d.prefixeCatalogue)
-        decalageX = v(.decalageX, d.decalageX)
-        decalageY = v(.decalageY, d.decalageY)
-        calibrationFaite = v(.calibrationFaite, d.calibrationFaite)
-        echelleX = v(.echelleX, d.echelleX)
-        echelleY = v(.echelleY, d.echelleY)
+        calibrations = v(.calibrations, d.calibrations)
+        imprimante = v(.imprimante, d.imprimante)
+        papierCalibrage = v(.papierCalibrage, d.papierCalibrage)
         uniteMesure = v(.uniteMesure, d.uniteMesure)
     }
 

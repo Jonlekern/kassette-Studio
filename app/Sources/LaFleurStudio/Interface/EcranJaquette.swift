@@ -49,6 +49,9 @@ struct EcranJaquette: View {
             if !etat.alertesBloquantes.isEmpty {
                 Button("Tout corriger") { etat.toutCorriger() }
             }
+            if a == .imprimer && etat.calibration == nil {
+                Button("Imprimer la règle d'abord") { etat.imprimerCalibrage() }
+            }
             Button(etat.alertesBloquantes.isEmpty ? "Continuer" : "\(a == .imprimer ? "Imprimer" : "Exporter") quand même") { lancer(a) }
             Button("Annuler", role: .cancel) {}
         } message: { _ in
@@ -59,9 +62,11 @@ struct EcranJaquette: View {
     private var messageExport: String {
         let b = etat.alertesBloquantes
         let rappel = "Rappel : usage personnel et non commercial. Tu es seul responsable de ce que tu imprimes (droits d'auteur, marques). Imprime toujours à 100 %."
-        if b.isEmpty { return rappel }
+        let regle = action == .imprimer && etat.calibration == nil
+            ? "Ton imprimante (\(etat.imprimanteCourante)) n'est pas encore calibrée : imprime d'abord la règle pour vérifier que la jaquette sort à la bonne taille (Réglages → Impression).\n\n" : ""
+        if b.isEmpty { return regle + rappel }
         let liste = b.prefix(4).map { "• " + $0.message }.joined(separator: "\n")
-        return "\(b.count) alerte\(b.count > 1 ? "s" : "") ouverte\(b.count > 1 ? "s" : "") :\n\(liste)\n\n\(rappel)"
+        return "\(b.count) alerte\(b.count > 1 ? "s" : "") ouverte\(b.count > 1 ? "s" : "") :\n\(liste)\n\n\(regle)\(rappel)"
     }
 
     private func lancer(_ a: ActionExport) {

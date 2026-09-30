@@ -1,3 +1,4 @@
+import AppKit
 import LaFleurCore
 import SwiftUI
 
@@ -81,11 +82,11 @@ struct Reglages: View {
         }
     }
 
-    @State private var papierCalibrage = "A4"
     @State private var regleH = ""
     @State private var regleV = ""
     @State private var bordGauche = ""
     @State private var bordHaut = ""
+    @State private var erreurMesure = ""
 
     private func nombre(_ t: String) -> Double? {
         Double(t.replacingOccurrences(of: ",", with: ".").trimmingCharacters(in: .whitespaces))
@@ -93,54 +94,54 @@ struct Reglages: View {
 
     private var impression: some View {
         let cm = etat.prefs.uniteMesure == "cm"
+        let attendu = cm ? 10.0 : 4.0
+        let unite = cm ? "cm" : "in"
+        let imprimantes = NSPrinter.printerNames
+        let c = etat.calibration
         return VStack(alignment: .leading, spacing: 12) {
-            Groupe(titre: "Calibrage : l'impression à la bonne taille") {
-                HStack {
-                    Text("1. Papier :")
-                    Picker("", selection: $papierCalibrage) { Text("A4").tag("A4"); Text("US Letter").tag("Letter") }
-                        .labelsHidden().frame(width: 110)
-                    Button("Imprimer la page de calibrage…") { etat.imprimerCalibrage(papierCalibrage == "A4" ? .a4 : .letter) }
-                        .buttonStyle(.w98Gras)
+            Groupe(titre: "Imprimante et papier") {
+                Picker("Imprimante", selection: Binding(get: { etat.imprimanteCourante },
+                                                         set: { etat.prefs.imprimante = $0 })) {
+                    ForEach(Array(Set(imprimantes + [etat.imprimanteCourante])).sorted(), id: \.self) { Text($0).tag($0) }
                 }
-                Text("La page sort avec une règle en cm et une en pouces. Imprime à 100 %.").foregroundStyle(W98.ombre)
+                Picker("Papier", selection: $etat.prefs.papierCalibrage) { Text("A4").tag("A4"); Text("US Letter").tag("Letter") }
+                    .pickerStyle(.radioGroup).horizontalRadioGroupLayout()
+            }
+            Groupe(titre: "Imprimer à la bonne taille") {
                 HStack {
-                    Text("2. Je mesure en :")
+                    Text("1.")
+                    Button("Imprimer la règle") { etat.imprimerCalibrage() }.buttonStyle(.w98Gras)
+                    Text("(une règle de 10 cm et une de 4 pouces)").foregroundStyle(W98.ombre)
+                }
+                HStack {
+                    Text("2. Je mesure en")
                     Picker("", selection: $etat.prefs.uniteMesure) { Text("centimètres").tag("cm"); Text("pouces").tag("in") }
                         .pickerStyle(.radioGroup).horizontalRadioGroupLayout().labelsHidden()
                 }
                 HStack {
-                    Text("Règle horizontale (\(cm ? "15 cm" : "6 in")) mesurée :")
-                    Champ(invite: cm ? "15" : "6", texte: $regleH).frame(width: 70); Text(cm ? "cm" : "in")
+                    Text("3. La règle de \(cm ? "10 cm" : "4 pouces") mesure :")
+                    Champ(invite: cm ? "10" : "4", texte: $regleH).frame(width: 70); Text(unite)
+                    Button("OK") { enregistrer(attendu: attendu) }.buttonStyle(.w98Gras).disabled(regleH.isEmpty && regleV.isEmpty && bordGauche.isEmpty && bordHaut.isEmpty)
                 }
-                HStack {
-                    Text("Règle verticale (\(cm ? "20 cm" : "8 in")) mesurée :")
-                    Champ(invite: cm ? "20" : "8", texte: $regleV).frame(width: 70); Text(cm ? "cm" : "in")
+                if !erreurMesure.isEmpty { Text(erreurMesure).foregroundStyle(W98.rouge) }
+                DisclosureGroup("Options : règle verticale, décalage") {
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack {
+                            Text("Règle verticale de \(cm ? "10 cm" : "4 pouces") :"); Champ(invite: cm ? "10" : "4", texte: $regleV).frame(width: 70); Text(unite)
+                        }
+                        Text("À remplir seulement si ton imprimante n'a pas la même erreur dans les deux sens.").foregroundStyle(W98.ombre)
+                        HStack { Text("Bord gauche → trait rouge :"); Champ(invite: "15", texte: $bordGauche).frame(width: 70); Text("mm") }
+                        HStack { Text("Bord haut → trait rouge :"); Champ(invite: "15", texte: $bordHaut).frame(width: 70); Text("mm") }
+                    }
+                    .padding(.top, 4)
                 }
-                HStack {
-                    Text("Bord gauche → trait rouge A :"); Champ(invite: "15", texte: $bordGauche).frame(width: 70); Text("mm")
+                if let c {
+                    Text("✓ \(etat.imprimanteCourante) : \(String(format: "%.1f", c.echelleX * 100)) %\(c.echelleY != c.echelleX ? " × \(String(format: "%.1f", c.echelleY * 100)) %" : "")\(c.decalageX != 0 || c.decalageY != 0 ? ", décalage \(String(format: "%+.1f", c.decalageX)) / \(String(format: "%+.1f", c.decalageY)) mm" : ""). Appliqué à toutes les impressions sur cette imprimante.")
+                        .foregroundStyle(W98.vert).fixedSize(horizontal: false, vertical: true)
+                    Button("Réinitialiser (100 %)") { etat.prefs.calibrations[etat.imprimanteCourante] = nil }.buttonStyle(.w98)
+                } else {
+                    Text("Cette imprimante n'est pas encore calibrée : elle imprime sans correction.").foregroundStyle(W98.ombre)
                 }
-                HStack {
-                    Text("Bord haut → trait rouge A :"); Champ(invite: "15", texte: $bordHaut).frame(width: 70); Text("mm")
-                }
-                Button("3. Enregistrer le calibrage") {
-                    let attenduH = cm ? 15.0 : 6.0, attenduV = cm ? 20.0 : 8.0
-                    if let h = nombre(regleH), h > 0 { etat.prefs.echelleX = attenduH / h }
-                    if let v = nombre(regleV), v > 0 { etat.prefs.echelleY = attenduV / v }
-                    if let g = nombre(bordGauche) { etat.prefs.decalageX = 15 - g }
-                    if let b = nombre(bordHaut) { etat.prefs.decalageY = 15 - b }
-                    etat.prefs.calibrationFaite = true
-                    regleH = ""; regleV = ""; bordGauche = ""; bordHaut = ""
-                }
-                .buttonStyle(.w98Gras).disabled([regleH, regleV, bordGauche, bordHaut].allSatisfy { $0.isEmpty })
-                Text(etat.prefs.calibrationFaite
-                     ? "Réglage enregistré : échelle \(String(format: "%.2f", etat.prefs.echelleX * 100)) % × \(String(format: "%.2f", etat.prefs.echelleY * 100)) %, décalage \(String(format: "%+.1f", etat.prefs.decalageX)) mm / \(String(format: "%+.1f", etat.prefs.decalageY)) mm. Il s'applique à toutes tes impressions."
-                     : "Pas encore calibré : les impressions partent sans correction.")
-                    .foregroundStyle(etat.prefs.calibrationFaite ? W98.vert : W98.ombre).fixedSize(horizontal: false, vertical: true)
-                Button("Remettre à zéro") {
-                    etat.prefs.echelleX = 1; etat.prefs.echelleY = 1; etat.prefs.decalageX = 0; etat.prefs.decalageY = 0
-                    etat.prefs.calibrationFaite = false
-                }
-                .buttonStyle(.w98)
             }
             Groupe(titre: "Papier conseillé") {
                 Text("J-card, O-card, obi : papier mat ou satiné de 170 à 250 g/m², A4.")
@@ -167,6 +168,27 @@ struct Reglages: View {
                     .foregroundStyle(W98.ombre).fixedSize(horizontal: false, vertical: true)
             }
         }
+    }
+
+    private func enregistrer(attendu: Double) {
+        var c = etat.calibration ?? CalibrationImprimante()
+        erreurMesure = ""
+        if !regleH.isEmpty {
+            guard let m = nombre(regleH), let e = CalibrationImprimante.echelle(attendu: attendu, mesure: m) else {
+                erreurMesure = "Mesure « \(regleH) » improbable : vérifie l'unité (cm ou pouces)."; return
+            }
+            c.echelleX = e; c.echelleY = e
+        }
+        if !regleV.isEmpty {
+            guard let m = nombre(regleV), let e = CalibrationImprimante.echelle(attendu: attendu, mesure: m) else {
+                erreurMesure = "Mesure verticale « \(regleV) » improbable."; return
+            }
+            c.echelleY = e
+        }
+        if let g = nombre(bordGauche) { c.decalageX = 15 - g }
+        if let b = nombre(bordHaut) { c.decalageY = 15 - b }
+        etat.prefs.calibrations[etat.imprimanteCourante] = c
+        regleH = ""; regleV = ""; bordGauche = ""; bordHaut = ""
     }
 
     private var claude: some View {
