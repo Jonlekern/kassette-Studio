@@ -13,6 +13,8 @@ Projet indépendant : aucun lien avec le site lafleurstudio.ch.
 | Sujet | Décision |
 |---|---|
 | Plateforme | App macOS native |
+| Deux modes | **Album** (l'ordre de l'album est gardé, simple découpe A/B) et **Mixtape** (plusieurs artistes, Claude compose et équilibre) |
+| Maison de disque | Champ « maison de disque » sur la jaquette et le code-barres. Exemple : **LAFLEURSTUDIO**, catalogue LFS-001, LFS-002… |
 | Référence | Tapercraft (vhs.texs.org), option A : on fait tout nous-mêmes, pas d'abonnement, pas de dépendance à leur service |
 | Spotify | Connexion à mon compte perso : tracklist, durées exactes, pochettes, infos d'album |
 | Claude | Compose des sélections, équilibre les faces A/B, écrit les textes de jaquette, propose le design (palette, polices, variantes), vérifie avant impression |
@@ -39,10 +41,10 @@ Projet indépendant : aucun lien avec le site lafleurstudio.ch.
 - **Types** : EAN-13, UPC-A, Code 128 (accepte des lettres, pratique pour un numéro de catalogue),
   QR code.
 - **Personnalisation** : le numéro (la clé de contrôle EAN est calculée toute seule), une ligne de texte
-  au-dessus (ex. « LAFLEUR TAPES · LFT-001 »), les couleurs des barres et du fond, la taille,
+  au-dessus (ex. « LAFLEURSTUDIO · LFS-001 »), les couleurs des barres et du fond, la taille,
   la rotation, afficher ou non les chiffres.
 - **Numéro par défaut** : un EAN commençant par 2 (plage réservée à l'usage interne, qui ne correspond
-  à aucun vrai produit), avec numérotation automatique des K7 : LFT-001, LFT-002…
+  à aucun vrai produit), avec numérotation automatique des K7 : LFS-001, LFS-002…
 - Claude peut proposer le texte et le numéro de catalogue, et la vérification avant impression contrôle
   que le code-barres reste scannable (taille minimale, contraste, pas de débordement).
 
