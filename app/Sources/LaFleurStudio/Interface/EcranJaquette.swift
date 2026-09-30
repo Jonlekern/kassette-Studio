@@ -14,6 +14,8 @@ struct EcranJaquette: View {
     @EnvironmentObject var etat: EtatApp
     @State private var apercu: FormatApercu = .jcard
     @State private var zoom: CGFloat = 4
+    /// Zoom automatique : l'objet entier tient dans l'aperçu.
+    @State private var ajuster = true
     @State private var demande = ""
     @State private var montrer3D = false
     @State private var action: ActionExport?
@@ -31,8 +33,15 @@ struct EcranJaquette: View {
             ScrollView { colonneReglages.padding(.trailing, 6) }.frame(width: 280)
             VStack(alignment: .leading, spacing: 6) {
                 barreApercu
-                ScrollView([.horizontal, .vertical]) {
-                    apercuVue.padding(24).shadow(color: .black.opacity(0.35), radius: 4, x: 2, y: 3)
+                GeometryReader { g in
+                    let t = tailleApercu
+                    let u = ajuster ? max(1, min((g.size.width - 48) / t.0, (g.size.height - 48) / t.1)) : zoom
+                    ScrollView([.horizontal, .vertical]) {
+                        apercuVue(u).padding(24).shadow(color: .black.opacity(0.35), radius: 4, x: 2, y: 3)
+                            .frame(minWidth: g.size.width, minHeight: g.size.height)
+                    }
+                    .onChange(of: u) { _, nouveau in if ajuster { zoom = nouveau } }
+                    .onAppear { if ajuster { zoom = u } }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(W98.grisFonce).creux(W98.grisFonce)
@@ -96,24 +105,35 @@ struct EcranJaquette: View {
             }
             Spacer()
             Text("Zoom")
-            Slider(value: $zoom, in: 1.5...8).frame(width: 110)
+            Slider(value: Binding(get: { zoom }, set: { zoom = $0; ajuster = false }), in: 1.5...8).frame(width: 110)
+            Button("Ajuster") { ajuster = true }.buttonStyle(ajuster ? .w98Gras : .w98).help("Tout l'objet dans l'aperçu")
             Text("\(Int(zoom / Typo.ptParMM * 100)) %").frame(width: 44, alignment: .trailing)
             Button("Aperçu 3D") { montrer3D = true }.buttonStyle(.w98).disabled(!etat.design.jcard)
         }
     }
 
-    @ViewBuilder private var apercuVue: some View {
+    /// Taille de l'objet affiché (mm).
+    private var tailleApercu: (CGFloat, CGFloat) {
+        switch apercu {
+        case .jcard, .verso: let g = etat.mise.gabaritJ; return (g.largeur, g.hauteur)
+        case .ocard: return (Gabarits.ocard.largeur, Gabarits.ocard.hauteur)
+        case .etiquettes: return (89, 42 * 2 + 6)
+        case .obi: return (Gabarits.obi.largeur, Gabarits.obi.hauteur)
+        }
+    }
+
+    @ViewBuilder private func apercuVue(_ u: CGFloat) -> some View {
         let m = etat.mise
         switch apercu {
-        case .jcard: JCardVue(mise: m, guides: true, u: zoom)
-        case .verso: JCardVue(mise: m, cote: .verso, guides: true, u: zoom)
-        case .ocard: OCardVue(mise: m, guides: true, u: zoom)
+        case .jcard: JCardVue(mise: m, guides: true, u: u)
+        case .verso: JCardVue(mise: m, cote: .verso, guides: true, u: u)
+        case .ocard: OCardVue(mise: m, guides: true, u: u)
         case .etiquettes:
-            VStack(spacing: 6 * zoom) {
-                EtiquetteVue(mise: m, face: .a, u: zoom)
-                EtiquetteVue(mise: m, face: .b, u: zoom)
+            VStack(spacing: 6 * u) {
+                EtiquetteVue(mise: m, face: .a, u: u)
+                EtiquetteVue(mise: m, face: .b, u: u)
             }
-        case .obi: ObiVue(mise: m, guides: true, u: zoom)
+        case .obi: ObiVue(mise: m, guides: true, u: u)
         }
     }
 
@@ -302,7 +322,7 @@ struct EcranJaquette: View {
         return VStack(alignment: .leading, spacing: 10) {
             Groupe(titre: "Direction artistique · Claude") {
                 if etat.conversation.isEmpty {
-                    BulleClaude(texte: etat.projet.mode == .album
+                    BulleClaude(cle: etat.projet.mode == .album
                                 ? "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Dis-moi l'ambiance, ou clique sur « Proposer »."
                                 : "Pour ta mixtape je propose d'abord un collage des covers, puis ta propre image, le style K7 maison, ou un design dessiné. Dis-moi l'ambiance.")
                 }

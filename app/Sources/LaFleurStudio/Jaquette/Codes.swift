@@ -89,11 +89,24 @@ struct PileCodes: View {
     let u: CGFloat
     var avecQR = true
     var avecBarres = true
+    /// Côte à côte (QR à gauche, code Spotify et code-barres à droite) au lieu d'empilés.
+    var cote = false
 
     var body: some View {
+        if cote {
+            HStack(alignment: .bottom, spacing: 2 * u) {
+                PileCodes(mise: mise, largeur: 15, u: u, avecQR: true, avecBarres: false)
+                PileCodes(mise: mise, largeur: largeur, u: u, avecQR: false, avecBarres: true)
+            }
+        } else {
+            pile
+        }
+    }
+
+    private var pile: some View {
         let d = mise.design
         let (b, f) = mise.couleursCode
-        VStack(spacing: 1.2 * u) {
+        return VStack(spacing: 1.2 * u) {
             if avecQR && d.qr, let m = CodeQR.modules(mise.contenuQR) {
                 QRVue(modules: m, cote: min(largeur, 15), barres: Color(hex: b), fond: Color(hex: f), u: u)
             }

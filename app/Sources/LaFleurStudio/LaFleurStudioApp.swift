@@ -8,6 +8,9 @@ struct LaFleurStudioApp: App {
     @StateObject private var moteur = MoteurEnregistrement()
 
     init() {
+        // Langue de l'interface choisie dans Réglages (prise en compte au lancement).
+        let langue = Stockage().preferences().langue
+        UserDefaults.standard.set([langue], forKey: "AppleLanguages")
         // Lancée avec `swift run`, l'app doit se déclarer comme une vraie app à fenêtres.
         NSApplication.shared.setActivationPolicy(.regular)
         NSApplication.shared.activate(ignoringOtherApps: true)

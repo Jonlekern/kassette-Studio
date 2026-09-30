@@ -212,8 +212,17 @@ struct Reglages: View {
                 Text("Français").tag("fr"); Text("English").tag("en"); Text("Русский").tag("ru"); Text("Deutsch").tag("de")
             }
             .pickerStyle(.radioGroup).labelsHidden()
-            Text("Claude répond dans cette langue. La traduction complète de l'interface arrive dans une prochaine étape.")
+            Text("Claude répond dans cette langue. L'interface change au prochain lancement de l'app.")
                 .foregroundStyle(W98.ombre)
+            Button("Relancer l'app maintenant") {
+                let url = Bundle.main.bundleURL
+                let config = NSWorkspace.OpenConfiguration()
+                config.createsNewApplicationInstance = true
+                NSWorkspace.shared.openApplication(at: url, configuration: config) { _, _ in
+                    DispatchQueue.main.async { NSApp.terminate(nil) }
+                }
+            }
+            .buttonStyle(.w98)
         }
     }
 }

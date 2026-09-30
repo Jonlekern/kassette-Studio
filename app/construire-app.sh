@@ -26,6 +26,9 @@ iconutil -c icns Ressources/AppIcon.iconset -o "$APP/Contents/Resources/AppIcon.
 # Polices libres (licences OFL et Apache jointes), chargées automatiquement par macOS au lancement.
 cp -R Ressources/Polices "$APP/Contents/Resources/Polices"
 
+# Traductions de l'interface (anglais, russe, allemand ; le français est la langue de base).
+for l in Ressources/Langues/*.lproj; do if [[ -d "$l" ]]; then cp -R "$l" "$APP/Contents/Resources/"; fi; done
+
 cat > "$APP/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

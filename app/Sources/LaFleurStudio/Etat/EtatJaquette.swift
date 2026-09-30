@@ -177,23 +177,61 @@ extension EtatApp {
 
     // MARK: Vérification avant impression
 
-    /// Corrige tout seul ce qui dépasse (taille réduite juste ce qu'il faut) et les codes illisibles.
+    /// Corrige tout seul ce qui dépasse : réduit la taille juste ce qu'il faut (jamais sous 5 pt),
+    /// puis raccourcit le texte de tranche s'il ne tient toujours pas. Codes illisibles → noir sur blanc.
     func toutCorriger() {
         var d = design
+        func deborde(_ z: ZoneTexte) -> Bool { z.largeurTexte > z.largeurZone + 0.05 || z.hauteurTexte > z.hauteurZone + 0.05 }
         for _ in 0..<8 {
-            let zones = Mise(projet: projet, design: d).zones()
             var ratios: [String: Double] = [:]
-            for z in zones where z.largeurTexte > z.largeurZone + 0.05 || z.hauteurTexte > z.hauteurZone + 0.05 {
+            var planchers: [String: Double] = [:]
+            for z in Mise(projet: projet, design: d).zones() where deborde(z) {
                 let r = min(z.largeurZone / max(0.01, z.largeurTexte), z.hauteurZone / max(0.01, z.hauteurTexte)) * 0.97
                 ratios[z.nom] = min(ratios[z.nom] ?? 1, r)
+                // Échelle qui donnerait 5 pt : on ne descend jamais en dessous.
+                let base = z.taillePt / d.echelle(z.nom)
+                planchers[z.nom] = max(planchers[z.nom] ?? 0, Verification.tailleMin / max(0.1, base))
             }
             if ratios.isEmpty { break }
-            for (zone, r) in ratios { d.echelles[zone] = max(0.45, d.echelle(zone) * r) }
+            var bouge = false
+            for (zone, r) in ratios {
+                let nouvelle = max(planchers[zone] ?? 0.45, d.echelle(zone) * r)
+                if nouvelle < d.echelle(zone) - 0.001 { d.echelles[zone] = nouvelle; bouge = true }
+            }
+            if !bouge { break }
+        }
+        // La tranche ne tient pas même à 5 pt : on essaie des versions plus courtes.
+        let tient = { (dd: Design) in !Mise(projet: projet, design: dd).zones().contains { $0.nom == "tranche" && deborde($0) } }
+        if !tient(d) {
+            for t in versionsCourtes(d.texteTranche ?? projet.trancheAuto) {
+                var essai = d; essai.texteTranche = t
+                if tient(essai) { d = essai; break }
+            }
         }
         if alertes.contains(where: { $0.id.hasPrefix("code-inverse") || $0.id.hasPrefix("code-contraste") }) { d.couleursCode = .blanc }
         design = d
         if let avis = avisClaude { appliquer(avis.corrections) }
         statut = alertesBloquantes.isEmpty ? "Tout est corrigé ✓" : "Il reste \(alertesBloquantes.count) alerte(s) à régler à la main"
+    }
+
+    /// Textes de tranche de plus en plus courts : initiale du prénom, sans article, titre seul, titre coupé.
+    func versionsCourtes(_ texte: String) -> [String] {
+        let parties = texte.components(separatedBy: " · ")
+        var v: [String] = []
+        let artiste = parties.first ?? ""
+        let reste = parties.dropFirst().joined(separator: " · ")
+        let mots = artiste.split(separator: " ")
+        let initiale = mots.count > 1 ? "\(mots[0].prefix(1)). " + mots.dropFirst().joined(separator: " ") : artiste
+        let sansArticle = reste.replacingOccurrences(of: #"^(THE|AN|A|LE|LA|LES|L')\s+"#, with: "", options: [.regularExpression, .caseInsensitive])
+        if !reste.isEmpty {
+            v.append("\(initiale) · \(reste)")
+            v.append("\(initiale) · \(sansArticle)")
+            v.append(reste)
+            v.append(sansArticle)
+        }
+        let base = reste.isEmpty ? texte : sansArticle
+        for n in stride(from: base.count - 1, through: 8, by: -2) { v.append(String(base.prefix(n)).trimmingCharacters(in: .whitespaces) + "…") }
+        return v
     }
 
     func appliquer(_ corrections: [AvisRendu.Correction]) {

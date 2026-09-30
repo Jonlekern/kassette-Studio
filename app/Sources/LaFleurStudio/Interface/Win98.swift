@@ -67,7 +67,7 @@ extension ButtonStyle where Self == BoutonW98 {
 
 /// Cadre gravé avec légende, comme les « group box » de Windows.
 struct Groupe<Contenu: View>: View {
-    let titre: String
+    let titre: LocalizedStringKey
     @ViewBuilder var contenu: Contenu
     var body: some View {
         VStack(alignment: .leading, spacing: 6) { contenu }
@@ -88,7 +88,7 @@ struct Fenetre<Contenu: View>: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text(titre).font(W98.policeGras).foregroundStyle(.white)
+                Text(LocalizedStringKey(titre)).font(W98.policeGras).foregroundStyle(.white)
                 Spacer()
                 if let fermer {
                     Button(action: fermer) { Text("×").font(.system(size: 11, weight: .bold)).foregroundStyle(W98.rouge) }
@@ -113,7 +113,7 @@ struct Onglets<Valeur: Hashable>: View {
                 let (valeur, titre) = onglets[i]
                 let actif = valeur == selection
                 Button { selection = valeur } label: {
-                    Text(titre).font(actif ? W98.policeGras : W98.police).foregroundStyle(.black)
+                    Text(LocalizedStringKey(titre)).font(actif ? W98.policeGras : W98.police).foregroundStyle(.black)
                         .padding(.horizontal, 16).padding(.vertical, actif ? 5 : 4)
                         .relief().offset(y: actif ? 1 : 2)
                 }
@@ -142,13 +142,15 @@ struct Blocs: View {
     }
 }
 
-/// Bulle de Claude (fond jaune pâle).
+/// Bulle de Claude (fond jaune pâle). `texte` : réponse de Claude, affichée telle quelle ; `cle` : texte de l'app, traduit.
 struct BulleClaude: View {
-    let texte: String
+    private let contenu: Text
+    init(texte: String) { contenu = Text(verbatim: texte) }
+    init(cle: LocalizedStringKey) { contenu = Text(cle) }
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text("Claude").font(W98.policeGras)
-            Text(texte).font(W98.police).fixedSize(horizontal: false, vertical: true)
+            contenu.font(W98.police).fixedSize(horizontal: false, vertical: true)
         }
         .padding(8).frame(maxWidth: .infinity, alignment: .leading).creux(W98.bulle)
     }
@@ -161,7 +163,7 @@ struct Champ: View {
     var secret = false
     var body: some View {
         Group {
-            if secret { SecureField(invite, text: $texte) } else { TextField(invite, text: $texte) }
+            if secret { SecureField(LocalizedStringKey(invite), text: $texte) } else { TextField(LocalizedStringKey(invite), text: $texte) }
         }
         .textFieldStyle(.plain).font(W98.police).padding(.horizontal, 5).frame(height: 22).creux()
     }

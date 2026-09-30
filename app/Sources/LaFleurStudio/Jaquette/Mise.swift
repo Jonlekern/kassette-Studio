@@ -62,8 +62,11 @@ struct Mise {
         case .typeII: position = "HIGH POSITION · 70 µs"
         case .typeIV: position = "METAL POSITION · 70 µs"
         }
-        let nr = c.reducteur == .aucun ? "" : " · \(c.reducteur.nom.uppercased()) NR"
-        return "\(c.bande.badge)\n\(position)\(nr)"
+        let nr = c.reducteur == .aucun ? "" : "\(c.reducteur.nom.uppercased()) NR"
+        let lignes = [c.bande.badge] + position.components(separatedBy: " · ") + (nr.isEmpty ? [] : [nr])
+        // Deux éléments par ligne au plus, pour tenir dans un rabat étroit.
+        return stride(from: 0, to: lignes.count, by: 2).map { lignes[$0..<min($0 + 2, lignes.count)].joined(separator: " · ") }
+            .joined(separator: "\n")
     }
 
     /// Lignes de la tracklist : (face, numéro, titre, durée).
@@ -94,18 +97,20 @@ struct Mise {
     }
 
     func badgeSpec(largeur: CGFloat) -> SpecTexte {
-        SpecTexte(zone: "rabat", texte: badge, famille: v.policeTexte, pt: 4.8 * e("rabat"), gras: true, kerning: 0.2,
-                  largeur: largeur, hauteur: 7, lignes: 2, couleur: p.texte, fond: p.fond)
+        let n = badge.components(separatedBy: "\n").count
+        return SpecTexte(zone: "badge", texte: badge, famille: v.policeTexte, pt: 5 * e("badge"), gras: true,
+                         largeur: largeur, hauteur: CGFloat(n) * 2.6, lignes: n, couleur: p.texte, fond: p.fond)
     }
 
+    /// Ligne au-dessus du code-barres : passe sur deux lignes si besoin.
     func texteCodeSpec(largeur: CGFloat) -> SpecTexte {
-        SpecTexte(zone: "code", texte: texteCode, famille: v.policeTexte, pt: 4.5 * e("code"), kerning: 0.2,
-                  largeur: largeur, hauteur: 3, lignes: 1, couleur: p.texte, fond: p.fond)
+        SpecTexte(zone: "code", texte: texteCode, famille: v.policeTexte, pt: 5 * e("code"),
+                  largeur: largeur, hauteur: 5.5, couleur: p.texte, fond: p.fond)
     }
 
     func droitsSpec(largeur: CGFloat) -> SpecTexte {
-        SpecTexte(zone: "droits", texte: projet.ligneDroits, famille: v.policeTexte, pt: 4.2 * e("rabat"),
-                  largeur: largeur, hauteur: 3, lignes: 1, couleur: p.texte, fond: p.fond)
+        SpecTexte(zone: "droits", texte: projet.ligneDroits, famille: v.policeTexte, pt: 5 * e("droits"),
+                  largeur: largeur, hauteur: 5.5, couleur: p.texte, fond: p.fond)
     }
 
     /// Hauteur de la tracklist (mm) pour une taille donnée.
@@ -145,7 +150,12 @@ struct Mise {
     func obiSpec() -> SpecTexte {
         let t = design.obiTexte.isEmpty ? texteTranche : design.obiTexte
         return SpecTexte(zone: "obi", texte: t, famille: v.policeTitre, pt: 9 * e("obi"), gras: true,
-                         largeur: 108 - 16, hauteur: 16, lignes: 1, couleur: p.fond, fond: p.accent)
+                         largeur: 108 - 16, hauteur: 16, lignes: 1, couleur: couleurObi, fond: p.accent)
+    }
+
+    /// Texte de l'obi : la couleur de la palette qui se lit le mieux sur l'accent.
+    var couleurObi: String {
+        [p.fond, p.texte, "#FFFFFF", "#000000"].max { Verification.contraste($0, p.accent) < Verification.contraste($1, p.accent) }!
     }
 
     // MARK: Blocs intérieurs
@@ -212,9 +222,9 @@ struct Mise {
             z.append(titre(largeur: Gabarits.recto - 8))
             z.append(artiste(largeur: Gabarits.recto - 8))
             if let r = g.panneau(.rabat) {
-                z.append(badgeSpec(largeur: r.largeur - 3))
-                if design.codeBarres && design.placeCode == .rabat { z.append(texteCodeSpec(largeur: r.largeur - 3)) }
-                z.append(droitsSpec(largeur: r.largeur - 3))
+                z.append(badgeSpec(largeur: r.largeur - 2))
+                if design.codeBarres && design.placeCode == .rabat { z.append(texteCodeSpec(largeur: r.largeur - 2)) }
+                z.append(droitsSpec(largeur: r.largeur - 2))
             }
             let rep = repartition
             var places: [(Bloc, CGFloat)] = rep.exterieur.map { ($0.value, $0.key.largeur) }

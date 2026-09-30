@@ -93,10 +93,10 @@ struct EcranEnregistrer: View {
     @ViewBuilder private var message: some View {
         switch moteur.etat {
         case .compteARebours(let s):
-            BulleClaude(texte: "Relâche la pause de la platine… \(s)")
+            BulleClaude(cle: "Relâche la pause de la platine… \(s)")
         case .finDeFace:
             VStack(alignment: .leading, spacing: 8) {
-                BulleClaude(texte: moteur.face == .a
+                BulleClaude(cle: moteur.face == .a
                     ? "Face A terminée. Arrête la platine, retourne la cassette, puis remets-la en ENREGISTREMENT + PAUSE."
                     : "Face B terminée. C'est dans la boîte ✿ Arrête la platine.")
                 if moteur.face == .a && !etat.projet.faceB.isEmpty {

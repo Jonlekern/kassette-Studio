@@ -202,7 +202,7 @@ struct RabatVue: View {
     let hauteur: CGFloat
     let u: CGFloat
     var body: some View {
-        let l = largeur - 3
+        let l = largeur - 2
         VStack(spacing: 1.2 * u) {
             TexteMM(spec: mise.badgeSpec(largeur: l), u: u)
             Spacer(minLength: 0)
@@ -221,6 +221,8 @@ struct BlocVue: View {
     let bloc: Mise.Bloc
     let largeur: CGFloat
     let hauteur: CGFloat
+    /// O-card : tous les codes cochés vont sous la tracklist, côte à côte.
+    var tousLesCodes = false
     let u: CGFloat
 
     var body: some View {
@@ -254,9 +256,13 @@ struct BlocVue: View {
                     }
                 }
                 Spacer(minLength: 0)
-                PileCodes(mise: mise, largeur: min(l, 30), u: u,
-                          avecQR: mise.design.placeQR == .interieur, avecBarres: mise.design.placeCode == .interieur)
-                    .frame(maxWidth: .infinity)
+                if tousLesCodes {
+                    PileCodes(mise: mise, largeur: 26, u: u, cote: true).frame(maxWidth: .infinity)
+                } else {
+                    PileCodes(mise: mise, largeur: min(l, 30), u: u,
+                              avecQR: mise.design.placeQR == .interieur, avecBarres: mise.design.placeCode == .interieur)
+                        .frame(maxWidth: .infinity)
+                }
             case .notes:
                 TexteMM(spec: mise.notesSpec(largeur: l, hauteur: hauteur - 10), u: u, alignement: .leading)
                 Spacer(minLength: 0)
@@ -351,10 +357,7 @@ struct OCardVue: View {
                         case .colle:
                             Rectangle().fill(Color(hex: p.accent))
                         case .dos:
-                            VStack(spacing: 0) {
-                                BlocVue(mise: mise, bloc: .tracklist, largeur: pan.largeur, hauteur: g.hauteur - 30, u: u)
-                                PileCodes(mise: mise, largeur: pan.largeur - 30, u: u).frame(height: 28 * u)
-                            }
+                            BlocVue(mise: mise, bloc: .tracklist, largeur: pan.largeur, hauteur: g.hauteur, tousLesCodes: true, u: u)
                         case .tranche:
                             TrancheVue(mise: mise, longueur: g.hauteur, epaisseur: pan.largeur, u: u)
                         case .recto:
@@ -473,7 +476,7 @@ struct ObiVue: View {
         let spec = mise.obiSpec()
         let vertical = { (t: String, taille: CGFloat, largeur: CGFloat) in
             Text(t).font(Typo.font(mise.design.variante.policeTexte, taille * u / Typo.ptParMM, gras: true))
-                .foregroundStyle(Color(hex: p.fond)).lineLimit(1).minimumScaleFactor(0.5)
+                .foregroundStyle(Color(hex: mise.couleurObi)).lineLimit(1).minimumScaleFactor(0.5)
                 .frame(width: (g.hauteur - 12) * u, height: largeur * u)
                 .rotationEffect(.degrees(90)).frame(width: largeur * u, height: g.hauteur * u)
         }
