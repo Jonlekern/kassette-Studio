@@ -237,6 +237,7 @@ extension Projet {
     public var numeroCodeAuto: String { CodesBarres.eanParDefaut(CodesBarres.numeroDeCatalogue(numeroCatalogue)) }
     /// Ligne ℗/© du rabat.
     public var ligneDroits: String {
+        if let droits, !droits.isEmpty { return droits }
         let a = annee ?? String(Calendar.current.component(.year, from: creeLe))
         return "℗ © \(a) \(maisonDeDisque)"
     }

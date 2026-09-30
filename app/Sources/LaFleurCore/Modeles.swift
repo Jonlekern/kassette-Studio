@@ -145,6 +145,8 @@ public struct Projet: Codable, Identifiable, Hashable, Sendable {
     public var catalogueOrigine: String?
     public var codeBarresOrigine: String?
     public var musicBrainzID: String?
+    /// Ligne ℗/© officielle (Spotify), si connue.
+    public var droits: String?
     /// Jaquette, étiquettes, O-card, obi (nil tant que l'écran Jaquette n'a pas été ouvert).
     public var design: Design?
     public var enregistree: Set<Face> = []

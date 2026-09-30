@@ -162,6 +162,22 @@ public actor ClientSpotify {
                                             disc_number: $0.disc_number).morceau() }
     }
 
+    /// Maison de disque et lignes ℗/© d'un album (champs absents pour certaines applis : alors nil).
+    public func edition(_ id: String) async throws -> (maison: String?, droits: String?) {
+        struct R: Decodable {
+            struct C: Decodable { let text: String; let type: String? }
+            let label: String?
+            let copyrights: [C]?
+        }
+        let r = try await get(R.self, api("/albums/\(id)"))
+        // La ligne ℗ (enregistrement) d'abord, sinon la ©.
+        let c = r.copyrights ?? []
+        let ligne = (c.first { $0.type == "P" } ?? c.first)?.text
+        return (r.label.flatMap { $0.isEmpty ? nil : $0 }, ligne.map { t in
+            t.hasPrefix("℗") || t.hasPrefix("©") || t.hasPrefix("(P)") || t.hasPrefix("(C)") ? t : "℗ " + t
+        })
+    }
+
     public func morceau(_ id: String) async throws -> Morceau? {
         try await get(TrackAPI.self, api("/tracks/\(id)")).morceau()
     }

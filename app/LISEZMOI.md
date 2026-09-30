@@ -90,4 +90,3 @@ aussi dans la langue choisie.
 - Platine double cassette (copie d'une K7) : prévu plus tard.
 - Modèles de planches d'étiquettes prédécoupées d'une marque précise (pour l'instant : papier autocollant
   pleine page + traits de coupe).
-- Ligne ℗ exacte venant de Spotify : l'app écrit « ℗ © année maison de disque ».

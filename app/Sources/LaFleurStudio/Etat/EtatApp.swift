@@ -190,6 +190,11 @@ final class EtatApp: ObservableObject {
             let morceaux = try await clientSpotify().morceauxDAlbum(a.id)
             projet.titre = a.titre; projet.artiste = a.artiste; projet.pochetteURL = a.pochetteURL
             projet.spotifyAlbumID = a.id; projet.mode = .album
+            projet.annee = morceaux.first?.annee
+            if let e = try? await clientSpotify().edition(a.id) {
+                projet.droits = e.droits
+                if let m = e.maison { projet.labelOrigine = m }
+            }
             remplir(morceaux)
         }
     }
