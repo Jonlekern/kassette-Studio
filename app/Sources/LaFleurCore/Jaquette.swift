@@ -306,6 +306,7 @@ public struct Papier: Hashable, Sendable {
     public static let a4 = Papier(nom: "A4", largeur: 210, hauteur: 297)
     public static let a4Paysage = Papier(nom: "A4 paysage", largeur: 297, hauteur: 210)
     public static let a3Paysage = Papier(nom: "A3 paysage", largeur: 420, hauteur: 297)
+    public static let letter = Papier(nom: "US Letter", largeur: 215.9, hauteur: 279.4)
 
     /// Le plus petit papier où l'objet tient avec son fond perdu et ses repères (marge 12 mm).
     public static func pour(largeur: Double, hauteur: Double) -> Papier {

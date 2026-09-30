@@ -439,6 +439,25 @@ struct EtiquetteVue: View {
         }
         .frame(width: (89 + 2 * perdu) * u, height: (42 + 2 * perdu) * u, alignment: .topLeading)
         .clipShape(RoundedRectangle(cornerRadius: perdu > 0 ? 0 : 2.5 * u))
+        // Sur la K7 de la platine, la fenêtre est un vrai trou : on voit les bobines.
+        .mask {
+            if fenetreADecouper {
+                Rectangle()
+            } else {
+                TrouFenetre(u: u).fill(style: FillStyle(eoFill: true))
+            }
+        }
+    }
+}
+
+struct TrouFenetre: Shape {
+    let u: CGFloat
+    func path(in r: CGRect) -> Path {
+        let f = Gabarits.fenetreEtiquette
+        var p = Path(r)
+        p.addRoundedRect(in: CGRect(x: f.x * u, y: f.y * u, width: f.largeur * u, height: f.hauteur * u),
+                         cornerSize: CGSize(width: 2 * u, height: 2 * u))
+        return p
     }
 }
 

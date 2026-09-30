@@ -32,6 +32,20 @@ jobs:
           name: LaFleurStudio
           path: app/dist/LaFleurStudio.zip
           retention-days: 30
+      - name: Captures des écrans et des jaquettes
+        continue-on-error: true
+        run: |
+          perl -e 'alarm 300; exec @ARGV' dist/LaFleurStudio.app/Contents/MacOS/LaFleurStudio --captures "$PWD/captures"
+          ls -la captures
+          cat captures/journal.txt || true
+      - name: Mettre les captures en téléchargement
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Captures
+          path: app/captures
+          retention-days: 14
+          if-no-files-found: ignore
       - name: Détail des erreurs (seulement si ça échoue)
         if: failure()
         run: |

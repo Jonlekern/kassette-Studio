@@ -1,11 +1,11 @@
 import LaFleurCore
 import SwiftUI
 
-/// Réglages (⌘,) : audio, platine, Claude, Spotify, langue, conditions.
+/// Réglages (⌘,) : audio, platine, impression, Claude, Spotify, sources, langue, conditions.
 struct Reglages: View {
     @EnvironmentObject var etat: EtatApp
     @State private var rubrique = "Audio"
-    private let rubriques = ["Audio", "Platine", "Claude", "Spotify", "Langue", "Conditions"]
+    private let rubriques = ["Audio", "Platine", "Impression", "Claude", "Spotify", "Sources", "Langue", "Conditions"]
 
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
@@ -25,6 +25,8 @@ struct Reglages: View {
                 switch rubrique {
                 case "Audio": audio
                 case "Platine": platine
+                case "Impression": ScrollView { impression }
+                case "Sources": sources
                 case "Claude": claude
                 case "Spotify": ScrollView { VStack(alignment: .leading, spacing: 12) { Groupe(titre: "Compte Spotify") { ReglageSpotify() }; GuideSpotify() } }
                 case "Langue": langue
@@ -79,6 +81,94 @@ struct Reglages: View {
         }
     }
 
+    @State private var papierCalibrage = "A4"
+    @State private var regleH = ""
+    @State private var regleV = ""
+    @State private var bordGauche = ""
+    @State private var bordHaut = ""
+
+    private func nombre(_ t: String) -> Double? {
+        Double(t.replacingOccurrences(of: ",", with: ".").trimmingCharacters(in: .whitespaces))
+    }
+
+    private var impression: some View {
+        let cm = etat.prefs.uniteMesure == "cm"
+        return VStack(alignment: .leading, spacing: 12) {
+            Groupe(titre: "Calibrage : l'impression à la bonne taille") {
+                HStack {
+                    Text("1. Papier :")
+                    Picker("", selection: $papierCalibrage) { Text("A4").tag("A4"); Text("US Letter").tag("Letter") }
+                        .labelsHidden().frame(width: 110)
+                    Button("Imprimer la page de calibrage…") { etat.imprimerCalibrage(papierCalibrage == "A4" ? .a4 : .letter) }
+                        .buttonStyle(.w98Gras)
+                }
+                Text("La page sort avec une règle en cm et une en pouces. Imprime à 100 %.").foregroundStyle(W98.ombre)
+                HStack {
+                    Text("2. Je mesure en :")
+                    Picker("", selection: $etat.prefs.uniteMesure) { Text("centimètres").tag("cm"); Text("pouces").tag("in") }
+                        .pickerStyle(.radioGroup).horizontalRadioGroupLayout().labelsHidden()
+                }
+                HStack {
+                    Text("Règle horizontale (\(cm ? "15 cm" : "6 in")) mesurée :")
+                    Champ(invite: cm ? "15" : "6", texte: $regleH).frame(width: 70); Text(cm ? "cm" : "in")
+                }
+                HStack {
+                    Text("Règle verticale (\(cm ? "20 cm" : "8 in")) mesurée :")
+                    Champ(invite: cm ? "20" : "8", texte: $regleV).frame(width: 70); Text(cm ? "cm" : "in")
+                }
+                HStack {
+                    Text("Bord gauche → trait rouge A :"); Champ(invite: "15", texte: $bordGauche).frame(width: 70); Text("mm")
+                }
+                HStack {
+                    Text("Bord haut → trait rouge A :"); Champ(invite: "15", texte: $bordHaut).frame(width: 70); Text("mm")
+                }
+                Button("3. Enregistrer le calibrage") {
+                    let attenduH = cm ? 15.0 : 6.0, attenduV = cm ? 20.0 : 8.0
+                    if let h = nombre(regleH), h > 0 { etat.prefs.echelleX = attenduH / h }
+                    if let v = nombre(regleV), v > 0 { etat.prefs.echelleY = attenduV / v }
+                    if let g = nombre(bordGauche) { etat.prefs.decalageX = 15 - g }
+                    if let b = nombre(bordHaut) { etat.prefs.decalageY = 15 - b }
+                    etat.prefs.calibrationFaite = true
+                    regleH = ""; regleV = ""; bordGauche = ""; bordHaut = ""
+                }
+                .buttonStyle(.w98Gras).disabled([regleH, regleV, bordGauche, bordHaut].allSatisfy { $0.isEmpty })
+                Text(etat.prefs.calibrationFaite
+                     ? "Réglage enregistré : échelle \(String(format: "%.2f", etat.prefs.echelleX * 100)) % × \(String(format: "%.2f", etat.prefs.echelleY * 100)) %, décalage \(String(format: "%+.1f", etat.prefs.decalageX)) mm / \(String(format: "%+.1f", etat.prefs.decalageY)) mm. Il s'applique à toutes tes impressions."
+                     : "Pas encore calibré : les impressions partent sans correction.")
+                    .foregroundStyle(etat.prefs.calibrationFaite ? W98.vert : W98.ombre).fixedSize(horizontal: false, vertical: true)
+                Button("Remettre à zéro") {
+                    etat.prefs.echelleX = 1; etat.prefs.echelleY = 1; etat.prefs.decalageX = 0; etat.prefs.decalageY = 0
+                    etat.prefs.calibrationFaite = false
+                }
+                .buttonStyle(.w98)
+            }
+            Groupe(titre: "Papier conseillé") {
+                Text("J-card, O-card, obi : papier mat ou satiné de 170 à 250 g/m², A4.")
+                Text("Étiquettes de K7 : papier autocollant A4 pleine page, mat. L'app imprime les traits de coupe.")
+                Text("Le PDF exporté garde le fond perdu (3 mm) pour une impression en boutique ; le calibrage ne s'applique qu'à ton imprimante.")
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
+    private var sources: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Groupe(titre: "MusicBrainz et Cover Art Archive") {
+                Text("Gratuit, sans compte : albums, tracklists, maisons de disque, scans des vraies éditions cassette.")
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Groupe(titre: "Discogs (jeton personnel gratuit)") {
+                Champ(invite: "Jeton Discogs", texte: $etat.jetonDiscogs, secret: true)
+                Text("1. Connecte-toi sur discogs.com (compte gratuit).")
+                Text("2. Settings → Developers → « Generate new token ».")
+                Link("   Ouvrir la page Developers de Discogs", destination: URL(string: "https://www.discogs.com/settings/developers")!).foregroundStyle(W98.bleu)
+                Text("3. Copie le jeton ici. Il est rangé dans le trousseau du Mac.")
+                Text("Discogs ajoute les photos de milliers d'éditions K7 : Claude s'en sert pour sa première proposition.")
+                    .foregroundStyle(W98.ombre).fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
     private var claude: some View {
         VStack(alignment: .leading, spacing: 12) {
             Groupe(titre: "Clé API") {
@@ -87,8 +177,9 @@ struct Reglages: View {
             }
             GuideCleClaude()
             Groupe(titre: "Recherche web") {
-                Toggle("Claude peut chercher sur des sites choisis (sources citées)", isOn: .constant(false)).toggleStyle(.checkbox).disabled(true)
-                Text("Arrive dans une prochaine étape.").foregroundStyle(W98.ombre)
+                Toggle("Claude peut chercher sur des sites choisis (sources citées)", isOn: $etat.prefs.rechercheWebClaude).toggleStyle(.checkbox)
+                Text("Sites : " + sitesMusique.joined(separator: ", ") + ". Claude cite ses sources ; ce qu'il trouve est à valider avant l'impression.")
+                    .foregroundStyle(W98.ombre).fixedSize(horizontal: false, vertical: true)
             }
         }
     }

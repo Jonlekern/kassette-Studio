@@ -53,35 +53,41 @@ extension EtatApp {
     // MARK: Éditions K7 existantes (première proposition d'un album)
 
     func chercherEditionsK7() {
-        let artiste = projet.artiste, titre = projet.titre
-        guard !titre.isEmpty else { statut = "Donne d'abord un titre à la cassette."; return }
-        let jeton = jetonDiscogs
-        lancer("Recherche des vraies éditions cassette de « \(titre) »…") { [self] in
-            var res: [EditionK7] = []
-            let albums = try await musicBrainz.chercher(artiste.isEmpty ? titre : "\(artiste) - \(titre)", cassetteSeulement: true)
-            for a in albums.prefix(6) {
-                let imgs = (try? await musicBrainz.images(a.id)) ?? []
-                guard !imgs.isEmpty else { continue }
-                res.append(EditionK7(id: "mb-\(a.id)", titre: a.titre,
-                                     detail: [a.annee, a.maisonDeDisque, a.catalogue].compactMap { $0 }.joined(separator: " · "),
-                                     source: "MusicBrainz", page: URL(string: "https://musicbrainz.org/release/\(a.id)")!,
-                                     images: imgs.map(\.vignette)))
-            }
-            if !jeton.isEmpty {
-                let dc = ClientDiscogs(jeton: jeton)
-                for e in try await dc.chercher(artiste: artiste, album: titre).prefix(4) {
-                    let photos = (try? await dc.photos(e.id)) ?? []
-                    let imgs = photos.isEmpty ? [e.image].compactMap { $0 } : photos.map(\.url)
-                    guard !imgs.isEmpty else { continue }
-                    res.append(EditionK7(id: "dc-\(e.id)", titre: e.titre,
-                                         detail: ([e.annee, e.pays] + e.maisonsDeDisque.prefix(1).map { Optional($0) } + [e.catalogue]).compactMap { $0 }.joined(separator: " · "),
-                                         source: "Discogs", page: e.page, images: imgs))
-                }
-            }
-            editionsK7 = res
-            statut = res.isEmpty ? "Aucune édition cassette trouvée : Claude partira de la pochette."
-                                 : "\(res.count) édition\(res.count > 1 ? "s" : "") cassette trouvée\(res.count > 1 ? "s" : "")"
+        guard !projet.titre.isEmpty else { statut = "Donne d'abord un titre à la cassette."; return }
+        lancer("Recherche des vraies éditions cassette de « \(projet.titre) »…") { [self] in
+            try await trouverEditionsK7()
+            let n = editionsK7.count
+            statut = n == 0 ? "Aucune édition cassette trouvée : Claude partira de la pochette."
+                            : "\(n) édition\(n > 1 ? "s" : "") cassette trouvée\(n > 1 ? "s" : "")"
         }
+    }
+
+    /// MusicBrainz (Cover Art Archive) et, avec un jeton, Discogs : éditions K7 qui ont des scans.
+    func trouverEditionsK7() async throws {
+        let artiste = projet.artiste, titre = projet.titre
+        var res: [EditionK7] = []
+        let albums = try await musicBrainz.chercher(artiste.isEmpty ? titre : "\(artiste) - \(titre)", cassetteSeulement: true)
+        for a in albums.prefix(6) {
+            let imgs = (try? await musicBrainz.images(a.id)) ?? []
+            guard !imgs.isEmpty else { continue }
+            res.append(EditionK7(id: "mb-\(a.id)", titre: a.titre,
+                                 detail: [a.annee, a.maisonDeDisque, a.catalogue].compactMap { $0 }.joined(separator: " · "),
+                                 source: "MusicBrainz", page: URL(string: "https://musicbrainz.org/release/\(a.id)")!,
+                                 images: imgs.map(\.vignette)))
+        }
+        if !jetonDiscogs.isEmpty {
+            let dc = ClientDiscogs(jeton: jetonDiscogs)
+            for e in ((try? await dc.chercher(artiste: artiste, album: titre)) ?? []).prefix(4) {
+                let photos = (try? await dc.photos(e.id)) ?? []
+                let imgs = photos.isEmpty ? [e.image].compactMap { $0 } : photos.map(\.url)
+                guard !imgs.isEmpty else { continue }
+                let infos: [String?] = [e.annee, e.pays, e.maisonsDeDisque.first, e.catalogue]
+                res.append(EditionK7(id: "dc-\(e.id)", titre: e.titre, detail: infos.compactMap { $0 }.joined(separator: " · "),
+                                     source: "Discogs", page: e.page, images: imgs))
+            }
+        }
+        editionsK7 = res
+        editionsCherchees = true
     }
 
     // MARK: Claude directeur artistique
@@ -93,6 +99,12 @@ extension EtatApp {
         if let r = regenerer, texte.isEmpty { conversation.append(MessageDesign(deClaude: false, texte: "Régénère la variante \(r).")) }
         lancer(regenerer == nil ? "Claude prépare le design…" : "Claude refait la variante \(regenerer!)…") { [self] in
             let c = try claude()
+            // Album, première proposition : d'abord les vraies éditions cassette.
+            if projet.mode == .album && design.propositions.isEmpty && !editionsCherchees && !projet.titre.isEmpty {
+                statut = "Recherche des vraies éditions cassette…"
+                try? await trouverEditionsK7()
+                statut = "Claude prépare le design…"
+            }
             await prechargerImages()
             var images: [Data] = [], legendes: [String] = []
             func joindre(_ url: URL?, _ legende: String) async {
@@ -264,13 +276,14 @@ extension EtatApp {
     func imprimer() {
         Task { @MainActor in
             await prechargerImages()
-            let data = Export.pdf(Export.pages(mise), mise: mise, decalageX: prefs.decalageX, decalageY: prefs.decalageY)
+            let data = Export.pdf(Export.pages(mise), mise: mise, decalageX: prefs.decalageX, decalageY: prefs.decalageY,
+                                  echelleX: prefs.echelleX, echelleY: prefs.echelleY)
             Export.imprimer(data, titre: nomFichier)
             if !prefs.calibrationFaite { statut = "Astuce : imprime une fois la page de calibrage (Réglages → Impression)." }
         }
     }
 
-    func imprimerCalibrage() { Export.imprimer(Export.calibrage(), titre: "LaFleurStudio - calibrage") }
+    func imprimerCalibrage(_ papier: Papier) { Export.imprimer(Export.calibrage(papier: papier), titre: "LaFleurStudio - calibrage") }
 
     // MARK: Images et polices
 

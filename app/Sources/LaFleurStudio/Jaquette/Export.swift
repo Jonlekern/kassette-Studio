@@ -62,7 +62,9 @@ enum Export {
     }
 
     /// PDF vectoriel, une page par objet, à imprimer à 100 %.
-    static func pdf(_ pages: [PageExport], mise: Mise, decalageX: CGFloat, decalageY: CGFloat) -> Data {
+    /// `echelleX/Y` : correction d'échelle mesurée sur la page de calibrage (1 = aucune).
+    static func pdf(_ pages: [PageExport], mise: Mise, decalageX: CGFloat, decalageY: CGFloat,
+                    echelleX: CGFloat = 1, echelleY: CGFloat = 1) -> Data {
         let data = NSMutableData()
         var boite = CGRect(x: 0, y: 0, width: 210 * u, height: 297 * u)
         guard let conso = CGDataConsumer(data: data as CFMutableData),
@@ -70,7 +72,9 @@ enum Export {
         for p in pages {
             var b = CGRect(x: 0, y: 0, width: p.papier.largeur * u, height: p.papier.hauteur * u)
             ctx.beginPage(mediaBox: &b)
-            let r = ImageRenderer(content: PageVue(page: p, mise: mise, decalageX: p.verso ? -decalageX : decalageX, decalageY: decalageY))
+            let r = ImageRenderer(content: PageVue(page: p, mise: mise, decalageX: p.verso ? -decalageX : decalageX, decalageY: decalageY)
+                .scaleEffect(x: echelleX, y: echelleY, anchor: .topLeading)
+                .frame(width: b.width, height: b.height, alignment: .topLeading))
             r.proposedSize = ProposedViewSize(width: b.width, height: b.height)
             r.render { _, dessiner in dessiner(ctx) }
             ctx.endPage()
@@ -118,15 +122,14 @@ enum Export {
         op.run()
     }
 
-    /// Page de calibrage : règles et carré de 100 mm pour mesurer le décalage de l'imprimante.
-    static func calibrage() -> Data {
-        let vue = PageCalibrage()
+    /// Page de calibrage : règles en cm et en pouces, repères pour le décalage. Jamais corrigée elle-même.
+    static func calibrage(papier: Papier = .a4) -> Data {
         let data = NSMutableData()
-        var b = CGRect(x: 0, y: 0, width: 210 * u, height: 297 * u)
+        var b = CGRect(x: 0, y: 0, width: papier.largeur * u, height: papier.hauteur * u)
         guard let conso = CGDataConsumer(data: data as CFMutableData),
               let ctx = CGContext(consumer: conso, mediaBox: &b, nil) else { return Data() }
         ctx.beginPage(mediaBox: &b)
-        let r = ImageRenderer(content: vue)
+        let r = ImageRenderer(content: PageCalibrage(papier: papier))
         r.proposedSize = ProposedViewSize(width: b.width, height: b.height)
         r.render { _, dessiner in dessiner(ctx) }
         ctx.endPage()
@@ -200,43 +203,74 @@ struct Reperes: View {
     }
 }
 
-/// Page A4 de calibrage : on mesure où tombent les repères pour corriger le décalage de l'imprimante.
+/// Une règle graduée : `longueur` en mm, `pas` = plus petite graduation (mm), étiquettes tous les `tous` pas.
+struct Regle: View {
+    let longueur: CGFloat
+    let pas: CGFloat
+    let tous: Int
+    let moitie: Int
+    let unite: String
+    var verticale = false
+    let u: CGFloat
+    var body: some View {
+        let n = Int((longueur / pas).rounded())
+        ZStack(alignment: .topLeading) {
+            Path { p in
+                p.move(to: .zero)
+                p.addLine(to: verticale ? CGPoint(x: 0, y: longueur * u) : CGPoint(x: longueur * u, y: 0))
+                for i in 0...n {
+                    let l: CGFloat = i % tous == 0 ? 6 : (i % moitie == 0 ? 4 : 2.2)
+                    let t = CGFloat(i) * pas * u
+                    if verticale { p.move(to: CGPoint(x: 0, y: t)); p.addLine(to: CGPoint(x: l * u, y: t)) }
+                    else { p.move(to: CGPoint(x: t, y: 0)); p.addLine(to: CGPoint(x: t, y: l * u)) }
+                }
+            }
+            .stroke(Color.black, lineWidth: 0.35)
+            ForEach(0...(n / tous), id: \.self) { k in
+                Text(k == n / tous ? "\(k) \(unite)" : "\(k)").font(.system(size: 7)).fixedSize()
+                    .offset(x: verticale ? 7 * u : CGFloat(k * tous) * pas * u - 2, y: verticale ? CGFloat(k * tous) * pas * u - 4 : 6.5 * u)
+            }
+        }
+    }
+}
+
+/// Page de calibrage : on mesure les règles et les repères au réglet, on entre les valeurs dans Réglages → Impression.
 struct PageCalibrage: View {
+    var papier: Papier = .a4
     private let u = Typo.ptParMM
     var body: some View {
         ZStack(alignment: .topLeading) {
             Rectangle().fill(Color.white)
-            // Carré de 100 mm : sert à vérifier l'échelle (imprimé à 100 %, il mesure exactement 100 mm).
-            Rectangle().stroke(Color.black, lineWidth: 0.5).frame(width: 100 * u, height: 100 * u).offset(x: 55 * u, y: 98.5 * u)
-            Text("Ce carré doit mesurer exactement 100 mm de côté.\nSinon l'impression n'est pas à 100 % : corrige le réglage de l'imprimante.")
-                .font(.system(size: 9)).multilineTextAlignment(.center).frame(width: 100 * u).offset(x: 55 * u, y: 140 * u)
-            // Repère vertical à 20 mm du bord gauche, repère horizontal à 20 mm du bord haut.
+            // Repères de décalage : à 15 mm du bord gauche et du bord haut.
             Path { p in
-                p.move(to: CGPoint(x: 20 * u, y: 30 * u)); p.addLine(to: CGPoint(x: 20 * u, y: 267 * u))
-                p.move(to: CGPoint(x: 30 * u, y: 20 * u)); p.addLine(to: CGPoint(x: 180 * u, y: 20 * u))
+                p.move(to: CGPoint(x: 15 * u, y: 8 * u)); p.addLine(to: CGPoint(x: 15 * u, y: 28 * u))
+                p.move(to: CGPoint(x: 8 * u, y: 15 * u)); p.addLine(to: CGPoint(x: 28 * u, y: 15 * u))
             }
             .stroke(Color.red, lineWidth: 0.5)
-            // Règles graduées en mm depuis ces repères.
-            Path { p in
-                for i in 0...150 {
-                    let l: CGFloat = i % 10 == 0 ? 5 : (i % 5 == 0 ? 3.5 : 2)
-                    p.move(to: CGPoint(x: (30 + CGFloat(i)) * u, y: 20 * u)); p.addLine(to: CGPoint(x: (30 + CGFloat(i)) * u, y: (20 + l) * u))
-                }
-                for i in 0...230 {
-                    let l: CGFloat = i % 10 == 0 ? 5 : (i % 5 == 0 ? 3.5 : 2)
-                    p.move(to: CGPoint(x: 20 * u, y: (30 + CGFloat(i)) * u)); p.addLine(to: CGPoint(x: (20 + l) * u, y: (30 + CGFloat(i)) * u))
-                }
+            Text("A").font(.system(size: 8, weight: .bold)).foregroundStyle(.red).offset(x: 16.5 * u, y: 20 * u)
+            // Règles horizontales : 15 cm et 6 pouces.
+            Text("Règle horizontale en cm (15 cm)").font(.system(size: 8, weight: .bold)).offset(x: 40 * u, y: 24 * u)
+            Regle(longueur: 150, pas: 1, tous: 10, moitie: 5, unite: "cm", u: u).offset(x: 40 * u, y: 30 * u)
+            Text("Règle horizontale en pouces (6 in)").font(.system(size: 8, weight: .bold)).offset(x: 40 * u, y: 46 * u)
+            Regle(longueur: 152.4, pas: 25.4 / 8, tous: 8, moitie: 4, unite: "in", u: u).offset(x: 40 * u, y: 52 * u)
+            // Règles verticales : 20 cm et 8 pouces.
+            Regle(longueur: 200, pas: 1, tous: 10, moitie: 5, unite: "cm", verticale: true, u: u).offset(x: 22 * u, y: 70 * u)
+            Regle(longueur: 203.2, pas: 25.4 / 8, tous: 8, moitie: 4, unite: "in", verticale: true, u: u).offset(x: 42 * u, y: 70 * u)
+            // Carré de 10 cm pour un contrôle d'un coup d'œil.
+            Rectangle().stroke(Color.black, lineWidth: 0.5).frame(width: 100 * u, height: 100 * u).offset(x: 90 * u, y: 150 * u)
+            Text("Carré de 10 cm × 10 cm (3,94 in)").font(.system(size: 8)).frame(width: 100 * u).offset(x: 90 * u, y: 196 * u)
+            VStack(alignment: .leading, spacing: 5) {
+                Text("LaFleurStudio · page de calibrage (\(papier.nom))").font(.system(size: 12, weight: .bold))
+                Text("Imprime cette page à 100 % (jamais « ajuster à la page »), puis mesure avec une règle :")
+                Text("1. La longueur réelle de la règle horizontale (15 cm ou 6 in).")
+                Text("2. La longueur réelle de la règle verticale (20 cm ou 8 in).")
+                Text("3. La distance entre le bord gauche de la feuille et le trait rouge vertical A (15 mm si tout est parfait).")
+                Text("4. La distance entre le bord haut de la feuille et le trait rouge horizontal A (15 mm si tout est parfait).")
+                Text("Entre les mesures dans Réglages → Impression. L'app corrige ensuite l'échelle et le décalage de toutes tes impressions.")
             }
-            .stroke(Color.black, lineWidth: 0.3)
-            VStack(alignment: .leading, spacing: 4) {
-                Text("LaFleurStudio · page de calibrage").font(.system(size: 12, weight: .bold))
-                Text("1. Mesure la distance entre le bord GAUCHE de la feuille et la ligne rouge verticale (normalement 20 mm).")
-                Text("2. Mesure la distance entre le bord HAUT de la feuille et la ligne rouge horizontale (normalement 20 mm).")
-                Text("3. Entre ces deux mesures dans Réglages → Impression : l'app corrige ensuite toutes tes impressions.")
-            }
-            .font(.system(size: 9)).frame(width: 150 * u, alignment: .leading).offset(x: 30 * u, y: 32 * u)
+            .font(.system(size: 8.5)).frame(width: 125 * u, alignment: .leading).offset(x: 70 * u, y: 72 * u)
         }
-        .frame(width: 210 * u, height: 297 * u, alignment: .topLeading)
+        .frame(width: papier.largeur * u, height: papier.hauteur * u, alignment: .topLeading)
         .environment(\.colorScheme, .light)
     }
 }

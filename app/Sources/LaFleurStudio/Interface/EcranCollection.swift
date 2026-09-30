@@ -5,6 +5,7 @@ import SwiftUI
 struct EcranCollection: View {
     @EnvironmentObject var etat: EtatApp
     let ouvrir: (Projet) -> Void
+    var reimprimer: () -> Void = {}
     @State private var recherche = ""
     @State private var aSupprimer: Projet?
 
@@ -24,10 +25,9 @@ struct EcranCollection: View {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 214), spacing: 16)], spacing: 16) {
                     ForEach(liste) { p in
                         VStack(alignment: .leading, spacing: 6) {
-                            AsyncImage(url: p.pochetteURL) { $0.resizable().scaledToFill() } placeholder: {
-                                ZStack { Color(red: 0.078, green: 0.157, blue: 0.227); Text(p.numeroCatalogue).foregroundStyle(.white) }
-                            }
-                            .frame(width: 196, height: 196).clipped()
+                            // Le recto de sa jaquette (ou la pochette si le design n'est pas encore fait).
+                            ImageRecto(mise: Mise(projet: p, design: p.design ?? Design()), largeur: 64, hauteur: 64, u: 196 / 64)
+                                .frame(width: 196, height: 196).clipped()
                             HStack {
                                 Text(p.numeroCatalogue).bold()
                                 Spacer()
@@ -41,6 +41,7 @@ struct EcranCollection: View {
                                 Button("Dupliquer") { etat.dupliquer(p) }.buttonStyle(.w98)
                                 Button("×") { aSupprimer = p }.buttonStyle(.w98).help("Supprimer")
                             }
+                            Button("Réimprimer la jaquette") { ouvrir(p); reimprimer() }.buttonStyle(.w98)
                         }
                         .padding(8).relief()
                     }

@@ -131,7 +131,7 @@ private struct Platine: View {
             HStack(alignment: .center, spacing: 16) {
                 CassetteDessin(projet: etat.projet, face: face, tourne: moteur.etat == .lecture,
                                progression: moteur.deroule.fin > 0 ? moteur.position / moteur.deroule.fin : 0)
-                    .frame(width: 300, height: 190).padding(8).creux(Color(white: 0.12))
+                    .frame(width: 281, height: 179).padding(8).creux(Color(white: 0.12))
                 VUMetre(canal: "GAUCHE", dbfs: moteur.niveaux.gauche)
                 VUMetre(canal: "DROITE", dbfs: moteur.niveaux.droite)
             }
@@ -242,66 +242,75 @@ private struct VUMetre: View {
 }
 
 /// La K7 dessinée avec l'étiquette du projet ; les bobines tournent pendant l'enregistrement.
+/// La K7 de la platine : la même étiquette que dans l'écran Jaquette, bobines visibles par la fenêtre.
+/// Les bobines tournent pendant l'enregistrement et la bande passe de gauche à droite au fil de la face.
 struct CassetteDessin: View {
     let projet: Projet
     let face: Face
     let tourne: Bool
     let progression: Double
+    var u: CGFloat = 2.8
 
-    private let fond = Color(red: 0.078, green: 0.157, blue: 0.227)
-    private let texte = Color(red: 0.91, green: 0.933, blue: 0.949)
+    // Positions en mm dans la coque (100,4 × 63,8 mm).
+    private let etiquette = CGPoint(x: 5.7, y: 4.5)
+    private var fenetre: CGRect {
+        let f = Gabarits.fenetreEtiquette
+        return CGRect(x: etiquette.x + f.x, y: etiquette.y + f.y, width: f.largeur, height: f.hauteur)
+    }
 
     var body: some View {
-        VStack(spacing: 6) {
-            HStack(spacing: 8) {
-                AsyncImage(url: projet.pochetteURL) { $0.resizable().scaledToFill() } placeholder: { Color.gray.opacity(0.3) }
-                    .frame(width: 32, height: 32).clipped()
-                VStack(alignment: .leading, spacing: 1) {
-                    Text(projet.titre.isEmpty ? "Sans titre" : projet.titre).font(.system(size: 15, weight: .medium, design: .serif)).italic().lineLimit(1)
-                    Text(projet.artiste.uppercased()).font(.system(size: 8, design: .monospaced)).kerning(1)
-                }
-                Spacer(minLength: 0)
-                Text(face.rawValue).font(.system(size: 34, weight: .bold, design: .serif))
-            }
+        let mise = Mise(projet: projet, design: projet.design ?? Design())
+        let p = max(0, min(1, progression))
+        ZStack(alignment: .topLeading) {
+            // Coque
+            RoundedRectangle(cornerRadius: 3 * u).fill(Color(red: 0.07, green: 0.08, blue: 0.1))
+            // Fenêtre : la bande vue à travers le plastique fumé
             TimelineView(.animation(paused: !tourne)) { contexte in
                 let angle = tourne ? contexte.date.timeIntervalSinceReferenceDate * 200 : 0
-                HStack {
-                    Text(projet.cassette.reducteur == .aucun ? "" : "NR").font(.system(size: 8, design: .monospaced))
-                    Spacer()
-                    Bobine(angle: angle, remplissage: 1 - progression)
-                    Rectangle().fill(Color(white: 0.07)).frame(width: 36, height: 14).overlay(Rectangle().stroke(Color(white: 0.35)))
-                    Bobine(angle: angle, remplissage: progression)
-                    Spacer()
-                    Text(projet.cassette.longueur.nom).font(.system(size: 8, design: .monospaced))
+                ZStack(alignment: .topLeading) {
+                    Rectangle().fill(Color(red: 0.16, green: 0.13, blue: 0.11))
+                    Bobine(angle: angle, remplissage: 1 - p, u: u).offset(x: (29 - fenetre.minX) * u, y: (fenetre.height / 2) * u)
+                    Bobine(angle: angle, remplissage: p, u: u).offset(x: (71.4 - fenetre.minX) * u, y: (fenetre.height / 2) * u)
                 }
-                .frame(height: 60).padding(.horizontal, 8)
-                .background(RoundedRectangle(cornerRadius: 26).fill(Color(red: 0.05, green: 0.106, blue: 0.157)))
+                .frame(width: fenetre.width * u, height: fenetre.height * u, alignment: .topLeading)
+                .clipShape(RoundedRectangle(cornerRadius: 2 * u))
             }
-            HStack {
-                Text([projet.cassette.marque, projet.cassette.bande.badge, projet.cassette.reducteur == .aucun ? "" : projet.cassette.reducteur.nom.uppercased()]
-                        .filter { !$0.isEmpty }.joined(separator: " · "))
-                Spacer()
-                Text("\(projet.maisonDeDisque) · \(projet.numeroCatalogue)")
+            .offset(x: fenetre.minX * u, y: fenetre.minY * u)
+            EtiquetteVue(mise: mise, face: face, fenetreADecouper: false, u: u)
+                .offset(x: etiquette.x * u, y: etiquette.y * u)
+            // Bas de la coque (trapèze avec les trous des cabestans)
+            Path { c in
+                c.move(to: CGPoint(x: 17 * u, y: 50 * u)); c.addLine(to: CGPoint(x: 83.4 * u, y: 50 * u))
+                c.addLine(to: CGPoint(x: 87 * u, y: 63.8 * u)); c.addLine(to: CGPoint(x: 13.4 * u, y: 63.8 * u)); c.closeSubpath()
             }
-            .font(.system(size: 7, design: .monospaced)).kerning(0.5)
+            .fill(Color(red: 0.11, green: 0.12, blue: 0.14))
+            ForEach([27.0, 73.4], id: \.self) { x in
+                Circle().fill(Color.black).frame(width: 3.5 * u, height: 3.5 * u).offset(x: (x - 1.75) * u, y: 55 * u)
+            }
+            ForEach([CGPoint(x: 3, y: 3), CGPoint(x: 97.4, y: 3), CGPoint(x: 3, y: 60.8), CGPoint(x: 97.4, y: 60.8), CGPoint(x: 50.2, y: 57)], id: \.x) { v in
+                Circle().fill(Color(white: 0.3)).frame(width: 1.8 * u, height: 1.8 * u).offset(x: (v.x - 0.9) * u, y: (v.y - 0.9) * u)
+            }
         }
-        .padding(10).foregroundStyle(texte)
-        .background(RoundedRectangle(cornerRadius: 8).fill(fond))
+        .frame(width: 100.4 * u, height: 63.8 * u, alignment: .topLeading)
+        .accessibilityLabel("Cassette face \(face.rawValue)")
     }
 }
 
+/// Une bobine : moyeu blanc à 6 dents qui tourne, bande brune qui grossit ou diminue (dimensions en mm).
 private struct Bobine: View {
     let angle: Double
     let remplissage: Double
+    let u: CGFloat
     var body: some View {
+        let r = 5.5 + 15 * max(0, min(1, remplissage))
         ZStack {
-            Circle().fill(Color(red: 0.353, green: 0.231, blue: 0.133))
-                .frame(width: 26 + 22 * max(0, min(1, remplissage)), height: 26 + 22 * max(0, min(1, remplissage)))
-            Circle().fill(Color(white: 0.96)).frame(width: 24, height: 24)
+            Circle().fill(Color(red: 0.353, green: 0.231, blue: 0.133)).frame(width: 2 * r * u, height: 2 * r * u)
+            Circle().fill(Color(white: 0.96)).frame(width: 9 * u, height: 9 * u)
             ForEach(0..<6) { i in
-                Rectangle().fill(Color(white: 0.25)).frame(width: 3, height: 7).offset(y: -7).rotationEffect(.degrees(Double(i) * 60 + angle))
+                Rectangle().fill(Color(white: 0.25)).frame(width: 1 * u, height: 2.2 * u).offset(y: -2.6 * u)
+                    .rotationEffect(.degrees(Double(i) * 60 + angle))
             }
         }
-        .frame(width: 50, height: 50)
+        .frame(width: 0, height: 0)
     }
 }

@@ -13,6 +13,14 @@ struct LaFleurStudioApp: App {
         NSApplication.shared.activate(ignoringOtherApps: true)
         // Polices libres de l'app et polices importées par l'utilisateur.
         Typo.enregistrer()
+        let args = CommandLine.arguments
+        if let i = args.firstIndex(of: "--captures"), i + 1 < args.count {
+            let dossier = URL(fileURLWithPath: args[i + 1])
+            Task { @MainActor in
+                await Captures.lancer(dossier)
+                exit(0)
+            }
+        }
     }
 
     var body: some Scene {

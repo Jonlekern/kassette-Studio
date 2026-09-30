@@ -50,8 +50,13 @@ public struct Preferences: Codable, Equatable, Sendable {
     public var decalageX = 0.0
     public var decalageY = 0.0
     public var calibrationFaite = false
+    /// Échelle réelle de l'imprimante (1 = exacte). Ex. une règle de 150 mm imprimée à 148,5 mm → 150 / 148,5.
+    public var echelleX = 1.0
+    public var echelleY = 1.0
+    /// Unité préférée pour mesurer la page de calibrage : "cm" ou "in".
+    public var uniteMesure = "cm"
     enum CodingKeys: String, CodingKey {
-        case conditionsAcceptees, spotifyClientID, dossierAudio, sortieAudioUID, platine, egaliserVolume, rechercheWebClaude, langue, prochainNumero, prefixeCatalogue, decalageX, decalageY, calibrationFaite
+        case conditionsAcceptees, spotifyClientID, dossierAudio, sortieAudioUID, platine, egaliserVolume, rechercheWebClaude, langue, prochainNumero, prefixeCatalogue, decalageX, decalageY, calibrationFaite, echelleX, echelleY, uniteMesure
     }
 
     /// Décodage tolérant : un réglage absent (ancienne version) prend sa valeur par défaut.
@@ -72,6 +77,9 @@ public struct Preferences: Codable, Equatable, Sendable {
         decalageX = v(.decalageX, d.decalageX)
         decalageY = v(.decalageY, d.decalageY)
         calibrationFaite = v(.calibrationFaite, d.calibrationFaite)
+        echelleX = v(.echelleX, d.echelleX)
+        echelleY = v(.echelleY, d.echelleY)
+        uniteMesure = v(.uniteMesure, d.uniteMesure)
     }
 
     public init() {}

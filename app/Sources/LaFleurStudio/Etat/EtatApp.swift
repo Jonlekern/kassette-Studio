@@ -24,7 +24,7 @@ struct Proposition: Identifiable, Equatable {
 /// L'état de l'app : réglages, cassette en cours, collection, connexions.
 @MainActor
 final class EtatApp: ObservableObject {
-    let stockage = Stockage()
+    let stockage: Stockage
 
     @Published var prefs: Preferences { didSet { if prefs != oldValue { try? stockage.enregistrer(prefs) } } }
     @Published var projet: Projet { didSet { if projet != oldValue { try? stockage.enregistrer(projet) } } }
@@ -46,6 +46,7 @@ final class EtatApp: ObservableObject {
     // Jaquette
     @Published var conversation: [MessageDesign] = []
     @Published var editionsK7: [EditionK7] = []
+    @Published var editionsCherchees = false
     @Published var avisClaude: AvisRendu?
     @Published var policesDisponibles: [String] = Typo.disponibles
     @Published var jetonDiscogs: String { didSet { Trousseau.ecrire("discogs", jetonDiscogs) } }
@@ -53,8 +54,9 @@ final class EtatApp: ObservableObject {
     private var spotify: ClientSpotify?
     private let retour = RetourConnexion()
 
-    init() {
-        let s = Stockage()
+    /// `stockage` : un autre dossier pour les captures automatiques (sans toucher aux vraies cassettes).
+    init(stockage s: Stockage = Stockage()) {
+        stockage = s
         var p = s.preferences()
         let projets = s.projets()
         let courant: Projet
@@ -107,13 +109,13 @@ final class EtatApp: ObservableObject {
         prefs = p
         projet = nouveau
         commentaireClaude = ""; propositions = []; questions = []
-        conversation = []; editionsK7 = []; avisClaude = nil
+        conversation = []; editionsK7 = []; editionsCherchees = false; avisClaude = nil
         rafraichirCollection()
     }
 
     func ouvrir(_ p: Projet) {
         projet = p; commentaireClaude = ""; propositions = []; questions = []
-        conversation = []; editionsK7 = []; avisClaude = nil
+        conversation = []; editionsK7 = []; editionsCherchees = false; avisClaude = nil
     }
 
     func dupliquer(_ p: Projet) {

@@ -24,7 +24,9 @@ struct Racine: View {
 struct FenetrePrincipale: View {
     @EnvironmentObject var etat: EtatApp
     @EnvironmentObject var moteur: MoteurEnregistrement
-    @State private var ecran: Ecran = .mixtape
+    @State private var ecran: Ecran
+
+    init(ecranInitial: Ecran = .mixtape) { _ecran = State(initialValue: ecranInitial) }
 
     var titre: String {
         let t = etat.projet.titre.isEmpty ? "Nouvelle cassette" : etat.projet.titre
@@ -42,7 +44,7 @@ struct FenetrePrincipale: View {
                     case .mixtape: EcranMixtape()
                     case .jaquette: EcranJaquette()
                     case .enregistrer: EcranEnregistrer()
-                    case .collection: EcranCollection(ouvrir: { etat.ouvrir($0); ecran = .mixtape })
+                    case .collection: EcranCollection(ouvrir: { etat.ouvrir($0); ecran = .mixtape }, reimprimer: { ecran = .jaquette })
                     }
                 }
                 .padding(12).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
