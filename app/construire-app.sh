@@ -20,6 +20,15 @@ rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN" "$APP/Contents/MacOS/LaFleurStudio"
 
+# Icône : la cassette pixel art de lafleurstudio.ch, déclinée dans toutes les tailles macOS.
+ICONES="$(mktemp -d)/AppIcon.iconset"
+mkdir -p "$ICONES"
+for t in 16 32 128 256 512; do
+  sips -z $t $t Ressources/icone-1024.png --out "$ICONES/icon_${t}x${t}.png" >/dev/null
+  sips -z $((t * 2)) $((t * 2)) Ressources/icone-1024.png --out "$ICONES/icon_${t}x${t}@2x.png" >/dev/null
+done
+iconutil -c icns "$ICONES" -o "$APP/Contents/Resources/AppIcon.icns"
+
 cat > "$APP/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -37,6 +46,7 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
   <key>LSMinimumSystemVersion</key><string>14.0</string>
   <key>LSApplicationCategoryType</key><string>public.app-category.music</string>
   <key>NSHighResolutionCapable</key><true/>
+  <key>CFBundleIconFile</key><string>AppIcon</string>
 </dict>
 </plist>
 PLIST
