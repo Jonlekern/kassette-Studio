@@ -55,6 +55,16 @@ Projet indépendant : aucun lien avec le site lafleurstudio.ch.
 - Claude peut proposer le texte et le numéro de catalogue, et la vérification avant impression contrôle
   que le code-barres reste scannable (taille minimale, contraste, pas de débordement).
 
+## QR code et code Spotify
+
+- **Générateur de QR code** intégré : lien Spotify de l'album (rempli automatiquement), lien perso
+  (Bandcamp, site, Instagram…) ou texte libre. Mêmes couleurs que le code-barres (blanc, design, perso),
+  taille et place réglables (recto, rabat, intérieur).
+- **Code Spotify** (le code en ondes que l'appli Spotify scanne) : généré depuis l'adresse officielle de
+  Spotify pour l'album ou la playlist, dans les couleurs du design. Place par défaut : rabat, au-dessus
+  de l'EAN.
+- Tous les codes sont réels : scannés, le QR et le code Spotify ouvrent l'album, l'EAN donne son numéro.
+
 ## Vérification avant impression (Claude)
 
 Exemple réel trouvé sur la maquette : le texte de la tranche « JEREMY SADIK · AN AFTERNOON AT THE LAKE »
