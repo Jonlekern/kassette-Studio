@@ -32,6 +32,20 @@ Projet indépendant : aucun lien avec le site lafleurstudio.ch.
    coupure à la milliseconde (c'est l'app qui joue les fichiers).
 5. Fin de face A : « stoppe la platine, retourne la K7 », puis face B.
 
+## Vérification avant impression (Claude)
+
+Exemple réel trouvé sur la maquette : le texte de la tranche « JEREMY SADIK · AN AFTERNOON AT THE LAKE »
+sortait du J-card. L'agent Claude embarqué doit repérer ce genre de problème tout seul, en deux temps :
+
+1. **Mesure automatique** par l'app, à chaque modification : chaque texte est comparé à sa zone
+   (tranche, rabat, recto…). Tout ce qui dépasse, passe dans le fond perdu ou devient illisible
+   (trop petit à l'impression, contraste trop faible) est signalé.
+2. **Regard de Claude** : l'app lui envoie une image du rendu et la liste des alertes. Claude confirme
+   et propose une correction, par exemple réduire la police, passer sur 2 lignes, raccourcir
+   (« J. SADIK · AFTERNOON AT THE LAKE ») ou changer la mise en page.
+
+Rien ne part à l'impression tant qu'une alerte est ouverte, sauf si on la force.
+
 ## Ce que Claude fait mieux que Tapercraft
 
 - Faces A/B : Tapercraft coupe la liste en deux par nombre de titres (`Math.ceil(n / 2)`), sans
