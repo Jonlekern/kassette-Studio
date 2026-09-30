@@ -1,17 +1,17 @@
 # LaFleurStudio — l'app Mac
 
-Étape 1 : **Mixtape + Enregistrement**. Les jaquettes (J-card, étiquettes, O-card, obi) arrivent à l'étape 2.
+Mixtape, Jaquette (J-card, O-card, étiquettes, obi), Enregistrement et Collection.
 
 ## Installer
 
-### Option A : télécharger l'app compilée par GitHub
+### Option A : télécharger l'app (le plus simple)
 
-1. Sur GitHub : onglet **Actions** → dernière « Compilation macOS » réussie → en bas, **Artifacts** →
-   `LaFleurStudio` (un .zip).
+1. Télécharge [LaFleurStudio.zip](https://github.com/Jonlekern/kassette-Studio/releases/latest/download/LaFleurStudio.zip)
+   (toujours la dernière version, publiée par GitHub à chaque envoi de code).
 2. Dézippe et glisse **LaFleurStudio.app** dans Applications.
-3. Premier lancement : l'app n'est pas signée par Apple, donc macOS la bloque. Fais **clic droit →
-   Ouvrir → Ouvrir**. Si ça ne suffit pas, dans le Terminal :
-   `xattr -dr com.apple.quarantine /Applications/LaFleurStudio.app`
+3. Premier lancement : l'app n'est pas signée par Apple, donc macOS la bloque. Ouvre-la une fois, puis
+   **Réglages Système → Confidentialité et sécurité → Ouvrir quand même**. Si ça ne suffit pas, dans le
+   Terminal : `xattr -dr com.apple.quarantine /Applications/LaFleurStudio.app`
 
 ### Option B : compiler sur ton Mac
 

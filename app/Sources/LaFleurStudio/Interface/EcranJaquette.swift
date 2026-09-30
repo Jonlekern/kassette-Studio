@@ -192,10 +192,15 @@ struct EcranJaquette: View {
                     ForEach(OrientationRecto.allCases, id: \.self) { Text(tr($0.nom)).tag($0) }
                 }
                 .pickerStyle(.segmented)
-                Picker("Cadrage", selection: lien(\.cadrage)) {
-                    ForEach(CadrageRecto.allCases, id: \.self) { Text(tr($0.nom)).tag($0) }
+                // Libellé au-dessus : à côté, il se coupait en deux (« Cadra-ge »).
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Cadrage")
+                    Picker("Cadrage", selection: lien(\.cadrage)) {
+                        ForEach(CadrageRecto.allCases, id: \.self) { Text(tr($0.nom)).tag($0) }
+                    }
+                    .labelsHidden()
+                    .pickerStyle(.segmented)
                 }
-                .pickerStyle(.segmented)
                 Picker("Style", selection: lien(\.variante.style)) { ForEach(StyleRecto.allCases, id: \.self) { Text(tr($0.nom)).tag($0) } }
                 HStack {
                     Button("Choisir une image…") { etat.choisirImagePerso() }.buttonStyle(.w98)

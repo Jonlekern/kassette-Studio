@@ -7,6 +7,8 @@ on:
 jobs:
   compiler:
     runs-on: macos-latest
+    permissions:
+      contents: write
     defaults:
       run:
         working-directory: app
@@ -32,6 +34,23 @@ jobs:
           name: LaFleurStudio
           path: app/dist/LaFleurStudio.zip
           retention-days: 30
+      - name: Publier la dernière version (page Releases, lien de téléchargement du README)
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/etape-1')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release delete derniere-version --yes --cleanup-tag || true
+          cat > notes.md <<EOF
+          Télécharge **LaFleurStudio.zip** ci-dessous, dézippe, glisse l'app dans Applications.
+
+          Premier lancement : Réglages Système → Confidentialité et sécurité → **Ouvrir quand même**
+          (l'app n'est pas signée par Apple). Mode d'emploi complet sur la page d'accueil du projet.
+
+          Version du $(date -u +%d.%m.%Y), code ${GITHUB_SHA::7}.
+          EOF
+          gh release create derniere-version dist/LaFleurStudio.zip --target "$GITHUB_SHA" --latest \
+            --title "LaFleurStudio — dernière version" --notes-file notes.md
       - name: Extraire les textes à traduire
         continue-on-error: true
         run: |
