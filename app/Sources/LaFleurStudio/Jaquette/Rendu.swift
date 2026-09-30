@@ -148,12 +148,15 @@ struct RectoVue: View {
                 Group {
                     if mise.projet.maisonDeDisque.uppercased() == "LAFLEURSTUDIO" {
                         LogoForme().fill(Color(hex: p.texte))
+                    } else if let logo = mise.design.logoMaison {
+                        ImageCache(url: logo, remplir: false)
                     } else {
                         Text(mise.projet.maisonDeDisque.uppercased()).font(Typo.font(mise.design.variante.policeTexte, 1.6 * u))
                             .foregroundStyle(Color(hex: p.texte)).lineLimit(1).minimumScaleFactor(0.5)
                     }
                 }
-                .placer(largeur / 2 - 12, hauteur - 5.5, 24, 1.8, u, .center)
+                .placer(largeur / 2 - 12, hauteur - (mise.design.logoMaison != nil && mise.projet.maisonDeDisque.uppercased() != "LAFLEURSTUDIO" ? 9 : 5.5),
+                        24, mise.design.logoMaison != nil && mise.projet.maisonDeDisque.uppercased() != "LAFLEURSTUDIO" ? 6 : 1.8, u, .center)
             }
         }
         .frame(width: largeur * u, height: hauteur * u, alignment: .topLeading)
@@ -183,6 +186,8 @@ struct TrancheVue: View {
                     CodeBarresVue(code: c, module: m, hauteur: epaisseur - 3.5, barres: Color(hex: b), fond: Color(hex: f), chiffres: false, u: u)
                 } else if mise.projet.maisonDeDisque.uppercased() == "LAFLEURSTUDIO" {
                     LogoForme().fill(Color(hex: p.texte)).frame(width: 12 * u, height: 1.2 * u)
+                } else if let logo = mise.design.logoMaison {
+                    ImageCache(url: logo, remplir: false).frame(width: 12 * u, height: 8 * u).rotationEffect(.degrees(-90))
                 } else {
                     Text(mise.projet.maisonDeDisque.uppercased()).font(petit).foregroundStyle(Color(hex: p.texte))
                         .lineLimit(1).minimumScaleFactor(0.4)
@@ -284,12 +289,38 @@ struct BlocVue: View {
 
 enum CoteJCard { case exterieur, verso }
 
+/// Codes placés librement sur la J-card ; dans l'aperçu, on les glisse à la souris.
+struct CodesLibres: View {
+    let mise: Mise
+    let u: CGFloat
+    var deplacer: ((Double, Double) -> Void)?
+    @State private var glisse: CGSize = .zero
+
+    var body: some View {
+        let d = mise.design
+        PileCodes(mise: mise, largeur: 25, u: u, avecQR: d.placeQR == .libre, avecBarres: d.placeCode == .libre)
+            .fixedSize()
+            .rotationEffect(.degrees(d.rotationCode))
+            .offset(x: d.codeX * u + glisse.width, y: d.codeY * u + glisse.height)
+            .gesture(DragGesture()
+                .onChanged { glisse = $0.translation }
+                .onEnded { v in
+                    deplacer?(d.codeX + v.translation.width / u, d.codeY + v.translation.height / u)
+                    glisse = .zero
+                },
+                including: deplacer == nil ? .none : .all)
+            .help(deplacer == nil ? "" : "Glisse les codes où tu veux")
+    }
+}
+
 /// J-card à plat. `perdu` : fond perdu en mm (0 à l'écran, 3 pour l'impression).
 struct JCardVue: View {
     let mise: Mise
     var cote: CoteJCard = .exterieur
     var perdu: CGFloat = 0
     var guides = false
+    /// Aperçu : appelé quand on a glissé les codes placés librement (nouvelle position en mm).
+    var deplacerCode: ((Double, Double) -> Void)?
     let u: CGFloat
 
     var body: some View {
@@ -327,6 +358,9 @@ struct JCardVue: View {
                     }
                 }
                 if guides { Plis(plis: cote == .exterieur ? g.plis : g.plis.map { g.largeur - $0 }, hauteur: g.hauteur, u: u) }
+                if cote == .exterieur && (mise.design.placeCode == .libre || mise.design.placeQR == .libre) {
+                    CodesLibres(mise: mise, u: u, deplacer: deplacerCode)
+                }
             }
             .offset(x: perdu * u, y: perdu * u)
         }

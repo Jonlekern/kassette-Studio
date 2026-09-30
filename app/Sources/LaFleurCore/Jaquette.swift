@@ -39,9 +39,14 @@ public enum StyleRecto: String, Codable, CaseIterable, Sendable {
 }
 
 public enum PlaceCode: String, Codable, CaseIterable, Sendable {
-    case rabat, tranche, interieur
+    case rabat, tranche, interieur, libre
     public var nom: String {
-        switch self { case .rabat: "Rabat, en bas"; case .tranche: "Tranche"; case .interieur: "Volet intérieur" }
+        switch self {
+        case .rabat: "Rabat, en bas"
+        case .tranche: "Tranche"
+        case .interieur: "Volet intérieur"
+        case .libre: "Libre (à glisser)"
+        }
     }
 }
 
@@ -150,12 +155,19 @@ public struct Design: Codable, Hashable, Sendable {
     public var texteQR = ""
     public var placeQR: PlaceCode = .rabat
     public var codeSpotify = false
+    /// Place libre des codes sur la J-card (mm depuis le coin haut gauche, extérieur) et rotation.
+    public var codeX = 70.0
+    public var codeY = 62.0
+    public var rotationCode = 0.0
+
+    /// Logo de la maison de disque importé par l'utilisateur (usage perso uniquement).
+    public var logoMaison: URL?
 
     // Vérification
     public var alertesForcees: Set<String> = []
 
     enum CodingKeys: String, CodingKey {
-        case jcard, ocard, etiquettes, obi, volets, dos, reperes, variante, propositions, historique, imagePerso, echelles, texteTranche, notes, credits, obiTexte, afficherLogoMaison, codeBarres, genreCode, numeroCode, texteCode, placeCode, couleursCode, barresPerso, fondPerso, chiffresCode, echelleCode, qr, contenuQR, texteQR, placeQR, codeSpotify, alertesForcees
+        case jcard, ocard, etiquettes, obi, volets, dos, reperes, variante, propositions, historique, imagePerso, echelles, texteTranche, notes, credits, obiTexte, afficherLogoMaison, codeBarres, genreCode, numeroCode, texteCode, placeCode, couleursCode, barresPerso, fondPerso, chiffresCode, echelleCode, qr, contenuQR, texteQR, placeQR, codeSpotify, codeX, codeY, rotationCode, logoMaison, alertesForcees
     }
 
     /// Décodage tolérant : un champ absent ou illisible prend sa valeur par défaut (les anciennes cassettes restent lisibles).
@@ -195,6 +207,10 @@ public struct Design: Codable, Hashable, Sendable {
         texteQR = v(.texteQR, d.texteQR)
         placeQR = v(.placeQR, d.placeQR)
         codeSpotify = v(.codeSpotify, d.codeSpotify)
+        codeX = v(.codeX, d.codeX)
+        codeY = v(.codeY, d.codeY)
+        rotationCode = v(.rotationCode, d.rotationCode)
+        logoMaison = v(.logoMaison, d.logoMaison)
         alertesForcees = v(.alertesForcees, d.alertesForcees)
     }
 

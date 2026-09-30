@@ -125,7 +125,9 @@ struct EcranJaquette: View {
     @ViewBuilder private func apercuVue(_ u: CGFloat) -> some View {
         let m = etat.mise
         switch apercu {
-        case .jcard: JCardVue(mise: m, guides: true, u: u)
+        case .jcard: JCardVue(mise: m, guides: true, deplacerCode: { x, y in
+            var d = etat.design; d.codeX = x; d.codeY = y; etat.design = d
+        }, u: u)
         case .verso: JCardVue(mise: m, cote: .verso, guides: true, u: u)
         case .ocard: OCardVue(mise: m, guides: true, u: u)
         case .etiquettes:
@@ -147,9 +149,15 @@ struct EcranJaquette: View {
         case .obi: g = Gabarits.obi
         }
         let mm = { (x: Double) in x.truncatingRemainder(dividingBy: 1) == 0 ? "\(Int(x)) mm" : String(format: "%.1f mm", x).replacingOccurrences(of: ".", with: ",") }
-        let panneaux = g.panneaux.count > 1 ? g.panneaux.map { "\($0.nom) \(mm($0.largeur))" }.joined(separator: " · ") + " · " : "\(mm(g.largeur)) × "
+        let panneaux = g.panneaux.count > 1 ? g.panneaux.map { "\(tr(nomPanneau($0))) \(mm($0.largeur))" }.joined(separator: " · ") + " · " : "\(mm(g.largeur)) × "
         let papier = Papier.pour(largeur: g.largeur, hauteur: g.hauteur)
-        return "\(panneaux)Hauteur \(mm(g.hauteur)) · Papier \(papier.nom) · 600 DPI\(apercu == .verso ? " · recto verso, retourner sur le grand côté" : "")"
+        return "\(panneaux)\(tr("Hauteur")) \(mm(g.hauteur)) · \(tr("Papier")) \(papier.nom) · 600 DPI\(apercu == .verso ? " · " + tr("recto verso, retourner sur le grand côté") : "")"
+    }
+
+    /// Nom d'un panneau sans numéro (pour la traduction), puis le numéro.
+    private func nomPanneau(_ p: Panneau) -> String {
+        if case .interieur(let i) = p.genre { return tr("Intérieur") + " \(i)" }
+        return p.nom
     }
 
     // MARK: Colonne de gauche : réglages
@@ -166,7 +174,7 @@ struct EcranJaquette: View {
 
             Groupe(titre: "Mise en page") {
                 Picker("Volets", selection: lien(\.volets)) { ForEach(3...8, id: \.self) { Text("\($0)").tag($0) } }
-                Picker("Dos", selection: lien(\.dos)) { ForEach(FormeDos.allCases, id: \.self) { Text($0.nom).tag($0) } }
+                Picker("Dos", selection: lien(\.dos)) { ForEach(FormeDos.allCases, id: \.self) { Text(tr($0.nom)).tag($0) } }
                 Toggle("Coupe, pliage, fond perdu", isOn: lien(\.reperes)).toggleStyle(.checkbox)
                 if etat.mise.aUnVerso {
                     Text("Avec \(etat.design.volets) volets, une partie va au verso : impression recto verso. Ajoute des volets pour tout imprimer d'un côté.")
@@ -175,7 +183,7 @@ struct EcranJaquette: View {
             }
 
             Groupe(titre: "Recto") {
-                Picker("Style", selection: lien(\.variante.style)) { ForEach(StyleRecto.allCases, id: \.self) { Text($0.nom).tag($0) } }
+                Picker("Style", selection: lien(\.variante.style)) { ForEach(StyleRecto.allCases, id: \.self) { Text(tr($0.nom)).tag($0) } }
                 HStack {
                     Button("Choisir une image…") { etat.choisirImagePerso() }.buttonStyle(.w98)
                     if etat.design.imagePerso != nil {
@@ -216,6 +224,15 @@ struct EcranJaquette: View {
                     Champ(invite: etat.mise.texteTranche, texte: lien(\.obiTexte))
                 }
                 Toggle("Logo de la maison de disque", isOn: lien(\.afficherLogoMaison)).toggleStyle(.checkbox)
+                if etat.projet.maisonDeDisque.uppercased() != "LAFLEURSTUDIO" {
+                    HStack {
+                        Button("Importer un logo…") { etat.importerLogo() }.buttonStyle(.w98)
+                        if etat.design.logoMaison != nil {
+                            Button("×") { var d = etat.design; d.logoMaison = nil; etat.design = d }.buttonStyle(.w98).help("Retirer le logo")
+                        }
+                    }
+                    Text("Sans logo importé, le nom est écrit en texte.").foregroundStyle(W98.ombre)
+                }
             }
 
             groupeCodes
@@ -264,7 +281,7 @@ struct EcranJaquette: View {
             }
             .toggleStyle(.checkbox)
             if d.codeBarres {
-                Picker("Type", selection: lien(\.genreCode)) { ForEach(CodeBarres1D.Genre.allCases, id: \.self) { Text($0.nom).tag($0) } }
+                Picker("Type", selection: lien(\.genreCode)) { ForEach(CodeBarres1D.Genre.allCases, id: \.self) { Text(tr($0.nom)).tag($0) } }
                 Text("Numéro")
                 Champ(invite: d.genreCode == .code128 ? etat.projet.numeroCatalogue : m.numeroCode, texte: lien(\.numeroCode))
                 if let c = CodesBarres.generer(d.genreCode, m.numeroCode), c.numero != d.numeroCode, !d.numeroCode.isEmpty {
@@ -274,25 +291,32 @@ struct EcranJaquette: View {
                 Champ(invite: etat.projet.texteCodeAuto, texte: Binding(
                     get: { d.texteCode ?? "" },
                     set: { t in var n = etat.design; n.texteCode = t.isEmpty ? nil : t; etat.design = n }))
-                Picker("Place", selection: lien(\.placeCode)) { ForEach(PlaceCode.allCases, id: \.self) { Text($0.nom).tag($0) } }
+                Picker("Place", selection: lien(\.placeCode)) { ForEach(PlaceCode.allCases, id: \.self) { Text(tr($0.nom)).tag($0) } }
                 Toggle("Chiffres sous les barres", isOn: lien(\.chiffresCode)).toggleStyle(.checkbox)
                 HStack { Text("Taille"); Slider(value: lien(\.echelleCode), in: 0.6...1.4) }
             }
             if d.qr {
-                Picker("QR code", selection: lien(\.contenuQR)) { ForEach(ContenuQR.allCases, id: \.self) { Text($0.nom).tag($0) } }
+                Picker("QR code", selection: lien(\.contenuQR)) { ForEach(ContenuQR.allCases, id: \.self) { Text(tr($0.nom)).tag($0) } }
                 if d.contenuQR != .spotify {
                     Champ(invite: d.contenuQR == .lienPerso ? "https://bandcamp.com/…" : "Texte du QR code", texte: lien(\.texteQR))
                 }
                 Picker("Place du QR", selection: lien(\.placeQR)) {
-                    Text(PlaceCode.rabat.nom).tag(PlaceCode.rabat)
-                    Text(PlaceCode.interieur.nom).tag(PlaceCode.interieur)
+                    Text(tr(PlaceCode.rabat.nom)).tag(PlaceCode.rabat)
+                    Text(tr(PlaceCode.interieur.nom)).tag(PlaceCode.interieur)
+                    Text(tr(PlaceCode.libre.nom)).tag(PlaceCode.libre)
                 }
+            }
+            if d.placeCode == .libre || d.placeQR == .libre {
+                Picker("Rotation", selection: lien(\.rotationCode)) {
+                    ForEach([0.0, 90, 180, 270], id: \.self) { Text("\(Int($0))°").tag($0) }
+                }
+                Text("Glisse les codes dans l'aperçu de la J-card.").foregroundStyle(W98.ombre)
             }
             if d.codeBarres || d.qr || d.codeSpotify {
                 Text("Couleurs")
                 HStack(spacing: 4) {
                     ForEach(CouleursCode.allCases, id: \.self) { c in
-                        Button(c.nom) { var n = etat.design; n.couleursCode = c; etat.design = n }
+                        Button(tr(c.nom)) { var n = etat.design; n.couleursCode = c; etat.design = n }
                             .buttonStyle(d.couleursCode == c ? .w98Gras : .w98)
                     }
                 }
@@ -358,7 +382,7 @@ struct EcranJaquette: View {
                     if !d.historique.isEmpty {
                         Menu("Versions (\(d.historique.count))") {
                             ForEach(d.historique.reversed()) { v in
-                                Button("\(v.nom) · \(v.creeLe.formatted(date: .omitted, time: .shortened)) · \(v.style.nom)") { etat.choisirVariante(v) }
+                                Button("\(v.nom) · \(v.creeLe.formatted(date: .omitted, time: .shortened)) · \(tr(v.style.nom))") { etat.choisirVariante(v) }
                             }
                         }
                         .fixedSize()

@@ -35,7 +35,7 @@ struct EcranCollection: View {
                                     .foregroundStyle(p.enregistree.isEmpty ? W98.grisFonce : W98.vert).bold()
                             }
                             Text(p.titre.isEmpty ? "Sans titre" : p.titre).bold().lineLimit(1)
-                            Text("\(p.artiste) · \(p.mode == .album ? "album" : "mixtape") · \(p.cassette.longueur.nom)").foregroundStyle(W98.ombre).lineLimit(1)
+                            Text("\(p.artiste) · \(tr(p.mode == .album ? "album" : "mixtape")) · \(p.cassette.longueur.nom)").foregroundStyle(W98.ombre).lineLimit(1)
                             HStack(spacing: 4) {
                                 Button("Ouvrir") { ouvrir(p) }.buttonStyle(.w98Gras)
                                 Button("Dupliquer") { etat.dupliquer(p) }.buttonStyle(.w98)

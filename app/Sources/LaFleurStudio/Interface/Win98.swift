@@ -168,3 +168,6 @@ struct Champ: View {
         .textFieldStyle(.plain).font(W98.police).padding(.horizontal, 5).frame(height: 22).creux()
     }
 }
+
+/// Traduit un texte connu seulement à l'exécution (noms des réglages, panneaux…), clé = texte français.
+func tr(_ s: String) -> String { Bundle.main.localizedString(forKey: s, value: s, table: nil) }

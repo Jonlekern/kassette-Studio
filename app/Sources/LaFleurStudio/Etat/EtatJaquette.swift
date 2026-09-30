@@ -45,7 +45,7 @@ extension EtatApp {
 
     /// Toutes les images dont les rendus ont besoin.
     var imagesNecessaires: [URL?] {
-        [projet.pochetteURL, design.imagePerso, mise.urlCodeSpotify] + projet.toutes.map(\.morceau.pochetteURL)
+        [projet.pochetteURL, design.imagePerso, design.logoMaison, mise.urlCodeSpotify] + projet.toutes.map(\.morceau.pochetteURL)
     }
 
     func prechargerImages() async { await Images.partage.precharger(imagesNecessaires) }
@@ -346,6 +346,27 @@ extension EtatApp {
             try FileManager.default.copyItem(at: src, to: dest)
             var d = design; d.imagePerso = dest; d.variante.style = .imagePerso; design = d
             statut = "Image ajoutée au recto"
+        } catch { statut = "⚠︎ " + error.localizedDescription }
+    }
+
+    /// Logo d'une autre maison de disque, depuis tes propres fichiers (usage perso uniquement).
+    func importerLogo() {
+        let avertissement = NSAlert()
+        avertissement.messageText = String(localized: "Usage perso uniquement")
+        avertissement.informativeText = String(localized: "Les logos des maisons de disque sont des marques. Importe seulement un fichier que tu as déjà ; l'app ne télécharge ni ne partage jamais de logos.")
+        avertissement.addButton(withTitle: String(localized: "Choisir le fichier…"))
+        avertissement.addButton(withTitle: String(localized: "Annuler"))
+        guard avertissement.runModal() == .alertFirstButtonReturn else { return }
+        let panneau = NSOpenPanel()
+        panneau.allowedContentTypes = [.image]
+        guard panneau.runModal() == .OK, let src = panneau.url else { return }
+        let dossier = stockage.racine.appendingPathComponent("images", isDirectory: true)
+        try? FileManager.default.createDirectory(at: dossier, withIntermediateDirectories: true)
+        let dest = dossier.appendingPathComponent("logo-\(UUID().uuidString).\(src.pathExtension.isEmpty ? "png" : src.pathExtension)")
+        do {
+            try FileManager.default.copyItem(at: src, to: dest)
+            var d = design; d.logoMaison = dest; d.afficherLogoMaison = true; design = d
+            statut = "Logo importé (usage perso uniquement)"
         } catch { statut = "⚠︎ " + error.localizedDescription }
     }
 

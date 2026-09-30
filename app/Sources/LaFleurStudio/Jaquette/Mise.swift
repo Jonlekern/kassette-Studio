@@ -245,6 +245,7 @@ struct Mise {
             if let r = g.panneau(.rabat) {
                 z.append(badgeSpec(largeur: r.largeur - 2))
                 if design.codeBarres && design.placeCode == .rabat { z.append(texteCodeSpec(largeur: r.largeur - 2)) }
+                if design.codeBarres && design.placeCode == .libre { z.append(texteCodeSpec(largeur: 25)) }
                 z.append(droitsSpec(largeur: r.largeur - 2))
             }
             let rep = repartition
@@ -309,6 +310,7 @@ struct Mise {
         case .rabat: place = (gabaritJ.panneau(.rabat)?.largeur ?? Gabarits.recto) - 3
         case .tranche: place = 30
         case .interieur: place = 40
+        case .libre: place = 25
         }
         return min(0.33, place / CGFloat(c.modules.count + 20)) * CGFloat(design.echelleCode)
     }

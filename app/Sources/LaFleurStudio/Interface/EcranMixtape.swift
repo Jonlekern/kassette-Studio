@@ -160,11 +160,11 @@ private struct ReglagesCassette: View {
             }
             HStack(spacing: 14) {
                 Picker("Bande", selection: $etat.projet.cassette.bande) {
-                    ForEach(TypeBande.allCases, id: \.self) { Text($0.nom).tag($0) }
+                    ForEach(TypeBande.allCases, id: \.self) { Text(tr($0.nom)).tag($0) }
                 }
                 .frame(width: 210)
                 Picker("Réducteur de bruit", selection: $etat.projet.cassette.reducteur) {
-                    ForEach(ReducteurBruit.allCases, id: \.self) { Text($0.nom).tag($0) }
+                    ForEach(ReducteurBruit.allCases, id: \.self) { Text(tr($0.nom)).tag($0) }
                 }
                 .frame(width: 230)
                 Text("Marque / modèle")
