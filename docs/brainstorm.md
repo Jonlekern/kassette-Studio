@@ -87,6 +87,9 @@ Claude ne génère pas de photos ni d'images réalistes. Pour une mixtape, il pr
 4. **Ta propre image** (photo, dessin, scan) : Claude propose le cadrage, les couleurs et la place
    du texte autour.
 
+**Ordre de priorité des propositions** (décision de Johnny) : 1. collage des covers, 2. ta propre
+image, 3. style « K7 maison », 4. design graphique dessiné par Claude.
+
 Dans tous les cas : 3 variantes, et on ajuste en lui parlant (« plus sombre », « plus 90s »).
 
 ## Code-barres
