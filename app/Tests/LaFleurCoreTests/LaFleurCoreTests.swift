@@ -1,3 +1,4 @@
+import Vision
 import XCTest
 @testable import LaFleurCore
 
@@ -185,5 +186,93 @@ final class MinutageAudioTests: XCTestCase {
         let attendu = [0.5, 1.5, 1.75, 2.25]
         XCTAssertEqual(transitions.count, attendu.count, "transitions : \(transitions)")
         for (t, a) in zip(transitions, attendu) { XCTAssertEqual(t, a, accuracy: 0.001, "transitions : \(transitions)") }
+    }
+}
+
+// MARK: - Étape 2 : codes et jaquette
+
+final class CodesTests: XCTestCase {
+    func testCleEAN() {
+        XCTAssertEqual(CodesBarres.completerEAN("200012600001"), "2000126000012")
+        XCTAssertEqual(CodesBarres.completerEAN("4006381333931"), "4006381333931")
+        XCTAssertEqual(CodesBarres.completerUPC("03600029145"), "036000291452")
+        XCTAssertNil(CodesBarres.completerEAN("12AB"))
+        XCTAssertEqual(CodesBarres.eanParDefaut(CodesBarres.numeroDeCatalogue("LFS-001")), "2000126000012")
+        XCTAssertEqual(CodesBarres.ean13("200012600001")?.modules.count, 95)
+        XCTAssertEqual(CodesBarres.upcA("03600029145")?.modules.count, 95)
+    }
+
+    /// Image noir et blanc d'un code 1D (3 px par module, zones blanches comprises).
+    private func image(_ c: CodeBarres1D) -> CGImage {
+        let px = 3, marge = 12, w = (c.modules.count + 2 * marge) * px, h = 120
+        let ctx = CGContext(data: nil, width: w, height: h, bitsPerComponent: 8, bytesPerRow: 0,
+                            space: CGColorSpaceCreateDeviceGray(), bitmapInfo: CGImageAlphaInfo.none.rawValue)!
+        ctx.setFillColor(gray: 1, alpha: 1); ctx.fill(CGRect(x: 0, y: 0, width: w, height: h))
+        ctx.setFillColor(gray: 0, alpha: 1)
+        for (i, b) in c.modules.enumerated() where b { ctx.fill(CGRect(x: (marge + i) * px, y: 20, width: px, height: 80)) }
+        return ctx.makeImage()!
+    }
+
+    private func image(_ m: [[Bool]]) -> CGImage {
+        let px = 8, marge = 4, n = m.count, w = (n + 2 * marge) * px
+        let ctx = CGContext(data: nil, width: w, height: w, bitsPerComponent: 8, bytesPerRow: 0,
+                            space: CGColorSpaceCreateDeviceGray(), bitmapInfo: CGImageAlphaInfo.none.rawValue)!
+        ctx.setFillColor(gray: 1, alpha: 1); ctx.fill(CGRect(x: 0, y: 0, width: w, height: w))
+        ctx.setFillColor(gray: 0, alpha: 1)
+        for (y, ligne) in m.enumerated() { for (x, b) in ligne.enumerated() where b {
+            ctx.fill(CGRect(x: (marge + x) * px, y: w - (marge + y + 1) * px, width: px, height: px))
+        } }
+        return ctx.makeImage()!
+    }
+
+    private func lire(_ img: CGImage) throws -> [String] {
+        let r = VNDetectBarcodesRequest()
+        try VNImageRequestHandler(cgImage: img).perform([r])
+        return (r.results ?? []).compactMap(\.payloadStringValue)
+    }
+
+    func testLesCodesSeScannent() throws {
+        XCTAssertEqual(try lire(image(CodesBarres.ean13("200012600001")!)).first, "2000126000012")
+        XCTAssertEqual(try lire(image(CodesBarres.code128("LFS-001")!)).first, "LFS-001")
+        let upc = try lire(image(CodesBarres.upcA("03600029145")!)).first
+        XCTAssertTrue(upc == "036000291452" || upc == "0036000291452", "UPC lu : \(upc ?? "rien")")
+        let lien = "https://open.spotify.com/album/6RUvESEU9esRjOKBMAdXHp"
+        let m = try XCTUnwrap(CodeQR.modules(lien))
+        XCTAssertEqual((m.count - 21) % 4, 0)
+        XCTAssertEqual(try lire(image(m)).first, lien)
+    }
+}
+
+final class JaquetteTests: XCTestCase {
+    func testGabarits() {
+        let j = Gabarits.jcard(volets: 3, dos: .normal)
+        XCTAssertEqual(j.largeur, 27 + 13 + 64, accuracy: 1e-9)
+        XCTAssertEqual(j.plis, [27, 40])
+        XCTAssertEqual(Gabarits.jcard(volets: 5, dos: .normal).panneaux.count, 5)
+        XCTAssertEqual(Gabarits.jcard(volets: 3, dos: .rectoSeul).panneaux.count, 3)
+        XCTAssertEqual(Gabarits.ocard.largeur, Gabarits.ocard.panneaux.reduce(0) { $0 + $1.largeur }, accuracy: 0.01)
+        XCTAssertEqual(Papier.pour(largeur: 104, hauteur: 101.6), .a4)
+        XCTAssertEqual(Papier.pour(largeur: 230, hauteur: 101.6), .a4Paysage)
+        XCTAssertEqual(Papier.pour(largeur: 356, hauteur: 101.6), .a3Paysage)
+    }
+
+    func testVerification() {
+        XCTAssertEqual(Verification.contraste("#000000", "#FFFFFF"), 21, accuracy: 0.01)
+        let z = ZoneTexte(nom: "tranche", texte: "JEREMY SADIK · AN AFTERNOON AT THE LAKE", largeurZone: 101.6, largeurTexte: 108,
+                          hauteurZone: 13, hauteurTexte: 4, taillePt: 9, couleurTexte: "#E8EEF2", couleurFond: "#14283A")
+        XCTAssertEqual(Verification.verifier([z]).map(\.id), ["deborde-tranche"])
+        XCTAssertEqual(Verification.verifierCode(nom: "EAN", barres: "#FFFFFF", fond: "#14283A", largeurModule: 0.3).first?.gravite, .bloquante)
+        XCTAssertTrue(Verification.verifierCode(nom: "EAN", barres: "#14283A", fond: "#FFFFFF", largeurModule: 0.3).isEmpty)
+    }
+
+    func testDesignTolerant() throws {
+        // Un design enregistré par une ancienne version (champs manquants) se relit avec les valeurs par défaut.
+        let d = try JSONDecoder().decode(Design.self, from: Data(#"{"volets": 5, "inconnu": 1}"#.utf8))
+        XCTAssertEqual(d.volets, 5)
+        XCTAssertEqual(d.dos, .normal)
+        var p = Projet(numeroCatalogue: "LFS-001")
+        p.design = d
+        let relu = try JSONDecoder().decode(Projet.self, from: JSONEncoder().encode(p))
+        XCTAssertEqual(relu.design, d)
     }
 }
