@@ -157,6 +157,49 @@ Conseil par défaut, qui marche avec n'importe quelle imprimante :
     trousseau du Mac ; Claude reçoit titres, durées, infos d'album et une image de la jaquette, jamais
     les fichiers audio.
 
+## Sources d'infos
+
+L'app va chercher les infos à des sources précises, puis les donne à Claude :
+
+1. **Spotify** (compte de l'utilisateur) : tracklist, durées, pochettes, date, ligne ℗.
+2. **Tags des fichiers audio** : titre, artiste, album, cover intégrée.
+3. **MusicBrainz** + **Cover Art Archive** : maison de disque, numéro de catalogue, crédits, covers HD.
+4. **Discogs** (clé gratuite dans Réglages) : notes de pochette, crédits, éditions.
+5. **Recherche web de Claude** (option) : limitée à des sites choisis, sources citées, validation
+   par l'utilisateur.
+
+Pas de paroles complètes (droits d'auteur) : seulement un lien vers un site de paroles.
+
+## Maisons de disque
+
+- Placées selon les conventions des K7 du commerce : **tranche** (nom ou logo d'un côté, numéro de
+  catalogue de l'autre), **dos/rabat** (ligne ℗/©, catalogue, code-barres regroupés en bas),
+  **recto** (petit logo en option), **étiquettes** (maison de disque + catalogue).
+- Mixtape : LaFleurStudio est la maison de disque de la K7 ; la maison de disque d'origine de chaque
+  titre va dans les crédits du volet intérieur.
+- Plusieurs maisons de disque : maison de disque d'abord, distributeur ensuite. Rien d'inventé : une
+  info introuvable devient une case à remplir.
+- **Logos** : les logos des autres maisons de disque sont des marques ; par défaut ils sont écrits en
+  texte. Option « Importer un logo » depuis ses propres fichiers, avec l'avertissement « usage perso
+  uniquement ». L'app ne télécharge ni ne partage jamais de logos. Le logo LaFleurStudio est dessiné
+  normalement.
+
+## Conditions d'utilisation
+
+À accepter au premier démarrage (case à cocher, sans elle le bouton « Commencer » reste grisé), et
+rappel court au moment d'exporter ou d'imprimer :
+
+- usage personnel et non commercial : rien n'est fait pour être vendu, loué ou distribué ;
+- l'utilisateur est seul responsable de ce qu'il fait avec l'app et de ce qu'il produit (droits d'auteur,
+  marques) ;
+- pochettes, logos, textes et infos venant de sources externes restent à leurs auteurs ;
+- app fournie telle quelle, sans garantie ; l'auteur de LaFleurStudio n'est pas responsable de l'usage
+  fait de l'app ni des objets produits ;
+- les propositions de Claude peuvent contenir des erreurs ; Claude (Anthropic) et Spotify ont leurs
+  propres conditions.
+
+Texte à faire relire par un juriste si l'app sort un jour du cercle perso.
+
 ## Collection
 
 Un écran liste toutes les K7 faites (LFS-001, LFS-002…) avec leur jaquette, pour les rouvrir,
