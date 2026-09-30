@@ -157,6 +157,6 @@ struct ChoixSortie: View {
 /// Logo LAFLEURSTUDIO © : une seule version vectorielle, colorée par `foregroundStyle`.
 struct Logo: View {
     var body: some View {
-        Text("LAFLEURSTUDIO ©").font(.system(size: 24, weight: .black, design: .default)).kerning(3)
+        LogoForme().aspectRatio(LogoForme.largeur / LogoForme.hauteur, contentMode: .fit).accessibilityLabel("LAFLEURSTUDIO")
     }
 }
