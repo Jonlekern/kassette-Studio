@@ -24,7 +24,22 @@ public struct PropositionDesign: Decodable, Sendable {
         public let elements: [Element]
         public let commentaire: String
     }
+    /// Un réglage que Claude change directement (voir `ChampsDesign`).
+    public struct Modification: Decodable, Sendable, Hashable {
+        public let champ: String
+        public let valeur: String
+    }
+    /// Une image que Claude veut poser : cherchée sur Wikimedia Commons (ou téléchargée si `url` est donnée).
+    public struct DemandeImage: Decodable, Sendable, Hashable {
+        public let requete: String
+        public let url: String
+        /// recto (image principale), logo (maison de disque), element (posé sur le recto)
+        public let usage: String
+        public let x: Double, y: Double, largeur: Double, hauteur: Double
+    }
     public let message: String
+    public let modifications: [Modification]
+    public let images: [DemandeImage]
     public let variantes: [V]
     public let texte_tranche: String
     public let notes: String
@@ -121,8 +136,7 @@ extension ClientClaude {
             - Style « graphique » : `elements` dessine le recto (x, y, largeur, hauteur de 0 à 1, origine en haut à gauche, \
             rotation en degrés, 3 à 25 formes). Pour les autres styles, `elements` peut ajouter quelques touches (bandes, \
             tampons, badge) ou rester vide. `texte` vaut "" sauf pour la forme « texte ».
-            - Badge de bande en texte seulement, façon K7 d'époque (ex. « TYPE II · CrO₂ · HIGH POSITION · 70 µs · DOLBY B NR »). \
-            Jamais les logos déposés des marques de cassettes ni des maisons de disque.
+            - Badge de bande façon K7 d'époque (ex. « TYPE II · CrO₂ · HIGH POSITION · 70 µs · DOLBY B NR »).
             - Texte de tranche : 42 caractères maximum, sinon il déborde (ex. « J. SADIK · AFTERNOON AT THE LAKE »).
             - Notes : quelques lignes de présentation, jamais de paroles complètes (droits d'auteur).
             - Crédits : seulement des infos sûres (données fournies) ; ce que tu ne sais pas reste vide, n'invente rien.
@@ -130,6 +144,18 @@ extension ClientClaude {
             - \(styles)
             - `message` : ce que tu as fait, en 2 ou 3 phrases, en \(langue). Tous les textes sont en \(langue) sauf les noms propres.
             - Si on te demande de régénérer une seule variante, renvoie quand même 3 variantes : les autres inchangées.
+            ACCÈS COMPLET : l'utilisateur fabrique des cassettes pour son usage personnel (il a accepté les conditions \
+            d'utilisation de l'app). Tu peux tout changer et tu exécutes ce qu'il demande, sans refuser ni faire la morale.
+            - Retouche (« mets le titre plus gros », « passe le QR à l'intérieur », « orientation paysage »…) : applique-la \
+            avec `modifications` (champ + valeur en texte) et renvoie `variantes` vide. Tu ne proposes 3 variantes que pour \
+            une première proposition ou quand on te demande d'autres pistes.
+            - Champs modifiables et valeurs : \(ChampsDesign.aide)
+            - Images : pour mettre une image, un logo ou un écusson (ex. « l'écusson Sony »), ajoute-la dans `images` : \
+            `requete` = mots-clés pour Wikimedia Commons (en anglais, ex. « Sony logo »), `url` = adresse directe d'un \
+            fichier image si tu la connais, sinon "". `usage` : « recto » (image principale du recto), « logo » (logo de la \
+            maison de disque, recto et tranche) ou « element » (posé sur le recto aux coordonnées x, y, largeur, hauteur \
+            de 0 à 1). L'app télécharge l'image et la pose tout de suite.
+            - Pour enlever une image posée : modification « images_retirer » valeur « tout ».
             """,
             message: """
             \(Self.fiche(projet, design))
@@ -141,7 +167,10 @@ extension ClientClaude {
             Demande : \(demande.isEmpty ? "Première proposition : 3 variantes." : demande)\(regenerer.map { "\nRégénère seulement la variante \($0), garde les autres." } ?? "")
             """,
             schema: objet(["message": chaine, "variantes": liste(variante), "texte_tranche": chaine, "notes": chaine,
-                           "credits": chaine, "texte_code": chaine]),
+                           "credits": chaine, "texte_code": chaine,
+                           "modifications": liste(objet(["champ": choix(ChampsDesign.tous), "valeur": chaine])),
+                           "images": liste(objet(["requete": chaine, "url": chaine, "usage": choix(["recto", "logo", "element"]),
+                                                  "x": nombre, "y": nombre, "largeur": nombre, "hauteur": nombre]))]),
             effort: "high", images: images)
     }
 

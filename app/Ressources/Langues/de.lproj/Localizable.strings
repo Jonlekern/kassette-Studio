@@ -84,6 +84,7 @@
 "Aucun fichier audio associé : ce morceau ne peut pas être enregistré. Choisis ton dossier audio à gauche." = "Keine Audiodatei zugeordnet: Dieser Titel kann nicht aufgenommen werden. Wähle links deinen Audio-Ordner.";
 "Aucun fichier audio dans ce dossier" = "Keine Audiodatei in diesem Ordner";
 "Aucun fichier audio dans le dossier" = "Keine Audiodatei im Ordner";
+"Aucune image trouvée pour « %@ ». Importe-la toi-même ou reformule." = "Kein Bild für „%@“ gefunden. Importiere es selbst oder formuliere um.";
 "Aucune police lisible dans ces fichiers" = "Keine lesbare Schrift in diesen Dateien";
 "Aucune édition cassette trouvée : Claude partira de la pochette." = "Keine Kassettenausgabe gefunden: Claude startet mit dem Cover.";
 "Audio" = "Audio";
@@ -233,6 +234,7 @@
 "Ignorer" = "Ignorieren";
 "Ignorer " = "Ignorieren ";
 "Image ajoutée au recto" = "Bild auf der Vorderseite eingefügt";
+"Image posée : %@" = "Bild platziert: %@";
 "Import de « %@ » depuis MusicBrainz…" = "Importiere „%@“ von MusicBrainz…";
 "Import de « %@ »…" = "Importiere „%@“…";
 "Import du lien Spotify…" = "Importiere den Spotify-Link…";
@@ -293,6 +295,7 @@
 "Mise en page" = "Layout";
 "Mixtape" = "Mixtape";
 "Mode Concentration activé" = "Fokus-Modus an";
+"Modifications de Claude appliquées ✓" = "Änderungen von Claude übernommen ✓";
 "Monter" = "Nach oben";
 "MusicBrainz (gratuit, sans compte)" = "MusicBrainz (kostenlos, ohne Konto)";
 "MusicBrainz a répondu %lld. Réessaie dans un instant." = "MusicBrainz antwortete %lld. Versuch es gleich nochmal.";
@@ -368,6 +371,7 @@
 "Remettre « %@ »" = "„%@“ zurücklegen";
 "Reprendre crédits et notes" = "Credits und Notizen übernehmen";
 "Retirer ce morceau" = "Diesen Titel entfernen";
+"Retirer cette image" = "Dieses Bild entfernen";
 "Retirer de la cassette" = "Von der Kassette entfernen";
 "Retirer de la cassette (ne sera pas enregistré)" = "Von der Kassette entfernen (wird nicht aufgenommen)";
 "Retirer l'image" = "Bild entfernen";

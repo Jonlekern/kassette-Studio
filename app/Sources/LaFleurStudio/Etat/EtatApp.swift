@@ -47,6 +47,8 @@ final class EtatApp: ObservableObject {
     @Published var conversation: [MessageDesign] = []
     @Published var editionsK7: [EditionK7] = []
     @Published var editionsCherchees = false
+    /// Autres images trouvées pour chaque demande de Claude (pour en choisir une autre).
+    @Published var imagesTrouvees: [String: [URL]] = [:]
     @Published var avisClaude: AvisRendu?
     @Published var policesDisponibles: [String] = Typo.disponibles
     @Published var jetonDiscogs: String { didSet { Trousseau.ecrire("discogs", jetonDiscogs) } }

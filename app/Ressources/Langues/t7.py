@@ -61,4 +61,8 @@ T = {
 "Orientation": ("Orientation", "Ориентация", "Ausrichtung"),
 "Vertical": ("Portrait", "Вертикально", "Hochformat"),
 "Paysage": ("Landscape", "Горизонтально", "Querformat"),
+"Modifications de Claude appliquées ✓": ("Claude's changes applied ✓", "Изменения Claude применены ✓", "Änderungen von Claude übernommen ✓"),
+"Image posée : %@": ("Image placed: %@", "Изображение добавлено: %@", "Bild platziert: %@"),
+"Aucune image trouvée pour « %@ ». Importe-la toi-même ou reformule.": ("No image found for “%@”. Import it yourself or rephrase.", "Не найдено изображение для «%@». Импортируй сам или переформулируй.", "Kein Bild für „%@“ gefunden. Importiere es selbst oder formuliere um."),
+"Retirer cette image": ("Remove this image", "Убрать это изображение", "Dieses Bild entfernen"),
 }

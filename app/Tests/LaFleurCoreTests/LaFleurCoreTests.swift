@@ -310,3 +310,37 @@ final class DiscogsTests: XCTestCase {
         XCTAssertEqual(d.notes, "Recorded at the lake.")
     }
 }
+
+final class RetouchesTests: XCTestCase {
+    func testChampsDesign() {
+        var p = Projet(numeroCatalogue: "LFS-001")
+        var d = Design()
+        XCTAssertTrue(ChampsDesign.appliquer("orientation", "paysage", projet: &p, design: &d))
+        XCTAssertTrue(ChampsDesign.appliquer("taille_titre", "1,3", projet: &p, design: &d))
+        XCTAssertTrue(ChampsDesign.appliquer("place_qr", "interieur", projet: &p, design: &d))
+        XCTAssertTrue(ChampsDesign.appliquer("titre", "Nouveau titre", projet: &p, design: &d))
+        XCTAssertFalse(ChampsDesign.appliquer("dos", "n'importe quoi", projet: &p, design: &d))
+        XCTAssertEqual(d.orientation, .paysage)
+        XCTAssertEqual(d.echelle("titre"), 1.3, accuracy: 1e-9)
+        XCTAssertEqual(d.placeQR, .interieur)
+        XCTAssertEqual(p.titre, "Nouveau titre")
+        // Chaque champ annoncé à Claude est bien reconnu.
+        for c in ChampsDesign.tous where c != "images_retirer" {
+            var p2 = p, d2 = d
+            let v = c.hasPrefix("taille_") || ["opacite_image", "volets", "rotation_code", "code_x", "code_y"].contains(c) ? "1" : "oui"
+            _ = ChampsDesign.appliquer(c, v, projet: &p2, design: &d2)
+        }
+    }
+
+    func testCommons() {
+        let json = #"""
+        {"query": {"pages": {"12": {"title": "File:Sony logo.svg", "index": 1, "imageinfo": [{"thumburl": "https://upload.wikimedia.org/a.png",
+          "url": "https://upload.wikimedia.org/a.svg", "descriptionurl": "https://commons.wikimedia.org/wiki/File:Sony_logo.svg",
+          "mime": "image/svg+xml", "extmetadata": {"LicenseShortName": {"value": "Public domain"}}}]}}}}
+        """#
+        let r = Commons.decoder(Data(json.utf8))
+        XCTAssertEqual(r.first?.titre, "Sony logo.svg")
+        XCTAssertEqual(r.first?.image.absoluteString, "https://upload.wikimedia.org/a.png")
+        XCTAssertEqual(r.first?.licence, "Public domain")
+    }
+}

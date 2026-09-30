@@ -144,6 +144,7 @@ struct RectoVue: View {
                 ZStack(alignment: .topLeading) {
                     ImageRecto(mise: mise, largeur: largeur + perduHaut, hauteur: largeur + perduDroite, u: u)
                         .offset(x: -perduHaut * u)
+                    ImagesPosees(images: mise.design.imagesPosees, largeur: hauteur, hauteur: largeur, u: u)
                     VStack(spacing: 1.5 * u) {
                         TexteMM(spec: r.titre, u: u)
                         TexteMM(spec: r.artiste, u: u)
@@ -160,6 +161,7 @@ struct RectoVue: View {
                 ZStack(alignment: .topLeading) {
                     ImageRecto(mise: mise, largeur: largeur + perduDroite, hauteur: largeur + perduHaut, u: u)
                         .offset(y: -perduHaut * u)
+                    ImagesPosees(images: mise.design.imagesPosees, largeur: largeur, hauteur: hauteur, u: u)
                     VStack(spacing: 1.5 * u) {
                         TexteMM(spec: r.titre, u: u)
                         TexteMM(spec: r.artiste, u: u)
@@ -173,6 +175,25 @@ struct RectoVue: View {
             }
         }
         .background(Color(hex: p.fond))
+    }
+}
+
+/// Images posées sur le recto (logos, écussons…), coordonnées de 0 à 1.
+struct ImagesPosees: View {
+    let images: [ImagePosee]
+    let largeur: CGFloat
+    let hauteur: CGFloat
+    let u: CGFloat
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            ForEach(images) { i in
+                ImageCache(url: i.url, remplir: false)
+                    .frame(width: i.largeur * largeur * u, height: i.hauteur * hauteur * u)
+                    .offset(x: i.x * largeur * u, y: i.y * hauteur * u)
+            }
+        }
+        .frame(width: largeur * u, height: hauteur * u, alignment: .topLeading)
+        .allowsHitTesting(false)
     }
 }
 

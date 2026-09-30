@@ -84,6 +84,7 @@
 "Aucun fichier audio associé : ce morceau ne peut pas être enregistré. Choisis ton dossier audio à gauche." = "Нет аудиофайла: этот трек нельзя записать. Выбери папку с аудио слева.";
 "Aucun fichier audio dans ce dossier" = "В этой папке нет аудиофайлов";
 "Aucun fichier audio dans le dossier" = "В папке нет аудиофайлов";
+"Aucune image trouvée pour « %@ ». Importe-la toi-même ou reformule." = "Не найдено изображение для «%@». Импортируй сам или переформулируй.";
 "Aucune police lisible dans ces fichiers" = "В этих файлах нет читаемых шрифтов";
 "Aucune édition cassette trouvée : Claude partira de la pochette." = "Кассетных изданий не найдено: Claude начнёт с обложки.";
 "Audio" = "Аудио";
@@ -233,6 +234,7 @@
 "Ignorer" = "Пропустить";
 "Ignorer " = "Пропустить ";
 "Image ajoutée au recto" = "Изображение добавлено на лицевую сторону";
+"Image posée : %@" = "Изображение добавлено: %@";
 "Import de « %@ » depuis MusicBrainz…" = "Импорт «%@» из MusicBrainz…";
 "Import de « %@ »…" = "Импорт «%@»…";
 "Import du lien Spotify…" = "Импорт ссылки Spotify…";
@@ -293,6 +295,7 @@
 "Mise en page" = "Макет";
 "Mixtape" = "Микстейп";
 "Mode Concentration activé" = "Режим «Фокусирование» включён";
+"Modifications de Claude appliquées ✓" = "Изменения Claude применены ✓";
 "Monter" = "Вверх";
 "MusicBrainz (gratuit, sans compte)" = "MusicBrainz (бесплатно, без аккаунта)";
 "MusicBrainz a répondu %lld. Réessaie dans un instant." = "MusicBrainz ответил %lld. Попробуй чуть позже.";
@@ -368,6 +371,7 @@
 "Remettre « %@ »" = "Вернуть «%@»";
 "Reprendre crédits et notes" = "Взять титры и заметки";
 "Retirer ce morceau" = "Убрать этот трек";
+"Retirer cette image" = "Убрать это изображение";
 "Retirer de la cassette" = "Убрать с кассеты";
 "Retirer de la cassette (ne sera pas enregistré)" = "Убрать с кассеты (не будет записан)";
 "Retirer l'image" = "Убрать изображение";

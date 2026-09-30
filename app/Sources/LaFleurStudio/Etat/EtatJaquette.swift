@@ -49,6 +49,7 @@ extension EtatApp {
     /// Toutes les images dont les rendus ont besoin.
     var imagesNecessaires: [URL?] {
         [projet.pochetteURL, design.imagePerso, design.logoMaison, mise.urlCodeSpotify] + projet.toutes.map(\.morceau.pochetteURL)
+            + design.imagesPosees.map(\.url)
     }
 
     func prechargerImages() async { await Images.partage.precharger(imagesNecessaires) }
@@ -152,10 +153,57 @@ extension EtatApp {
             if d.notes.isEmpty { d.notes = r.notes }
             if d.credits.isEmpty { d.credits = r.credits }
             if d.texteCode == nil && !r.texte_code.isEmpty && r.texte_code != projet.texteCodeAuto { d.texteCode = r.texte_code }
-            design = d
+            // Retouches directes demandées par l'utilisateur.
+            var p = projet
+            for m in r.modifications { ChampsDesign.appliquer(m.champ, m.valeur, projet: &p, design: &d) }
+            p.design = d
+            projet = p
             conversation.append(MessageDesign(deClaude: true, texte: r.message))
-            statut = String(localized: "Claude a proposé \(nouvelles.count) variantes")
+            statut = nouvelles.isEmpty ? String(localized: "Modifications de Claude appliquées ✓")
+                                       : String(localized: "Claude a proposé \(nouvelles.count) variantes")
+            // Images demandées par Claude : téléchargées et posées tout de suite.
+            for demandeImage in r.images { await poserImage(demandeImage) }
         }
+    }
+
+    /// Télécharge une image (adresse directe, sinon recherche Wikimedia Commons) et la pose sur la cassette.
+    func poserImage(_ di: PropositionDesign.DemandeImage) async {
+        var candidats: [(URL, String)] = []
+        if let u = URL(string: di.url), u.scheme?.hasPrefix("http") == true { candidats.append((u, u.host ?? "web")) }
+        if let trouves = try? await Commons.chercher(di.requete) {
+            candidats += trouves.map { ($0.image, "Wikimedia Commons · \($0.titre)\($0.licence.isEmpty ? "" : " · \($0.licence)")") }
+        }
+        for (url, source) in candidats {
+            guard let local = await telecharger(url) else { continue }
+            var d = design
+            switch di.usage {
+            case "logo": d.logoMaison = local; d.afficherLogoMaison = true
+            case "recto": d.imagePerso = local; d.variante.style = .imagePerso
+            default:
+                let l = di.largeur > 0 ? di.largeur : 0.3, h = di.hauteur > 0 ? di.hauteur : 0.3
+                d.imagesPosees.append(ImagePosee(url: local, source: source, x: max(0, min(1 - l, di.x)), y: max(0, min(1 - h, di.y)),
+                                                 largeur: l, hauteur: h))
+            }
+            design = d
+            imagesTrouvees[di.requete] = candidats.map { $0.0 }
+            conversation.append(MessageDesign(deClaude: true, texte: String(localized: "Image posée : \(source)")))
+            return
+        }
+        conversation.append(MessageDesign(deClaude: true, texte: String(localized: "Aucune image trouvée pour « \(di.requete) ». Importe-la toi-même ou reformule.")))
+    }
+
+    /// Copie une image du web dans le dossier de l'app (l'impression marche ensuite hors ligne).
+    func telecharger(_ url: URL) async -> URL? {
+        var req = URLRequest(url: url)
+        req.setValue("LaFleurStudio/0.1 ( https://lafleurstudio.ch )", forHTTPHeaderField: "User-Agent")
+        guard let reponse = try? await URLSession.shared.data(for: req),
+              (reponse.1 as? HTTPURLResponse)?.statusCode == 200, NSImage(data: reponse.0) != nil else { return nil }
+        let data = reponse.0
+        let dossier = stockage.racine.appendingPathComponent("images", isDirectory: true)
+        try? FileManager.default.createDirectory(at: dossier, withIntermediateDirectories: true)
+        let ext = data.starts(with: [0x89, 0x50]) ? "png" : (data.starts(with: [0x3C]) ? "svg" : "jpg")
+        let dest = dossier.appendingPathComponent("web-\(UUID().uuidString).\(ext)")
+        return (try? data.write(to: dest)) != nil ? dest : nil
     }
 
     func choisirVariante(_ v: Variante) { var d = design; d.choisir(v); design = d }

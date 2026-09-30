@@ -200,6 +200,15 @@ struct EcranJaquette: View {
                     }
                 }
                 HStack { Text("Opacité"); Slider(value: lien(\.variante.opaciteImage), in: 0.1...1) }
+                ForEach(etat.design.imagesPosees) { img in
+                    HStack(spacing: 4) {
+                        ImageCache(url: img.url, remplir: false).frame(width: 24, height: 24)
+                        Text(img.source).lineLimit(1).truncationMode(.middle).help(img.source)
+                        Spacer(minLength: 0)
+                        Button("×") { var d = etat.design; d.imagesPosees.removeAll { $0.id == img.id }; etat.design = d }
+                            .buttonStyle(.w98).help("Retirer cette image")
+                    }
+                }
             }
 
             Groupe(titre: "Couleurs et polices") {
