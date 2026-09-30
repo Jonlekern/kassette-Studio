@@ -112,6 +112,19 @@ enum Captures {
         if let data = Export.png(JCardVue(mise: etat.mise, perdu: 3, u: Typo.ptParMM), dpi: 300) {
             try? data.write(to: dossier.appendingPathComponent("format-3volets-corrige.png"))
         }
+        // Recherche réelle sur Wikimedia Commons, comme quand Claude demande un logo.
+        let commons = (try? await Commons.chercher("Sony logo")) ?? []
+        journal.append("Commons « Sony logo » : \(commons.count) résultat(s)" + (commons.first.map { " · premier : \($0.titre) (\($0.licence))" } ?? ""))
+        if let premier = commons.first {
+            var dl = etat.design
+            await Images.partage.charger(premier.image)
+            dl.imagesPosees = [ImagePosee(url: premier.image, source: premier.titre, x: 0.6, y: 0.05, largeur: 0.35, hauteur: 0.12)]
+            etat.design = dl
+            if let data = Export.png(RectoVue(mise: etat.mise, largeur: Gabarits.recto, hauteur: Gabarits.hauteurJ, u: Typo.ptParMM), dpi: 300) {
+                try? data.write(to: dossier.appendingPathComponent("recto-avec-logo.png"))
+            }
+            dl.imagesPosees = []; etat.design = dl
+        }
         journal.append("Polices disponibles : " + Typo.disponibles.joined(separator: ", "))
         try? journal.joined(separator: "\n").write(to: dossier.appendingPathComponent("journal.txt"), atomically: true, encoding: .utf8)
         try? FileManager.default.removeItem(at: tmp)
