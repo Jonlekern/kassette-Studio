@@ -91,6 +91,8 @@ Claude ne génère pas de photos ni d'images réalistes. Pour une mixtape, il pr
 image, 3. style « K7 maison », 4. design graphique dessiné par Claude.
 
 Dans tous les cas : 3 variantes, et on ajuste en lui parlant (« plus sombre », « plus 90s »).
+Un bouton **« Régénérer »** relance de nouvelles propositions (sur toutes les variantes ou une seule) ;
+les versions précédentes restent accessibles pour revenir en arrière.
 
 ## Code-barres
 
