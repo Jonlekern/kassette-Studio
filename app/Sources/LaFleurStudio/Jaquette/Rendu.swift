@@ -157,6 +157,7 @@ struct RectoVue: View {
             }
         }
         .frame(width: largeur * u, height: hauteur * u, alignment: .topLeading)
+        .background(Color(hex: p.fond))
     }
 }
 
