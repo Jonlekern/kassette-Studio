@@ -98,6 +98,13 @@ sortait du J-card. L'agent Claude embarqué doit repérer ce genre de problème 
 
 Rien ne part à l'impression tant qu'une alerte est ouverte, sauf si on la force.
 
+## Cassette personnalisée sur l'écran d'enregistrement
+
+La K7 dessinée dans la platine reprend les données du projet : étiquette dans les couleurs du design,
+mini-pochette, titre, artiste, face en cours (A/B), marque et modèle, type de bande, Dolby, numéro de
+catalogue et maison de disque, longueur. Elle se met à jour dès qu'on change quelque chose (design,
+face, type de bande…), et les bobines tournent pendant l'enregistrement.
+
 ## Ce que Claude fait mieux que Tapercraft
 
 - Faces A/B : Tapercraft coupe la liste en deux par nombre de titres (`Math.ceil(n / 2)`), sans
