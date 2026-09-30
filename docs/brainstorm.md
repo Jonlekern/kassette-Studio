@@ -36,8 +36,11 @@ Projet indépendant : aucun lien avec le site lafleurstudio.ch.
 
 ## Code-barres
 
-- **Place par défaut** : en bas du rabat du J-card, centré, sur un fond blanc (lisible sur n'importe
-  quelle couleur de jaquette). Autres places : sur la tranche, ou libre (on le glisse où on veut).
+- **Place par défaut** : en bas du rabat du J-card, centré.
+- **Couleurs** : trois choix en un clic : **Blanc** (barres noires sur fond blanc), **Design** (barres
+  et fond pris dans la palette de la jaquette, ex. bleu nuit sur blanc écume), ou **Perso** (n'importe
+  quelles couleurs). Claude vérifie le contraste : des barres claires sur fond foncé ne se scannent
+  souvent pas, il le signale. Autres places : sur la tranche, ou libre (on le glisse où on veut).
 - **Types** : EAN-13, UPC-A, Code 128 (accepte des lettres, pratique pour un numéro de catalogue),
   QR code.
 - **Personnalisation** : le numéro (la clé de contrôle EAN est calculée toute seule), une ligne de texte
