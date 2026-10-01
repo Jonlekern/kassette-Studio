@@ -54,7 +54,7 @@ PLIST
 
 # Signature locale, avec une exigence fixe (l'identifiant de l'app) au lieu de l'empreinte du binaire :
 # macOS peut alors reconnaître la nouvelle version comme la même app (moins de questions du trousseau).
-codesign --force --deep --sign - -r='=designated => identifier "ch.lafleurstudio.app"' "$APP"
+codesign --force --deep --sign - -r='designated => identifier "ch.lafleurstudio.app"' "$APP"
 echo "✓ $APP"
 
 if [[ "${1:-}" == "--installer" ]]; then
