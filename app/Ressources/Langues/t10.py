@@ -19,4 +19,7 @@ T = {
 "L'IA a refusé la demande (%@).": ("The AI declined the request (%@).", "ИИ отклонил запрос (%@).", "Die KI hat die Anfrage abgelehnt (%@)."),
 "Réponse de l'IA vide ou illisible.": ("The AI's reply was empty or unreadable.", "Ответ ИИ пустой или нечитаемый.", "Die Antwort der KI war leer oder unlesbar."),
 "Réponse de l'IA coupée (trop longue).": ("The AI's reply was cut off (too long).", "Ответ ИИ обрезан (слишком длинный).", "Die Antwort der KI wurde abgeschnitten (zu lang)."),
+"Réglages…": ("Settings…", "Настройки…", "Einstellungen…"),
+"Réglages (⌘,)": ("Settings (⌘,)", "Настройки (⌘,)", "Einstellungen (⌘,)"),
+"Moteur": ("Engine", "Движок", "Modell"),
 }

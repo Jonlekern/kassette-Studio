@@ -319,6 +319,7 @@
 "Modifications de Claude appliquées ✓" = "Änderungen von Claude übernommen ✓";
 "Modèle" = "Modell";
 "Monter" = "Nach oben";
+"Moteur" = "Modell";
 "Moteur d'IA" = "KI-Modell";
 "MusicBrainz (dos CD/vinyle)" = "MusicBrainz (CD-/Vinyl-Rückseite)";
 "MusicBrainz (gratuit, sans compte)" = "MusicBrainz (kostenlos, ohne Konto)";
@@ -410,6 +411,8 @@
 "Règle verticale de %@ :" = "Senkrechtes %@-Lineal:";
 "Réafficher les alertes ignorées (%lld)" = "Ignorierte Warnungen wieder zeigen (%lld)";
 "Réducteur de bruit" = "Rauschunterdrückung";
+"Réglages (⌘,)" = "Einstellungen (⌘,)";
+"Réglages…" = "Einstellungen…";
 "Régénérer seulement la variante %@" = "Nur Variante %@ neu erzeugen";
 "Régénérer tout" = "Alle neu erzeugen";
 "Réimprimer la jaquette" = "J-Card neu drucken";

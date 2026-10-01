@@ -319,6 +319,7 @@
 "Modifications de Claude appliquées ✓" = "Изменения Claude применены ✓";
 "Modèle" = "Модель";
 "Monter" = "Вверх";
+"Moteur" = "Движок";
 "Moteur d'IA" = "Движок ИИ";
 "MusicBrainz (dos CD/vinyle)" = "MusicBrainz (оборот CD/винила)";
 "MusicBrainz (gratuit, sans compte)" = "MusicBrainz (бесплатно, без аккаунта)";
@@ -410,6 +411,8 @@
 "Règle verticale de %@ :" = "Вертикальная линейка %@:";
 "Réafficher les alertes ignorées (%lld)" = "Показать пропущенные предупреждения (%lld)";
 "Réducteur de bruit" = "Шумоподавление";
+"Réglages (⌘,)" = "Настройки (⌘,)";
+"Réglages…" = "Настройки…";
 "Régénérer seulement la variante %@" = "Пересоздать только вариант %@";
 "Régénérer tout" = "Пересоздать все";
 "Réimprimer la jaquette" = "Перепечатать вкладыш";

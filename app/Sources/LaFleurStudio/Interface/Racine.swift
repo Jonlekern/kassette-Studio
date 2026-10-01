@@ -36,9 +36,14 @@ struct FenetrePrincipale: View {
     var body: some View {
         Fenetre(titre: titre) {
             VStack(alignment: .leading, spacing: 0) {
-                Onglets(onglets: [(Ecran.mixtape, "1. Mixtape"), (.jaquette, "2. Jaquette"), (.enregistrer, "3. Enregistrer"),
-                                  (.collection, "4. Collection")], selection: $ecran)
-                    .padding(.horizontal, 8).padding(.top, 8).zIndex(1)
+                HStack(alignment: .center) {
+                    Onglets(onglets: [(Ecran.mixtape, "1. Mixtape"), (.jaquette, "2. Jaquette"), (.enregistrer, "3. Enregistrer"),
+                                      (.collection, "4. Collection")], selection: $ecran)
+                    Spacer()
+                    // Les réglages étaient seulement dans le menu LaFleurStudio (⌘,) : introuvables pour beaucoup.
+                    SettingsLink { Text("Réglages…") }.buttonStyle(.w98).help("Réglages (⌘,)")
+                }
+                .padding(.horizontal, 8).padding(.top, 8).zIndex(1)
                 Group {
                     switch ecran {
                     case .mixtape: EcranMixtape()
