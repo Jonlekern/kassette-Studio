@@ -142,6 +142,9 @@ struct Blocs: View {
     }
 }
 
+/// Nom du moteur d'IA choisi dans Réglages (« Claude », « GPT » ou « Gemini »), pour les bulles et les titres.
+@MainActor var nomIA = "Claude"
+
 /// Bulle de Claude (fond jaune pâle). `texte` : réponse de Claude, affichée telle quelle ; `cle` : texte de l'app, traduit.
 struct BulleClaude: View {
     private let contenu: Text
@@ -149,7 +152,7 @@ struct BulleClaude: View {
     init(cle: LocalizedStringKey) { contenu = Text(cle) }
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
-            Text("Claude").font(W98.policeGras)
+            Text(verbatim: nomIA).font(W98.policeGras)
             contenu.font(W98.police).fixedSize(horizontal: false, vertical: true)
         }
         .padding(8).frame(maxWidth: .infinity, alignment: .leading).creux(W98.bulle)

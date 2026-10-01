@@ -24,6 +24,7 @@ struct PremierDemarrage: View {
                                 .frame(width: 150, alignment: .leading).lineLimit(1)
                             Button("i") { aide.toggle() }.buttonStyle(.w98).accessibilityLabel("Aide sur la clé API Claude")
                         }
+                        Text("Tu préfères GPT ou Gemini ? Choisis-le plus tard dans Réglages → IA.").foregroundStyle(W98.ombre)
                     }
                     Groupe(titre: "2. Spotify (facultatif, Premium obligatoire)") {
                         ReglageSpotify()

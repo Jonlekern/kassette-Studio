@@ -72,8 +72,11 @@ public struct Preferences: Codable, Equatable, Sendable {
     public var papierCalibrage = "A4"
     /// Unité préférée pour mesurer la règle : "cm" ou "in".
     public var uniteMesure = "cm"
+    /// Moteur d'IA choisi (Claude par défaut) et modèle par moteur (vide = modèle par défaut).
+    public var fournisseurIA: FournisseurIA = .claude
+    public var modelesIA: [String: String] = [:]
     enum CodingKeys: String, CodingKey {
-        case conditionsAcceptees, spotifyClientID, dossierAudio, sortieAudioUID, platine, egaliserVolume, rechercheWebClaude, langue, prochainNumero, prefixeCatalogue, calibrations, imprimante, papierCalibrage, uniteMesure
+        case conditionsAcceptees, spotifyClientID, dossierAudio, sortieAudioUID, platine, egaliserVolume, rechercheWebClaude, langue, prochainNumero, prefixeCatalogue, calibrations, imprimante, papierCalibrage, uniteMesure, fournisseurIA, modelesIA
     }
 
     /// Décodage tolérant : un réglage absent (ancienne version) prend sa valeur par défaut.
@@ -95,6 +98,8 @@ public struct Preferences: Codable, Equatable, Sendable {
         imprimante = v(.imprimante, d.imprimante)
         papierCalibrage = v(.papierCalibrage, d.papierCalibrage)
         uniteMesure = v(.uniteMesure, d.uniteMesure)
+        fournisseurIA = v(.fournisseurIA, d.fournisseurIA)
+        modelesIA = v(.modelesIA, d.modelesIA)
     }
 
     public init() {}

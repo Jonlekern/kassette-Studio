@@ -6,6 +6,8 @@
 "%@ / %@ · FACE %@" = "%@ / %@ · SEITE %@";
 "%@ : barres plus claires que le fond, la plupart des lecteurs ne le liront pas." = "%@: Striche heller als der Hintergrund, die meisten Scanner lesen das nicht.";
 "%@ : contraste trop faible entre les barres et le fond (%@:1)." = "%@: Kontrast zwischen Strichen und Hintergrund zu schwach (%@:1).";
+"%@ : pas de clé" = "%@: kein Schlüssel";
+"%@ : prêt" = "%@: bereit";
 "%@ DE MUSIQUE" = "%@ MUSIK";
 "%@ LIBRES" = "%@ FREI";
 "%@ très petit (module de %@ mm) : il risque de ne pas se scanner." = "%@ sehr klein (Modul %@ mm): wird eventuell nicht gescannt.";
@@ -142,6 +144,7 @@
 "Claude cherche les infos de l'album sur le web…" = "Claude sucht Albuminfos im Web…";
 "Claude compose la sélection…" = "Claude stellt die Auswahl zusammen…";
 "Claude est l'assistant intégré à l'app. Il t'aide à préparer la cassette, mais c'est toi qui décides : tu acceptes, modifies ou refuses chacune de ses propositions." = "Claude ist der eingebaute Assistent. Er hilft dir bei der Kassette, aber du entscheidest: Du übernimmst, änderst oder verwirfst jeden Vorschlag.";
+"Claude est recommandé : l'app a été réglée et testée avec lui. GPT et Gemini font le même travail, mais leurs designs peuvent être moins soignés." = "Claude wird empfohlen: Die App wurde mit ihm abgestimmt und getestet. GPT und Gemini machen dasselbe, ihre Designs können aber weniger sorgfältig sein.";
 "Claude part de leurs scans pour la première proposition." = "Claude nutzt ihre Scans für den ersten Vorschlag.";
 "Claude peut chercher sur des sites choisis (sources citées)" = "Claude darf auf ausgewählten Seiten suchen (mit Quellen)";
 "Claude prépare le design…" = "Claude bereitet das Design vor…";
@@ -152,13 +155,16 @@
 "Client ID" = "Client ID";
 "Client ID de ton appli Spotify" = "Client ID deiner Spotify-App";
 "Clé API" = "API-Schlüssel";
+"Clé API %@" = "%@-API-Schlüssel";
 "Clé de contrôle calculée : %@" = "Prüfziffer berechnet: %@";
+"Clé refusée" = "Schlüssel abgelehnt";
 "Coche ce que tu gardes. Rien n'est ajouté sans toi." = "Hake an, was du behältst. Nichts wird ohne dich hinzugefügt.";
 "Code Spotify : cette cassette n'a pas été importée depuis Spotify." = "Spotify-Code: diese Kassette wurde nicht aus Spotify importiert.";
 "Code-barres %@ %@" = "Strichcode %@ %@";
 "Codes" = "Codes";
 "Codes scannables" = "Codes scannbar";
 "Collage des covers" = "Cover-Collage";
+"Colle d'abord ta clé" = "Füg zuerst deinen Schlüssel ein";
 "Commencer" = "Loslegen";
 "Composer avec Claude (mixtape)" = "Mit Claude zusammenstellen (Mixtape)";
 "Composer la sélection" = "Auswahl zusammenstellen";
@@ -178,6 +184,7 @@
 "Couper la tonalité" = "Ton stoppen";
 "Court" = "Kurz";
 "Crédits" = "Credits";
+"Créer une clé %@…" = "%@-Schlüssel erstellen…";
 "Custom" = "Eigene";
 "Custom " = "Eigene ";
 "DROITE" = "RECHTS";
@@ -187,6 +194,7 @@
 "Design" = "Design";
 "Design graphique de Claude" = "Grafikdesign von Claude";
 "Deutsch" = "Deutsch";
+"Direction artistique · %@" = "Art Direction · %@";
 "Direction artistique · Claude" = "Art Direction · Claude";
 "Discogs (jeton personnel gratuit)" = "Discogs (kostenloses persönliches Token)";
 "Discogs a répondu %lld. Réessaie dans un instant." = "Discogs antwortete %lld. Versuch es gleich nochmal.";
@@ -237,6 +245,7 @@
 "Guide pas à pas…" = "Schritt-für-Schritt-Anleitung…";
 "Guide — connecter Spotify" = "Anleitung — Spotify verbinden";
 "Hauteur" = "Höhe";
+"IA" = "KI";
 "INVERSION DE LA PLATINE…" = "DECK WENDET…";
 "Ignorer" = "Ignorieren";
 "Ignorer " = "Ignorieren ";
@@ -271,6 +280,9 @@
 "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Dis-moi l'ambiance, ou clique sur « Proposer »." = "Ich starte mit echten Kassettenausgaben, falls ich welche finde, sonst mit deinem Cover. Sag mir die Stimmung oder klick „Vorschlagen“.";
 "Jeton Discogs" = "Discogs-Token";
 "Jeton Discogs refusé : vérifie-le dans Réglages → Sources." = "Discogs-Token abgelehnt: prüfe es unter Einstellungen → Quellen.";
+"L'IA a refusé la demande (%@)." = "Die KI hat die Anfrage abgelehnt (%@).";
+"L'IA a répondu %lld : %@" = "Die KI antwortete %lld: %@";
+"L'IA peut chercher sur des sites choisis (sources citées)" = "Die KI darf auf ausgewählten Websites suchen (mit Quellen)";
 "L'app joue seulement sur cette sortie ; le reste du Mac ne change pas." = "Die App spielt nur über diesen Ausgang; der Rest des Mac bleibt unverändert.";
 "LAFLEURSTUDIO" = "LAFLEURSTUDIO";
 "La cassette est retirée de la collection. Tes fichiers audio ne sont pas touchés." = "Die Kassette wird aus der Sammlung entfernt. Deine Audiodateien bleiben unberührt.";
@@ -305,7 +317,9 @@
 "Mixtape" = "Mixtape";
 "Mode Concentration activé" = "Fokus-Modus an";
 "Modifications de Claude appliquées ✓" = "Änderungen von Claude übernommen ✓";
+"Modèle" = "Modell";
 "Monter" = "Nach oben";
+"Moteur d'IA" = "KI-Modell";
 "MusicBrainz (dos CD/vinyle)" = "MusicBrainz (CD-/Vinyl-Rückseite)";
 "MusicBrainz (gratuit, sans compte)" = "MusicBrainz (kostenlos, ohne Konto)";
 "MusicBrainz a répondu %lld. Réessaie dans un instant." = "MusicBrainz antwortete %lld. Versuch es gleich nochmal.";
@@ -402,6 +416,8 @@
 "Réinitialiser (100 %)" = "Zurücksetzen (100 %)";
 "Réponse de Claude coupée (trop longue)." = "Claudes Antwort wurde abgeschnitten (zu lang).";
 "Réponse de Claude vide ou illisible." = "Claudes Antwort war leer oder unlesbar.";
+"Réponse de l'IA coupée (trop longue)." = "Die Antwort der KI wurde abgeschnitten (zu lang).";
+"Réponse de l'IA vide ou illisible." = "Die Antwort der KI war leer oder unlesbar.";
 "Sans logo importé, le nom est écrit en texte." = "Ohne importiertes Logo wird der Name als Text geschrieben.";
 "Se connecter…" = "Verbinden…";
 "Si Spotify refuse l'accès, c'est en général qu'il faut Premium, ou que la Redirect URI ne correspond pas exactement." = "Verweigert Spotify den Zugriff, fehlt meist Premium oder die Redirect URI stimmt nicht exakt.";
@@ -447,6 +463,7 @@
 "Tranche" = "Rücken";
 "Transparente" = "Transparent";
 "Tu paies à l'usage : préparer une cassette coûte en général quelques centimes. La clé reste dans le trousseau de ton Mac. Claude reçoit les titres, les durées et les infos d'album, jamais tes fichiers audio." = "Du zahlst nach Nutzung: eine Kassette vorzubereiten kostet meist ein paar Cent. Der Schlüssel bleibt im Schlüsselbund deines Mac. Claude bekommt Titel, Dauer und Albuminfos, nie deine Audiodateien.";
+"Tu préfères GPT ou Gemini ? Choisis-le plus tard dans Réglages → IA." = "Lieber GPT oder Gemini? Wähl es später unter Einstellungen → KI.";
 "Type" = "Typ";
 "Type I · Normal" = "Typ I · Normal";
 "Type II · Chrome" = "Typ II · Chrom";
@@ -457,6 +474,7 @@
 "VU" = "VU";
 "Versions (%lld)" = "Versionen (%lld)";
 "Vertical" = "Hochformat";
+"Vide = modèle conseillé (%@)." = "Leer = empfohlenes Modell (%@).";
 "Vider les faces" = "Seiten leeren";
 "Volet intérieur" = "Innenfeld";
 "Volets" = "Felder";
@@ -466,6 +484,7 @@
 "Vérification de Claude : tout est bon ✓" = "Claudes Prüfung: alles gut ✓";
 "Vérifier avec Claude" = "Mit Claude prüfen";
 "Zoom" = "Zoom";
+"ajoute ta clé API %@ dans Réglages" = "füg deinen %@-API-Schlüssel in den Einstellungen hinzu";
 "album" = "Album";
 "artiste" = "Künstler";
 "badge de bande" = "Band-Plakette";

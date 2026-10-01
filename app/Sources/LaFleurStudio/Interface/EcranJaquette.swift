@@ -389,7 +389,7 @@ struct EcranJaquette: View {
     private var colonneClaude: some View {
         let d = etat.design
         return VStack(alignment: .leading, spacing: 10) {
-            Groupe(titre: "Direction artistique · Claude") {
+            Groupe(titre: "Direction artistique · \(etat.fournisseurIA.nom)") {
                 if etat.conversation.isEmpty {
                     BulleClaude(cle: etat.projet.mode == .album
                                 ? "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Dis-moi l'ambiance, ou clique sur « Proposer »."

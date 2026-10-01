@@ -6,6 +6,8 @@
 "%@ / %@ · FACE %@" = "%@ / %@ · СТОРОНА %@";
 "%@ : barres plus claires que le fond, la plupart des lecteurs ne le liront pas." = "%@: штрихи светлее фона, большинство сканеров его не прочтут.";
 "%@ : contraste trop faible entre les barres et le fond (%@:1)." = "%@: слишком слабый контраст между штрихами и фоном (%@:1).";
+"%@ : pas de clé" = "%@: нет ключа";
+"%@ : prêt" = "%@: готов";
 "%@ DE MUSIQUE" = "%@ МУЗЫКИ";
 "%@ LIBRES" = "%@ СВОБОДНО";
 "%@ très petit (module de %@ mm) : il risque de ne pas se scanner." = "%@ очень мелкий (модуль %@ мм): может не считаться.";
@@ -142,6 +144,7 @@
 "Claude cherche les infos de l'album sur le web…" = "Claude ищет данные альбома в интернете…";
 "Claude compose la sélection…" = "Claude собирает подборку…";
 "Claude est l'assistant intégré à l'app. Il t'aide à préparer la cassette, mais c'est toi qui décides : tu acceptes, modifies ou refuses chacune de ses propositions." = "Claude — встроенный помощник. Он помогает готовить кассету, но решаешь ты: принимаешь, меняешь или отклоняешь каждое предложение.";
+"Claude est recommandé : l'app a été réglée et testée avec lui. GPT et Gemini font le même travail, mais leurs designs peuvent être moins soignés." = "Рекомендуется Claude: приложение настроено и протестировано с ним. GPT и Gemini делают то же самое, но их дизайн может быть менее аккуратным.";
 "Claude part de leurs scans pour la première proposition." = "Claude берёт их сканы за основу первого предложения.";
 "Claude peut chercher sur des sites choisis (sources citées)" = "Claude может искать на выбранных сайтах (с источниками)";
 "Claude prépare le design…" = "Claude готовит дизайн…";
@@ -152,13 +155,16 @@
 "Client ID" = "Client ID";
 "Client ID de ton appli Spotify" = "Client ID твоего приложения Spotify";
 "Clé API" = "Ключ API";
+"Clé API %@" = "API-ключ %@";
 "Clé de contrôle calculée : %@" = "Контрольная цифра: %@";
+"Clé refusée" = "Ключ отклонён";
 "Coche ce que tu gardes. Rien n'est ajouté sans toi." = "Отметь, что оставить. Без тебя ничего не добавится.";
 "Code Spotify : cette cassette n'a pas été importée depuis Spotify." = "Код Spotify: эта кассета не импортирована из Spotify.";
 "Code-barres %@ %@" = "Штрихкод %@ %@";
 "Codes" = "Коды";
 "Codes scannables" = "Коды читаются";
 "Collage des covers" = "Коллаж обложек";
+"Colle d'abord ta clé" = "Сначала вставь ключ";
 "Commencer" = "Начать";
 "Composer avec Claude (mixtape)" = "Собрать с Claude (микстейп)";
 "Composer la sélection" = "Собрать подборку";
@@ -178,6 +184,7 @@
 "Couper la tonalité" = "Выключить тон";
 "Court" = "Короткий";
 "Crédits" = "Титры";
+"Créer une clé %@…" = "Создать ключ %@…";
 "Custom" = "Своя";
 "Custom " = "Своя ";
 "DROITE" = "ПРАВЫЙ";
@@ -187,6 +194,7 @@
 "Design" = "Дизайн";
 "Design graphique de Claude" = "Графический дизайн от Claude";
 "Deutsch" = "Deutsch";
+"Direction artistique · %@" = "Арт-дирекция · %@";
 "Direction artistique · Claude" = "Арт-дирекция · Claude";
 "Discogs (jeton personnel gratuit)" = "Discogs (бесплатный личный токен)";
 "Discogs a répondu %lld. Réessaie dans un instant." = "Discogs ответил %lld. Попробуй чуть позже.";
@@ -237,6 +245,7 @@
 "Guide pas à pas…" = "Пошаговая инструкция…";
 "Guide — connecter Spotify" = "Инструкция — подключить Spotify";
 "Hauteur" = "Высота";
+"IA" = "ИИ";
 "INVERSION DE LA PLATINE…" = "РЕВЕРС ДЕКИ…";
 "Ignorer" = "Пропустить";
 "Ignorer " = "Пропустить ";
@@ -271,6 +280,9 @@
 "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Dis-moi l'ambiance, ou clique sur « Proposer »." = "Я начну с настоящих кассетных изданий, если найду, иначе — с твоей обложки. Опиши настроение или нажми «Предложить».";
 "Jeton Discogs" = "Токен Discogs";
 "Jeton Discogs refusé : vérifie-le dans Réglages → Sources." = "Токен Discogs отклонён: проверь его в Настройки → Источники.";
+"L'IA a refusé la demande (%@)." = "ИИ отклонил запрос (%@).";
+"L'IA a répondu %lld : %@" = "ИИ ответил %lld: %@";
+"L'IA peut chercher sur des sites choisis (sources citées)" = "ИИ может искать на выбранных сайтах (с источниками)";
 "L'app joue seulement sur cette sortie ; le reste du Mac ne change pas." = "Приложение играет только на этот выход; остальной Mac не меняется.";
 "LAFLEURSTUDIO" = "LAFLEURSTUDIO";
 "La cassette est retirée de la collection. Tes fichiers audio ne sont pas touchés." = "Кассета удаляется из коллекции. Твои аудиофайлы не трогаются.";
@@ -305,7 +317,9 @@
 "Mixtape" = "Микстейп";
 "Mode Concentration activé" = "Режим «Фокусирование» включён";
 "Modifications de Claude appliquées ✓" = "Изменения Claude применены ✓";
+"Modèle" = "Модель";
 "Monter" = "Вверх";
+"Moteur d'IA" = "Движок ИИ";
 "MusicBrainz (dos CD/vinyle)" = "MusicBrainz (оборот CD/винила)";
 "MusicBrainz (gratuit, sans compte)" = "MusicBrainz (бесплатно, без аккаунта)";
 "MusicBrainz a répondu %lld. Réessaie dans un instant." = "MusicBrainz ответил %lld. Попробуй чуть позже.";
@@ -402,6 +416,8 @@
 "Réinitialiser (100 %)" = "Сбросить (100 %)";
 "Réponse de Claude coupée (trop longue)." = "Ответ Claude обрезан (слишком длинный).";
 "Réponse de Claude vide ou illisible." = "Ответ Claude пустой или нечитаемый.";
+"Réponse de l'IA coupée (trop longue)." = "Ответ ИИ обрезан (слишком длинный).";
+"Réponse de l'IA vide ou illisible." = "Ответ ИИ пустой или нечитаемый.";
 "Sans logo importé, le nom est écrit en texte." = "Без импортированного логотипа название пишется текстом.";
 "Se connecter…" = "Подключиться…";
 "Si Spotify refuse l'accès, c'est en général qu'il faut Premium, ou que la Redirect URI ne correspond pas exactement." = "Если Spotify отказывает в доступе, обычно нужен Premium или Redirect URI не совпадает точно.";
@@ -447,6 +463,7 @@
 "Tranche" = "Корешок";
 "Transparente" = "Прозрачный";
 "Tu paies à l'usage : préparer une cassette coûte en général quelques centimes. La clé reste dans le trousseau de ton Mac. Claude reçoit les titres, les durées et les infos d'album, jamais tes fichiers audio." = "Оплата по факту: подготовка кассеты обычно стоит несколько центов. Ключ хранится в связке ключей Mac. Claude получает названия, длительности и данные альбома, но не аудиофайлы.";
+"Tu préfères GPT ou Gemini ? Choisis-le plus tard dans Réglages → IA." = "Предпочитаешь GPT или Gemini? Выбери позже в Настройках → ИИ.";
 "Type" = "Тип";
 "Type I · Normal" = "Тип I · Normal";
 "Type II · Chrome" = "Тип II · Chrome";
@@ -457,6 +474,7 @@
 "VU" = "VU";
 "Versions (%lld)" = "Версии (%lld)";
 "Vertical" = "Вертикально";
+"Vide = modèle conseillé (%@)." = "Пусто = рекомендуемая модель (%@).";
 "Vider les faces" = "Очистить стороны";
 "Volet intérieur" = "Внутренняя панель";
 "Volets" = "Панели";
@@ -466,6 +484,7 @@
 "Vérification de Claude : tout est bon ✓" = "Проверка Claude: всё в порядке ✓";
 "Vérifier avec Claude" = "Проверить с Claude";
 "Zoom" = "Масштаб";
+"ajoute ta clé API %@ dans Réglages" = "добавь API-ключ %@ в Настройках";
 "album" = "альбом";
 "artiste" = "исполнитель";
 "badge de bande" = "значок ленты";

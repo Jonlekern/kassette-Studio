@@ -6,6 +6,8 @@
 "%@ / %@ · FACE %@" = "%@ / %@ · SIDE %@";
 "%@ : barres plus claires que le fond, la plupart des lecteurs ne le liront pas." = "%@: bars lighter than the background, most scanners won't read it.";
 "%@ : contraste trop faible entre les barres et le fond (%@:1)." = "%@: contrast between bars and background too low (%@:1).";
+"%@ : pas de clé" = "%@: no key";
+"%@ : prêt" = "%@: ready";
 "%@ DE MUSIQUE" = "%@ OF MUSIC";
 "%@ LIBRES" = "%@ FREE";
 "%@ très petit (module de %@ mm) : il risque de ne pas se scanner." = "%@ very small (%@ mm module): it may not scan.";
@@ -142,6 +144,7 @@
 "Claude cherche les infos de l'album sur le web…" = "Claude is looking up the album on the web…";
 "Claude compose la sélection…" = "Claude is composing the selection…";
 "Claude est l'assistant intégré à l'app. Il t'aide à préparer la cassette, mais c'est toi qui décides : tu acceptes, modifies ou refuses chacune de ses propositions." = "Claude is the app's built-in assistant. It helps you prepare the tape, but you decide: you accept, edit or reject each suggestion.";
+"Claude est recommandé : l'app a été réglée et testée avec lui. GPT et Gemini font le même travail, mais leurs designs peuvent être moins soignés." = "Claude is recommended: the app was tuned and tested with it. GPT and Gemini do the same job, but their designs may be less polished.";
 "Claude part de leurs scans pour la première proposition." = "Claude starts from their scans for the first proposal.";
 "Claude peut chercher sur des sites choisis (sources citées)" = "Claude may search chosen sites (sources cited)";
 "Claude prépare le design…" = "Claude is preparing the design…";
@@ -152,13 +155,16 @@
 "Client ID" = "Client ID";
 "Client ID de ton appli Spotify" = "Your Spotify app's Client ID";
 "Clé API" = "API key";
+"Clé API %@" = "%@ API key";
 "Clé de contrôle calculée : %@" = "Check digit computed: %@";
+"Clé refusée" = "Key rejected";
 "Coche ce que tu gardes. Rien n'est ajouté sans toi." = "Tick what you keep. Nothing is added without you.";
 "Code Spotify : cette cassette n'a pas été importée depuis Spotify." = "Spotify code: this tape wasn't imported from Spotify.";
 "Code-barres %@ %@" = "Barcode %@ %@";
 "Codes" = "Codes";
 "Codes scannables" = "Codes scannable";
 "Collage des covers" = "Cover collage";
+"Colle d'abord ta clé" = "Paste your key first";
 "Commencer" = "Start";
 "Composer avec Claude (mixtape)" = "Compose with Claude (mixtape)";
 "Composer la sélection" = "Compose the selection";
@@ -178,6 +184,7 @@
 "Couper la tonalité" = "Stop the tone";
 "Court" = "Short";
 "Crédits" = "Credits";
+"Créer une clé %@…" = "Create a %@ key…";
 "Custom" = "Custom";
 "Custom " = "Custom ";
 "DROITE" = "RIGHT";
@@ -187,6 +194,7 @@
 "Design" = "Design";
 "Design graphique de Claude" = "Graphic design by Claude";
 "Deutsch" = "Deutsch";
+"Direction artistique · %@" = "Art direction · %@";
 "Direction artistique · Claude" = "Art direction · Claude";
 "Discogs (jeton personnel gratuit)" = "Discogs (free personal token)";
 "Discogs a répondu %lld. Réessaie dans un instant." = "Discogs replied %lld. Try again in a moment.";
@@ -237,6 +245,7 @@
 "Guide pas à pas…" = "Step-by-step guide…";
 "Guide — connecter Spotify" = "Guide — connect Spotify";
 "Hauteur" = "Height";
+"IA" = "AI";
 "INVERSION DE LA PLATINE…" = "DECK REVERSING…";
 "Ignorer" = "Ignore";
 "Ignorer " = "Ignore ";
@@ -271,6 +280,9 @@
 "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Dis-moi l'ambiance, ou clique sur « Proposer »." = "I start from real cassette editions if I find any, otherwise from your cover. Tell me the mood, or click “Propose”.";
 "Jeton Discogs" = "Discogs token";
 "Jeton Discogs refusé : vérifie-le dans Réglages → Sources." = "Discogs token rejected: check it in Settings → Sources.";
+"L'IA a refusé la demande (%@)." = "The AI declined the request (%@).";
+"L'IA a répondu %lld : %@" = "The AI replied %lld: %@";
+"L'IA peut chercher sur des sites choisis (sources citées)" = "The AI can search chosen websites (sources cited)";
 "L'app joue seulement sur cette sortie ; le reste du Mac ne change pas." = "The app plays only on this output; the rest of the Mac is unchanged.";
 "LAFLEURSTUDIO" = "LAFLEURSTUDIO";
 "La cassette est retirée de la collection. Tes fichiers audio ne sont pas touchés." = "The tape is removed from the collection. Your audio files are not touched.";
@@ -305,7 +317,9 @@
 "Mixtape" = "Mixtape";
 "Mode Concentration activé" = "Focus mode on";
 "Modifications de Claude appliquées ✓" = "Claude's changes applied ✓";
+"Modèle" = "Model";
 "Monter" = "Move up";
+"Moteur d'IA" = "AI engine";
 "MusicBrainz (dos CD/vinyle)" = "MusicBrainz (CD/vinyl back)";
 "MusicBrainz (gratuit, sans compte)" = "MusicBrainz (free, no account)";
 "MusicBrainz a répondu %lld. Réessaie dans un instant." = "MusicBrainz replied %lld. Try again in a moment.";
@@ -402,6 +416,8 @@
 "Réinitialiser (100 %)" = "Reset (100 %)";
 "Réponse de Claude coupée (trop longue)." = "Claude's reply was cut off (too long).";
 "Réponse de Claude vide ou illisible." = "Claude's reply was empty or unreadable.";
+"Réponse de l'IA coupée (trop longue)." = "The AI's reply was cut off (too long).";
+"Réponse de l'IA vide ou illisible." = "The AI's reply was empty or unreadable.";
 "Sans logo importé, le nom est écrit en texte." = "Without an imported logo, the name is written as text.";
 "Se connecter…" = "Connect…";
 "Si Spotify refuse l'accès, c'est en général qu'il faut Premium, ou que la Redirect URI ne correspond pas exactement." = "If Spotify refuses access, it usually means Premium is needed, or the Redirect URI doesn't match exactly.";
@@ -447,6 +463,7 @@
 "Tranche" = "Spine";
 "Transparente" = "Clear";
 "Tu paies à l'usage : préparer une cassette coûte en général quelques centimes. La clé reste dans le trousseau de ton Mac. Claude reçoit les titres, les durées et les infos d'album, jamais tes fichiers audio." = "You pay per use: preparing a tape usually costs a few cents. The key stays in your Mac's keychain. Claude receives titles, durations and album info, never your audio files.";
+"Tu préfères GPT ou Gemini ? Choisis-le plus tard dans Réglages → IA." = "Prefer GPT or Gemini? Pick it later in Settings → AI.";
 "Type" = "Type";
 "Type I · Normal" = "Type I · Normal";
 "Type II · Chrome" = "Type II · Chrome";
@@ -457,6 +474,7 @@
 "VU" = "VU";
 "Versions (%lld)" = "Versions (%lld)";
 "Vertical" = "Portrait";
+"Vide = modèle conseillé (%@)." = "Empty = recommended model (%@).";
 "Vider les faces" = "Clear the sides";
 "Volet intérieur" = "Inner panel";
 "Volets" = "Panels";
@@ -466,6 +484,7 @@
 "Vérification de Claude : tout est bon ✓" = "Claude's check: all good ✓";
 "Vérifier avec Claude" = "Check with Claude";
 "Zoom" = "Zoom";
+"ajoute ta clé API %@ dans Réglages" = "add your %@ API key in Settings";
 "album" = "album";
 "artiste" = "artist";
 "badge de bande" = "tape badge";

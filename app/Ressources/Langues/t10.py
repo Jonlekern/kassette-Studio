@@ -1,0 +1,22 @@
+# Choix du moteur d'IA (Claude, GPT, Gemini).
+T = {
+"IA": ("AI", "ИИ", "KI"),
+"Moteur d'IA": ("AI engine", "Движок ИИ", "KI-Modell"),
+"Claude est recommandé : l'app a été réglée et testée avec lui. GPT et Gemini font le même travail, mais leurs designs peuvent être moins soignés.": ("Claude is recommended: the app was tuned and tested with it. GPT and Gemini do the same job, but their designs may be less polished.", "Рекомендуется Claude: приложение настроено и протестировано с ним. GPT и Gemini делают то же самое, но их дизайн может быть менее аккуратным.", "Claude wird empfohlen: Die App wurde mit ihm abgestimmt und getestet. GPT und Gemini machen dasselbe, ihre Designs können aber weniger sorgfältig sein."),
+"Clé API %@": ("%@ API key", "API-ключ %@", "%@-API-Schlüssel"),
+"Créer une clé %@…": ("Create a %@ key…", "Создать ключ %@…", "%@-Schlüssel erstellen…"),
+"Modèle": ("Model", "Модель", "Modell"),
+"Vide = modèle conseillé (%@).": ("Empty = recommended model (%@).", "Пусто = рекомендуемая модель (%@).", "Leer = empfohlenes Modell (%@)."),
+"L'IA peut chercher sur des sites choisis (sources citées)": ("The AI can search chosen websites (sources cited)", "ИИ может искать на выбранных сайтах (с источниками)", "Die KI darf auf ausgewählten Websites suchen (mit Quellen)"),
+"Colle d'abord ta clé": ("Paste your key first", "Сначала вставь ключ", "Füg zuerst deinen Schlüssel ein"),
+"Clé refusée": ("Key rejected", "Ключ отклонён", "Schlüssel abgelehnt"),
+"Tu préfères GPT ou Gemini ? Choisis-le plus tard dans Réglages → IA.": ("Prefer GPT or Gemini? Pick it later in Settings → AI.", "Предпочитаешь GPT или Gemini? Выбери позже в Настройках → ИИ.", "Lieber GPT oder Gemini? Wähl es später unter Einstellungen → KI."),
+"Direction artistique · %@": ("Art direction · %@", "Арт-дирекция · %@", "Art Direction · %@"),
+"%@ : pas de clé": ("%@: no key", "%@: нет ключа", "%@: kein Schlüssel"),
+"%@ : prêt": ("%@: ready", "%@: готов", "%@: bereit"),
+"ajoute ta clé API %@ dans Réglages": ("add your %@ API key in Settings", "добавь API-ключ %@ в Настройках", "füg deinen %@-API-Schlüssel in den Einstellungen hinzu"),
+"L'IA a répondu %lld : %@": ("The AI replied %lld: %@", "ИИ ответил %lld: %@", "Die KI antwortete %lld: %@"),
+"L'IA a refusé la demande (%@).": ("The AI declined the request (%@).", "ИИ отклонил запрос (%@).", "Die KI hat die Anfrage abgelehnt (%@)."),
+"Réponse de l'IA vide ou illisible.": ("The AI's reply was empty or unreadable.", "Ответ ИИ пустой или нечитаемый.", "Die Antwort der KI war leer oder unlesbar."),
+"Réponse de l'IA coupée (trop longue).": ("The AI's reply was cut off (too long).", "Ответ ИИ обрезан (слишком длинный).", "Die Antwort der KI wurde abgeschnitten (zu lang)."),
+}

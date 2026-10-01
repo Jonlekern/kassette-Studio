@@ -53,7 +53,7 @@ struct FenetrePrincipale: View {
                     if etat.occupe { ProgressView().controlSize(.small).padding(.leading, 4) }
                     Text(etat.statut).lineLimit(1).padding(.horizontal, 6).frame(maxWidth: .infinity, alignment: .leading).frame(height: 20).creux(W98.gris)
                     Text(etat.spotifyConnecte ? "Spotify : connecté" : "Spotify : non connecté").padding(.horizontal, 6).frame(height: 20).creux(W98.gris)
-                    Text(etat.cleClaude.isEmpty ? "Claude : pas de clé" : "Claude : prêt").padding(.horizontal, 6).frame(height: 20).creux(W98.gris)
+                    Text(etat.cle(etat.fournisseurIA).isEmpty ? "\(etat.fournisseurIA.nom) : pas de clé" : "\(etat.fournisseurIA.nom) : prêt").padding(.horizontal, 6).frame(height: 20).creux(W98.gris)
                 }
                 .padding(8)
             }

@@ -6,7 +6,7 @@ import SwiftUI
 struct Reglages: View {
     @EnvironmentObject var etat: EtatApp
     @State private var rubrique = "Audio"
-    private let rubriques = ["Audio", "Platine", "Impression", "Claude", "Spotify", "Sources", "Langue", "Conditions"]
+    private let rubriques = ["Audio", "Platine", "Impression", "IA", "Spotify", "Sources", "Langue", "Conditions"]
 
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
@@ -28,7 +28,7 @@ struct Reglages: View {
                 case "Platine": platine
                 case "Impression": ScrollView { impression }
                 case "Sources": sources
-                case "Claude": claude
+                case "IA": ScrollView { claude }
                 case "Spotify": ScrollView { VStack(alignment: .leading, spacing: 12) { Groupe(titre: "Compte Spotify") { ReglageSpotify() }; GuideSpotify() } }
                 case "Langue": langue
                 default: Groupe(titre: "Conditions d'utilisation") { TexteConditions() }
@@ -196,18 +196,55 @@ struct Reglages: View {
         regleH = ""; regleV = ""; bordGauche = ""; bordHaut = ""
     }
 
+    @State private var testIA = ""
+
     private var claude: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Groupe(titre: "Clé API") {
-                Champ(invite: "sk-ant-…", texte: $etat.cleClaude, secret: true)
-                Text("Rangée dans le trousseau du Mac.").foregroundStyle(W98.ombre)
+        let f = etat.prefs.fournisseurIA
+        return VStack(alignment: .leading, spacing: 12) {
+            Groupe(titre: "Moteur d'IA") {
+                Picker("Moteur", selection: $etat.prefs.fournisseurIA) {
+                    ForEach(FournisseurIA.allCases, id: \.self) { Text(verbatim: "\($0.nom) (\($0.societe))").tag($0) }
+                }
+                .pickerStyle(.segmented).labelsHidden()
+                .onChange(of: etat.prefs.fournisseurIA) { _, _ in testIA = "" }
+                if f != .claude {
+                    Text("Claude est recommandé : l'app a été réglée et testée avec lui. GPT et Gemini font le même travail, mais leurs designs peuvent être moins soignés.")
+                        .foregroundStyle(W98.ombre).fixedSize(horizontal: false, vertical: true)
+                }
             }
-            GuideCleClaude()
+            Groupe(titre: "Clé API \(f.nom)") {
+                HStack {
+                    Champ(invite: f.inviteCle, texte: etat.lienCle(f), secret: true)
+                    Button("Tester") { testerIA() }.buttonStyle(.w98)
+                    Text(testIA).foregroundStyle(testIA == "OK" ? W98.vert : W98.rouge).bold().lineLimit(1)
+                }
+                Text("Rangée dans le trousseau du Mac.").foregroundStyle(W98.ombre)
+                Link("Créer une clé \(f.nom)…", destination: f.pageCles).foregroundStyle(W98.bleu)
+                HStack {
+                    Text("Modèle")
+                    Champ(invite: f.modeleParDefaut, texte: Binding(
+                        get: { etat.prefs.modelesIA[f.rawValue] ?? "" },
+                        set: { etat.prefs.modelesIA[f.rawValue] = $0.trimmingCharacters(in: .whitespaces) }))
+                }
+                Text("Vide = modèle conseillé (\(f.modeleParDefaut)).").foregroundStyle(W98.ombre)
+            }
+            if f == .claude { GuideCleClaude() }
             Groupe(titre: "Recherche web") {
-                Toggle("Claude peut chercher sur des sites choisis (sources citées)", isOn: $etat.prefs.rechercheWebClaude).toggleStyle(.checkbox)
-                Text("Sites : " + sitesMusique.joined(separator: ", ") + ". Claude cite ses sources ; ce qu'il trouve est à valider avant l'impression.")
+                Toggle("L'IA peut chercher sur des sites choisis (sources citées)", isOn: $etat.prefs.rechercheWebClaude).toggleStyle(.checkbox)
+                Text("Sites : " + sitesMusique.joined(separator: ", ") + ". L'IA cite ses sources ; ce qu'elle trouve est à valider avant l'impression.")
                     .foregroundStyle(W98.ombre).fixedSize(horizontal: false, vertical: true)
             }
+        }
+    }
+
+    private func testerIA() {
+        let f = etat.prefs.fournisseurIA
+        let c = etat.cle(f).trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !c.isEmpty else { testIA = tr("Colle d'abord ta clé"); return }
+        testIA = "…"
+        Task {
+            do { try await ClientClaude(cleAPI: c, fournisseur: f).testerCle(); testIA = "OK" }
+            catch { testIA = tr("Clé refusée") }
         }
     }
 

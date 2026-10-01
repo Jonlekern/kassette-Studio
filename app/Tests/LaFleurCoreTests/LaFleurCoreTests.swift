@@ -333,6 +333,16 @@ final class RetouchesTests: XCTestCase {
         XCTAssertEqual(k7.bande, .typeIV)
         XCTAssertEqual(k7.marque, "TDK MA")
         XCTAssertEqual(k7.coque, .fumee)
+
+        // GPT ou Gemini : JSON parfois entouré de ```json … ``` ; anciens réglages relus avec Claude par défaut.
+        struct R: Decodable { let ok: Bool }
+        let gpt = ClientClaude(cleAPI: "x", fournisseur: .openai)
+        XCTAssertEqual(gpt.modele, FournisseurIA.openai.modeleParDefaut)
+        XCTAssertEqual(ClientClaude(cleAPI: "x", fournisseur: .gemini, modele: "gemini-perso").modele, "gemini-perso")
+        XCTAssertTrue(try! gpt.decoder(R.self, "```json\n{\"ok\": true}\n```").ok)
+        let prefs = try! JSONDecoder().decode(Preferences.self, from: Data("{\"langue\":\"en\"}".utf8))
+        XCTAssertEqual(prefs.fournisseurIA, .claude)
+        XCTAssertEqual(prefs.langue, "en")
         XCTAssertEqual(d.echelle("titre"), 1.3, accuracy: 1e-9)
         XCTAssertEqual(d.placeQR, .interieur)
         XCTAssertEqual(p.titre, "Nouveau titre")

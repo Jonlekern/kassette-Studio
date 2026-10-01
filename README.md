@@ -17,6 +17,7 @@
 <h3 align="center">
   <a href="https://github.com/Jonlekern/kassette-Studio/releases/latest/download/LaFleurStudio.zip">⬇️ Télécharger LaFleurStudio pour Mac</a>
 </h3>
+<p align="center"><a href="README.en.md">🇬🇧 English version</a></p>
 <p align="center">macOS 14 Sonoma ou plus récent · Mac Apple Silicon ou Intel · toujours la dernière version</p>
 
 <p align="center">
@@ -45,7 +46,7 @@ l'app, tes cassettes et tes réglages sont gardés.
 
 | | | |
 |---|---|---|
-| ✅ | **Clé API Claude** | Obligatoire pour le design. Ce n'est **pas** l'abonnement Claude Pro/Max : c'est un compte à part, payé à l'usage, sur [platform.claude.com](https://platform.claude.com). Le bouton **i** de l'app explique tout. |
+| ✅ | **Une clé API d'IA** | **Claude** (recommandé), ou **GPT** (OpenAI) ou **Gemini** (Google), au choix dans Réglages → IA. Ce n'est **pas** un abonnement Claude Pro / ChatGPT Plus : c'est un compte à part, payé à l'usage ([Claude](https://platform.claude.com), [OpenAI](https://platform.openai.com/api-keys), [Gemini](https://aistudio.google.com/apikey)). Le bouton **i** de l'app explique tout. |
 | ✅ | **Tes fichiers audio** | Un dossier avec tes morceaux (MP3, FLAC, WAV, AIFF, M4A). |
 | ✅ | **Une platine K7 + un câble** | Sortie casque ou carte son USB du Mac → entrée LINE IN de la platine. |
 | ✅ | **Une imprimante** | Papier 170 à 250 g/m² pour les jaquettes, papier autocollant pour les étiquettes. |
@@ -79,7 +80,7 @@ l'ambiance et Claude propose.
 <img src="docs/images/j-card.jpg" width="820" alt="Une J-card à plat">
 
 <p>
-  <img src="docs/images/apercu-3d.jpg" width="300" alt="Aperçu 3D">
+  <img src="docs/images/apercu-3d.jpg" width="300" alt="Aperçu 3D du boîtier">
   <img src="docs/images/etiquettes.jpg" width="510" alt="Étiquettes de K7">
 </p>
 
@@ -89,6 +90,10 @@ Une platine façon Windows 98 avec VU-mètres. Elle joue la face depuis tes fich
 rebours, les blancs entre les morceaux, et s'arrête net à la fin de la face.
 
 <img src="docs/images/enregistrer.jpg" width="820" alt="L'écran Enregistrer">
+
+La cassette porte ton étiquette, et tu choisis la couleur de la coque :
+
+<img src="docs/images/coques.jpg" width="820" alt="Les 4 couleurs de coque">
 
 ### 4. Collection
 
@@ -103,7 +108,7 @@ L'app parle français, anglais, russe et allemand (Réglages → Langue).
 ## Pour les curieux
 
 - [app/LISEZMOI.md](app/LISEZMOI.md) : mode d'emploi complet, et comment compiler soi-même avec Xcode.
-- [docs/etude-cassettes.md](docs/etude-cassettes.md) : comment sont faites les vraies K7 (27 scans).
+- [docs/etude-cassettes.md](docs/etude-cassettes.md) : comment sont faites les vraies K7 (étude de 27 cassettes).
 - [docs/brainstorm.md](docs/brainstorm.md) : les décisions prises pendant la conception.
 - [docs/analyse-texs.md](docs/analyse-texs.md) : analyse de Tapercraft (vhs.texs.org), l'outil de référence.
 - [maquettes/](maquettes/) et [prototype-v0/](prototype-v0/) : les maquettes et le tout premier prototype.

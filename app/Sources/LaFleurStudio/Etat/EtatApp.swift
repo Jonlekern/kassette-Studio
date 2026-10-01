@@ -26,10 +26,16 @@ struct Proposition: Identifiable, Equatable {
 final class EtatApp: ObservableObject {
     let stockage: Stockage
 
-    @Published var prefs: Preferences { didSet { if prefs != oldValue { try? stockage.enregistrer(prefs) } } }
+    @Published var prefs: Preferences {
+        didSet { if prefs != oldValue { try? stockage.enregistrer(prefs) }; nomIA = prefs.fournisseurIA.nom }
+    }
     @Published var projet: Projet { didSet { if projet != oldValue { try? stockage.enregistrer(projet) } } }
     @Published private(set) var collection: [Projet] = []
     @Published var cleClaude: String { didSet { Trousseau.ecrire("claude", cleClaude) } }
+    /// Clés des autres moteurs d'IA (GPT, Gemini), aussi dans le trousseau.
+    @Published var clesIA: [FournisseurIA: String] = [:] {
+        didSet { for (f, c) in clesIA where c != oldValue[f] { Trousseau.ecrire(f.entreeTrousseau, c) } }
+    }
     @Published private(set) var spotifyConnecte: Bool
 
     @Published var statut = String(localized: "Prêt")
@@ -71,6 +77,8 @@ final class EtatApp: ObservableObject {
         projet = courant
         collection = projets
         cleClaude = Trousseau.lire("claude") ?? ""
+        nomIA = prefs.fournisseurIA.nom
+        clesIA = [.openai: Trousseau.lire("openai") ?? "", .gemini: Trousseau.lire("gemini") ?? ""]
         jetonDiscogs = Trousseau.lire("discogs") ?? ""
         spotifyConnecte = Trousseau.lireJSON("spotify-jetons", ClientSpotify.Jetons.self) != nil
         try? s.enregistrer(p)
@@ -94,9 +102,21 @@ final class EtatApp: ObservableObject {
         switch prefs.langue { case "en": "English"; case "ru": "русский"; case "de": "Deutsch"; default: "français" }
     }
 
+    /// Moteur d'IA choisi dans Réglages (Claude par défaut).
+    var fournisseurIA: FournisseurIA { prefs.fournisseurIA }
+
+    func cle(_ f: FournisseurIA) -> String { f == .claude ? cleClaude : (clesIA[f] ?? "") }
+
+    func lienCle(_ f: FournisseurIA) -> Binding<String> {
+        Binding(get: { self.cle(f) }, set: { if f == .claude { self.cleClaude = $0 } else { self.clesIA[f] = $0 } })
+    }
+
+    /// Le client du moteur choisi. (Nom historique : au début, il n'y avait que Claude.)
     func claude() throws -> ClientClaude {
-        guard !cleClaude.isEmpty else { throw ClientClaude.Erreur.http(401, "ajoute ta clé API Claude dans Réglages") }
-        return ClientClaude(cleAPI: cleClaude, langue: langueClaude)
+        let f = fournisseurIA
+        let c = cle(f).trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !c.isEmpty else { throw ClientClaude.Erreur.http(401, String(localized: "ajoute ta clé API \(f.nom) dans Réglages")) }
+        return ClientClaude(cleAPI: c, langue: langueClaude, fournisseur: f, modele: prefs.modelesIA[f.rawValue])
     }
 
     // MARK: Collection

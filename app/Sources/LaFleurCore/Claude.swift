@@ -1,16 +1,21 @@
 import Foundation
 
-/// Client minimal de l'API Messages d'Anthropic (HTTP brut : pas de SDK Swift officiel).
-/// Toutes les réponses sont demandées en JSON strict via `output_config.format`.
+/// Client du moteur d'IA : l'API Messages d'Anthropic (Claude, par défaut), ou OpenAI / Gemini (Fournisseurs.swift).
+/// HTTP brut, pas de SDK. Toutes les réponses sont demandées en JSON strict, imposé par un schéma.
 public struct ClientClaude: Sendable {
     public var cleAPI: String
-    public var modele = "claude-opus-5-5"
+    public var fournisseur: FournisseurIA = .claude
+    public var modele = FournisseurIA.claude.modeleParDefaut
     /// Langue des réponses (celle de l'app).
     public var langue = "français"
-    public init(cleAPI: String, langue: String = "français") { self.cleAPI = cleAPI; self.langue = langue }
+    public init(cleAPI: String, langue: String = "français", fournisseur: FournisseurIA = .claude, modele: String? = nil) {
+        self.cleAPI = cleAPI; self.langue = langue; self.fournisseur = fournisseur
+        self.modele = (modele?.isEmpty == false ? modele! : fournisseur.modeleParDefaut)
+    }
 
     /// Vérifie la clé sans rien consommer (liste des modèles).
     public func testerCle() async throws {
+        guard fournisseur == .claude else { return try await testerCleAutre() }
         var req = URLRequest(url: URL(string: "https://api.anthropic.com/v1/models?limit=1")!)
         req.setValue(cleAPI, forHTTPHeaderField: "x-api-key")
         req.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
@@ -23,10 +28,10 @@ public struct ClientClaude: Sendable {
         case http(Int, String), refus(String), reponseVide, tronquee
         public var errorDescription: String? {
             switch self {
-            case .http(let code, let msg): String(localized: "Claude a répondu \(code) : \(msg)")
-            case .refus(let raison): String(localized: "Claude a refusé la demande (\(raison)).")
-            case .reponseVide: String(localized: "Réponse de Claude vide ou illisible.")
-            case .tronquee: String(localized: "Réponse de Claude coupée (trop longue).")
+            case .http(let code, let msg): String(localized: "L'IA a répondu \(code) : \(msg)")
+            case .refus(let raison): String(localized: "L'IA a refusé la demande (\(raison)).")
+            case .reponseVide: String(localized: "Réponse de l'IA vide ou illisible.")
+            case .tronquee: String(localized: "Réponse de l'IA coupée (trop longue).")
             }
         }
     }
@@ -37,6 +42,13 @@ public struct ClientClaude: Sendable {
     public func demander<T: Decodable>(_ type: T.Type, systeme: String, message: String,
                                        schema: [String: Any], effort: String = "medium",
                                        images: [Data] = [], rechercheWeb: [String] = []) async throws -> T {
+        switch fournisseur {
+        case .openai: return try await demanderOpenAI(type, systeme: systeme, message: message, schema: schema, effort: effort,
+                                                      images: images, rechercheWeb: rechercheWeb)
+        case .gemini: return try await demanderGemini(type, systeme: systeme, message: message, schema: schema,
+                                                      images: images, rechercheWeb: rechercheWeb)
+        case .claude: break
+        }
         var contenu: [[String: Any]] = images.map {
             ["type": "image", "source": ["type": "base64", "media_type": Self.typeImage($0), "data": $0.base64EncodedString()]]
         }
@@ -73,7 +85,7 @@ public struct ClientClaude: Sendable {
             guard code == 200 else {
                 let msg = ((try? JSONSerialization.jsonObject(with: data)) as? [String: Any])
                     .flatMap { ($0["error"] as? [String: Any])?["message"] as? String } ?? String(decoding: data, as: UTF8.self)
-                throw Erreur.http(code, msg)
+                throw Erreur.http(code, "Claude — \(msg)")
             }
             let r = try JSONDecoder().decode(ReponseMessages.self, from: data)
             if r.stop_reason == "refusal" { throw Erreur.refus(r.stop_details?.category ?? "sans catégorie") }
@@ -86,8 +98,7 @@ public struct ClientClaude: Sendable {
             // Seul le texte qui suit le dernier bloc d'outil est la réponse JSON.
             var texte = ""
             for b in r.content { if b.type == "text" { texte += b.text ?? "" } else { texte = "" } }
-            guard let json = texte.data(using: .utf8), !texte.isEmpty else { throw Erreur.reponseVide }
-            do { return try JSONDecoder().decode(T.self, from: json) } catch { throw Erreur.reponseVide }
+            return try decoder(T.self, texte)
         }
         throw Erreur.reponseVide
     }
