@@ -278,7 +278,10 @@ final class MoteurEnregistrement: ObservableObject {
     // MARK: Tonalité de réglage
 
     /// Signal à 1 kHz, −12 dBFS RMS (0 VU sur l'app), pour régler le niveau d'entrée de la platine.
-    func basculerTonalite() {
+    /// `sortie` : la sortie choisie dans les réglages (avant, la tonalité partait sur la sortie par défaut du Mac
+    /// tant que l'écran des réglages n'avait pas été ouvert).
+    func basculerTonalite(sortie: String?) {
+        if sortie != sortieCourante { changerSortie(sortie) }
         if source == nil {
             var phase = 0.0
             let taux = 48000.0

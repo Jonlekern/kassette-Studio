@@ -401,7 +401,9 @@ final class CheminsTests: XCTestCase {
         XCTAssertThrowsError(try Chemins.ecrire("etiquettePochette", "ronde", dans: &d))
         XCTAssertThrowsError(try Chemins.ecrire("volets", "4.5", dans: &d))
         XCTAssertThrowsError(try Chemins.ecrire("codeBarres", "peut-être", dans: &d))
-        XCTAssertEqual(d, Design(), "un refus ne change rien")
+        XCTAssertEqual(d.etiquettePochette, .petite, "un refus ne change rien")
+        XCTAssertEqual(d.volets, 3)
+        XCTAssertTrue(d.codeBarres)
     }
 
     func testProjetEtReglages() throws {

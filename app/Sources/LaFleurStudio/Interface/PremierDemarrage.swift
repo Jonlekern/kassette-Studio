@@ -150,7 +150,7 @@ struct ChoixSortie: View {
                 }
                 .labelsHidden()
                 Button("Actualiser") { sorties = SortiesAudio.lister() }.buttonStyle(.w98)
-                Button(moteur.tonaliteActive ? "Couper la tonalité" : "Tonalité 1 kHz") { moteur.basculerTonalite() }.buttonStyle(.w98)
+                Button(moteur.tonaliteActive ? "Couper la tonalité" : "Tonalité 1 kHz") { moteur.basculerTonalite(sortie: etat.prefs.sortieAudioUID) }.buttonStyle(.w98)
             }
             Text("L'app joue seulement sur cette sortie ; le reste du Mac ne change pas.").foregroundStyle(W98.ombre)
         }

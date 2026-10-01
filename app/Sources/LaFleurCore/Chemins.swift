@@ -31,7 +31,17 @@ public enum Chemins {
         var racine = try jsonObjet(objet)
         racine = try remplacer(racine, m[...], valeur, chemin: chemin)
         let data = try JSONSerialization.data(withJSONObject: racine)
-        do { objet = try JSONDecoder().decode(T.self, from: data) } catch { throw Erreur.valeurInvalide(chemin, valeur) }
+        guard let nouveau = try? JSONDecoder().decode(T.self, from: data) else { throw Erreur.valeurInvalide(chemin, valeur) }
+        // Le décodage tolérant remplace une valeur illisible par la valeur par défaut, sans erreur :
+        // on relit pour vérifier que le changement a bien été pris (sinon c'est un refus, pas un succès silencieux).
+        // (Un objet entier est complété par ses valeurs par défaut : on ne vérifie que les valeurs simples.)
+        let v = Self.valeur(racine, m)
+        if !(v is [String: Any]) && !(v is [Any]) {
+            let voulu = v.map(texte) ?? "null"
+            let obtenu = lire(chemin, dans: nouveau) ?? "null"
+            guard voulu == obtenu || (Double(voulu) != nil && Double(voulu) == Double(obtenu)) else { throw Erreur.valeurInvalide(chemin, valeur) }
+        }
+        objet = nouveau
     }
 
     /// Le modèle sous forme JSON (pour le montrer à l'IA).
@@ -111,7 +121,8 @@ public enum Chemins {
         default:
             // Valeur absente ou nulle : on devine (nul, booléen, nombre, JSON, sinon texte).
             if bas == "null" || bas == "nil" || t.isEmpty { return NSNull() }
-            if bas == "true" || bas == "false" { return bas == "true" }
+            if ["true", "oui", "yes", "vrai"].contains(bas) { return true }
+            if ["false", "non", "no", "faux"].contains(bas) { return false }
             if let nombre { return nombre }
             if t.hasPrefix("{") || t.hasPrefix("["), let d = t.data(using: .utf8), let o = try? JSONSerialization.jsonObject(with: d) { return o }
             return t

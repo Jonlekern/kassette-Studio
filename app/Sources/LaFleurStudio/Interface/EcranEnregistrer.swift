@@ -34,7 +34,7 @@ struct EcranEnregistrer: View {
                     Toggle("Bande rembobinée", isOn: $checklist[2]).toggleStyle(.checkbox)
                     Toggle("Platine sur \([c.bande.nom, c.reducteur == .aucun ? nil : c.reducteur.nom].compactMap { $0 }.joined(separator: ", "))", isOn: $checklist[3]).toggleStyle(.checkbox)
                     Toggle("Mode Concentration activé", isOn: $checklist[4]).toggleStyle(.checkbox)
-                    Button(moteur.tonaliteActive ? "Couper la tonalité" : "Tonalité 1 kHz") { moteur.basculerTonalite() }
+                    Button(moteur.tonaliteActive ? "Couper la tonalité" : "Tonalité 1 kHz") { moteur.basculerTonalite(sortie: etat.prefs.sortieAudioUID) }
                         .buttonStyle(.w98).disabled(enCours)
                 }
                 Groupe(titre: "Déroulé") {
