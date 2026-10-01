@@ -372,3 +372,59 @@ final class RetouchesTests: XCTestCase {
         XCTAssertEqual(r.first?.licence, "Public domain")
     }
 }
+
+/// L'IA change n'importe quel réglage par son chemin (demande 6).
+final class CheminsTests: XCTestCase {
+    func testEcrireEtLire() throws {
+        var d = Design()
+        try Chemins.ecrire("variante.palette.fond", "#112233", dans: &d)
+        XCTAssertEqual(d.variante.palette.fond, "#112233")
+        try Chemins.ecrire("echelles.titre", "1,3", dans: &d)
+        XCTAssertEqual(d.echelle("titre"), 1.3, accuracy: 1e-9)
+        try Chemins.ecrire("ajustements.recto-titre.dx", "4", dans: &d)
+        XCTAssertEqual(d.ajustement("recto-titre").dx, 4)
+        XCTAssertEqual(d.ajustement("recto-titre").echelle, 1)
+        try Chemins.ecrire("ajustements.etiquette-pochette.masque", "oui", dans: &d)
+        XCTAssertTrue(d.ajustement("etiquette-pochette").masque)
+        try Chemins.ecrire("etiquettePochette", "aucune", dans: &d)
+        XCTAssertEqual(d.etiquettePochette, .aucune)
+        try Chemins.ecrire("codeBarres", "non", dans: &d)
+        XCTAssertFalse(d.codeBarres)
+        try Chemins.ecrire("volets", "5", dans: &d)
+        XCTAssertEqual(d.volets, 5)
+        XCTAssertEqual(Chemins.lire("volets", dans: d), "5")
+        XCTAssertEqual(Chemins.lire("variante.palette.fond", dans: d), "#112233")
+    }
+
+    func testRefus() {
+        var d = Design()
+        XCTAssertThrowsError(try Chemins.ecrire("etiquettePochette", "ronde", dans: &d))
+        XCTAssertThrowsError(try Chemins.ecrire("volets", "4.5", dans: &d))
+        XCTAssertThrowsError(try Chemins.ecrire("codeBarres", "peut-être", dans: &d))
+        XCTAssertEqual(d, Design(), "un refus ne change rien")
+    }
+
+    func testProjetEtReglages() throws {
+        var p = Projet(numeroCatalogue: "LFS-009")
+        try Chemins.ecrire("cassette.bande", "typeI", dans: &p)
+        XCTAssertEqual(p.cassette.bande, .typeI)
+        try Chemins.ecrire("titre", "Pluie", dans: &p)
+        XCTAssertEqual(p.titre, "Pluie")
+        var r = Preferences()
+        try Chemins.ecrire("platine.blanc", "3", dans: &r)
+        XCTAssertEqual(r.platine.blanc, 3)
+        // Les anciennes cassettes sans historique IA se relisent.
+        XCTAssertTrue(p.echangesIA.isEmpty)
+        p.echangesIA = [EchangeIA(demande: "titre plus gros", moteur: "Claude · claude-opus-5-5", reponse: "ok",
+                                  changements: ["echelles.titre : — → 1.3"], cout: 0.01, designApres: Design(), refaisable: true)]
+        let relu = try JSONDecoder().decode(Projet.self, from: JSONEncoder().encode(p))
+        XCTAssertEqual(relu.echangesIA.first?.demande, "titre plus gros")
+    }
+
+    func testCout() {
+        let c = CompteurJetons()
+        c.ajouter(entree: 1_000_000, sortie: 100_000)
+        XCTAssertEqual(c.cout(modele: "claude-opus-5-5") ?? 0, 4 + 2, accuracy: 1e-9)
+        XCTAssertNil(c.cout(modele: "modele-inconnu"))
+    }
+}

@@ -25,6 +25,23 @@ enum Captures {
         await ecran("ecran-2-jaquette.png", .jaquette)
         await ecran("ecran-3-enregistrer.png", .enregistrer)
         await ecran("ecran-4-collection.png", .collection)
+        // Étiquettes « pochette en fond » et jaquette retouchée (titre agrandi et déplacé, pochette de l'étiquette masquée).
+        var dr = etat.design
+        dr.etiquettePochette = .fond; dr.voileEtiquette = 0.4
+        dr.echelles["titre"] = 1.3
+        var aj = Ajustement(); aj.dy = -4; aj.couleur = "#F2C14E"
+        dr.ajustements["recto-titre"] = aj
+        let sauvegarde = etat.design
+        etat.design = dr
+        if let data = Export.png(VStack(spacing: 18) { EtiquetteVue(mise: etat.mise, face: .a, u: Typo.ptParMM); EtiquetteVue(mise: etat.mise, face: .b, u: Typo.ptParMM) }
+                                    .padding(10).background(Color.white), dpi: 300) {
+            try? data.write(to: dossier.appendingPathComponent("etiquettes-pochette-en-fond.png"))
+        }
+        etat.elementSelectionne = "recto-titre"
+        await capturer(JCardVue(mise: etat.mise, guides: true, u: 4).environment(\.editionJaquette, etat.edition).padding(12).background(W98.grisFonce),
+                       CGSize(width: 900, height: 470), dossier.appendingPathComponent("jaquette-element-selectionne.png"))
+        etat.elementSelectionne = nil
+        etat.design = sauvegarde
         for r in ["Audio", "IA"] {
             await capturer(Reglages(rubrique: r).environmentObject(etat).environmentObject(moteur), CGSize(width: 760, height: 560),
                            dossier.appendingPathComponent("reglages-\(r.lowercased()).png"))
