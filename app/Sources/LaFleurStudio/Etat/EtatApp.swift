@@ -302,6 +302,7 @@ final class EtatApp: ObservableObject {
             if projet.artiste.isEmpty { projet.artiste = pistes.first?.morceau.artiste ?? "" }
             repartirDansLOrdre(pistes)
             statut = String(localized: "\(pistes.count) fichiers chargés dans l'ordre des pistes")
+            if projet.pochetteURL == nil { await chercherVraiePochette() }
         }
     }
 

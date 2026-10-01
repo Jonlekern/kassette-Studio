@@ -27,8 +27,20 @@ enum Captures {
         await ecran("ecran-4-collection.png", .collection)
         await capturer(Apercu3D(mise: etat.mise) {}.environmentObject(etat), CGSize(width: 560, height: 560),
                        dossier.appendingPathComponent("apercu-3d.png"))
-        await capturer(CassetteDessin(projet: etat.projet, face: .a, tourne: false, progression: 0.3).padding(8).background(Color(white: 0.12)),
+        if let img = Boitier3D.image(etat.mise, taille: CGSize(width: 600, height: 600)), let t = img.tiffRepresentation,
+           let png = NSBitmapImageRep(data: t)?.representation(using: .png, properties: [:]) {
+            try? png.write(to: dossier.appendingPathComponent("boitier-3d.png"))
+        }
+        await capturer(CassetteDessin(projet: etat.projet, face: .a, tourne: false, progression: 0.3).padding(8).background(W98.gris),
                        CGSize(width: 300, height: 196), dossier.appendingPathComponent("platine-cassette.png"))
+        // Les 4 couleurs de coque, sur le gris de l'écran.
+        let coques = HStack(spacing: 10) {
+            ForEach(CouleurCoque.allCases, id: \.self) { c in
+                CassetteDessin(projet: Self.avecCoque(etat.projet, c), face: .a, tourne: false, progression: 0.3)
+            }
+        }
+        .padding(10).background(W98.gris)
+        await capturer(coques, CGSize(width: 4 * 281 + 50, height: 199), dossier.appendingPathComponent("coques.png"))
 
         // Chaque format, à plat, comme à l'impression (300 DPI).
         await etat.prechargerImages()
@@ -141,6 +153,12 @@ enum Captures {
     }
 
     /// Rend une vue AppKit/SwiftUI complète (champs, listes…) dans une fenêtre hors écran.
+    static func avecCoque(_ projet: Projet, _ c: CouleurCoque) -> Projet {
+        var p = projet
+        p.cassette.coque = c
+        return p
+    }
+
     static func capturer(_ vue: some View, _ taille: CGSize, _ url: URL) async {
         let h = NSHostingView(rootView: vue.frame(width: taille.width, height: taille.height))
         h.frame = CGRect(origin: .zero, size: taille)

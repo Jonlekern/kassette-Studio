@@ -28,6 +28,7 @@ struct EcranCollection: View {
                             // Le recto de sa jaquette (ou la pochette si le design n'est pas encore fait).
                             ImageRecto(mise: Mise(projet: p, design: p.design ?? Design()), largeur: 64, hauteur: 64, u: 196 / 64)
                                 .frame(width: 196, height: 196).clipped()
+                                .frame(maxWidth: .infinity)
                             HStack {
                                 Text(p.numeroCatalogue).bold()
                                 Spacer()

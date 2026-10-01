@@ -131,7 +131,7 @@ private struct Platine: View {
             HStack(alignment: .center, spacing: 16) {
                 CassetteDessin(projet: etat.projet, face: face, tourne: moteur.etat == .lecture,
                                progression: moteur.deroule.fin > 0 ? moteur.position / moteur.deroule.fin : 0)
-                    .frame(width: 281, height: 179).padding(8).creux(Color(white: 0.12))
+                    .frame(width: 281, height: 179).padding(8)
                 VUMetre(canal: String(localized: "GAUCHE"), dbfs: moteur.niveaux.gauche)
                 VUMetre(canal: String(localized: "DROITE"), dbfs: moteur.niveaux.droite)
             }
@@ -261,9 +261,12 @@ struct CassetteDessin: View {
     var body: some View {
         let mise = Mise(projet: projet, design: projet.design ?? Design())
         let p = max(0, min(1, progression))
+        let c = Coque(projet.cassette.coque)
         ZStack(alignment: .topLeading) {
-            // Coque
-            RoundedRectangle(cornerRadius: 3 * u).fill(Color(red: 0.07, green: 0.08, blue: 0.1))
+            // Coque, avec un liseré clair sur les arêtes pour qu'elle se détache du gris de l'écran
+            RoundedRectangle(cornerRadius: 3 * u).fill(c.plastique)
+                .shadow(color: .black.opacity(0.35), radius: 2 * u, x: 0, y: 1 * u)
+            RoundedRectangle(cornerRadius: 3 * u).strokeBorder(c.arete, lineWidth: 0.7 * u)
             // Fenêtre : la bande vue à travers le plastique fumé
             TimelineView(.animation(paused: !tourne)) { contexte in
                 let angle = tourne ? contexte.date.timeIntervalSinceReferenceDate * 200 : 0
@@ -283,16 +286,42 @@ struct CassetteDessin: View {
                 c.move(to: CGPoint(x: 17 * u, y: 50 * u)); c.addLine(to: CGPoint(x: 83.4 * u, y: 50 * u))
                 c.addLine(to: CGPoint(x: 87 * u, y: 63.8 * u)); c.addLine(to: CGPoint(x: 13.4 * u, y: 63.8 * u)); c.closeSubpath()
             }
-            .fill(Color(red: 0.11, green: 0.12, blue: 0.14))
+            .fill(c.bas)
+            Path { t in
+                t.move(to: CGPoint(x: 17 * u, y: 50 * u)); t.addLine(to: CGPoint(x: 83.4 * u, y: 50 * u))
+                t.addLine(to: CGPoint(x: 87 * u, y: 63.8 * u)); t.move(to: CGPoint(x: 13.4 * u, y: 63.8 * u)); t.addLine(to: CGPoint(x: 17 * u, y: 50 * u))
+            }
+            .stroke(c.arete, lineWidth: 0.5 * u)
             ForEach([27.0, 73.4], id: \.self) { x in
-                Circle().fill(Color.black).frame(width: 3.5 * u, height: 3.5 * u).offset(x: (x - 1.75) * u, y: 55 * u)
+                Circle().fill(c.trou).frame(width: 3.5 * u, height: 3.5 * u).offset(x: (x - 1.75) * u, y: 55 * u)
             }
             ForEach([CGPoint(x: 3, y: 3), CGPoint(x: 97.4, y: 3), CGPoint(x: 3, y: 60.8), CGPoint(x: 97.4, y: 60.8), CGPoint(x: 50.2, y: 57)], id: \.x) { v in
-                Circle().fill(Color(white: 0.3)).frame(width: 1.8 * u, height: 1.8 * u).offset(x: (v.x - 0.9) * u, y: (v.y - 0.9) * u)
+                Circle().fill(c.vis).frame(width: 1.8 * u, height: 1.8 * u).offset(x: (v.x - 0.9) * u, y: (v.y - 0.9) * u)
             }
         }
         .frame(width: 100.4 * u, height: 63.8 * u, alignment: .topLeading)
         .accessibilityLabel("Cassette face \(face.rawValue)")
+    }
+}
+
+/// Teintes du plastique selon la couleur de coque choisie (Mixtape → Cassette → Coque).
+private struct Coque {
+    let plastique: Color, bas: Color, arete: Color, trou: Color, vis: Color
+    init(_ couleur: CouleurCoque) {
+        switch couleur {
+        case .fumee:
+            plastique = Color(red: 0.36, green: 0.37, blue: 0.40); bas = Color(red: 0.30, green: 0.31, blue: 0.34)
+            arete = Color.white.opacity(0.35); trou = Color(white: 0.12); vis = Color(white: 0.62)
+        case .transparente:
+            plastique = Color(red: 0.84, green: 0.88, blue: 0.91); bas = Color(red: 0.76, green: 0.80, blue: 0.84)
+            arete = Color.white.opacity(0.9); trou = Color(white: 0.35); vis = Color(white: 0.55)
+        case .blanche:
+            plastique = Color(white: 0.95); bas = Color(white: 0.88)
+            arete = Color(white: 0.7); trou = Color(white: 0.3); vis = Color(white: 0.6)
+        case .noire:
+            plastique = Color(red: 0.09, green: 0.10, blue: 0.12); bas = Color(red: 0.16, green: 0.17, blue: 0.19)
+            arete = Color.white.opacity(0.3); trou = Color.black; vis = Color(white: 0.45)
+        }
     }
 }
 

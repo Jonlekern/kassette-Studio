@@ -226,6 +226,29 @@ extension EtatApp {
         conversation.append(MessageDesign(deClaude: true, texte: String(localized: "Aucune image trouvée pour « \(di.requete) ». Importe-la toi-même ou reformule.")))
     }
 
+    /// Album sans pochette (cassette faite depuis le dossier, fichiers sans image) : va chercher la vraie
+    /// pochette de l'album sur le Cover Art Archive. Seulement si le titre correspond, pour ne pas mettre
+    /// la pochette d'un autre album.
+    private static var pochettesCherchees = Set<UUID>()
+
+    func chercherVraiePochette() async {
+        guard projet.mode == .album, projet.pochetteURL == nil, !projet.titre.isEmpty,
+              !Self.pochettesCherchees.contains(projet.id) else { return }
+        let id = projet.id
+        Self.pochettesCherchees.insert(id)  // une seule recherche par cassette et par lancement
+        let q = projet.artiste.isEmpty ? projet.titre : "\(projet.artiste) - \(projet.titre)"
+        let titre = Association.normaliser(projet.titre)
+        for a in ((try? await musicBrainz.chercher(q)) ?? []).prefix(6) where Association.normaliser(a.titre) == titre {
+            guard let url = URL(string: "https://coverartarchive.org/release/\(a.id)/front-1200"),
+                  let local = await telecharger(url) else { continue }
+            // L'utilisateur a pu changer de cassette pendant la recherche.
+            guard projet.id == id, projet.pochetteURL == nil else { return }
+            projet.pochetteURL = local
+            statut = String(localized: "Vraie pochette trouvée (Cover Art Archive)")
+            return
+        }
+    }
+
     /// Copie une image du web dans le dossier de l'app (l'impression marche ensuite hors ligne).
     func telecharger(_ url: URL) async -> URL? {
         var req = URLRequest(url: url)

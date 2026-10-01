@@ -30,7 +30,8 @@ struct EcranJaquette: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
-            ScrollView { colonneReglages.padding(.trailing, 6).frame(width: 274, alignment: .leading) }.frame(width: 280)
+            // Marge à droite = largeur de la barre de défilement de macOS, pour qu'elle ne passe pas sur les menus.
+            ScrollView { colonneReglages.padding(.trailing, 15).frame(width: 280, alignment: .leading) }.frame(width: 280)
             VStack(alignment: .leading, spacing: 6) {
                 barreApercu
                 GeometryReader { g in
@@ -45,13 +46,15 @@ struct EcranJaquette: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(W98.grisFonce).creux(W98.grisFonce)
-                Text(dimensions).lineLimit(1)
+                Text(dimensions).lineLimit(2).fixedSize(horizontal: false, vertical: true)
             }
-            ScrollView { colonneClaude.padding(.trailing, 6).frame(width: 304, alignment: .leading) }.frame(width: 310)
+            ScrollView { colonneClaude.padding(.trailing, 15).frame(width: 310, alignment: .leading) }.frame(width: 310)
         }
         .onAppear {
             if etat.projet.design == nil { etat.design = etat.designParDefaut }
             if !etat.design.jcard && apercu == .jcard { apercu = etat.design.etiquettes ? .etiquettes : .ocard }
+            // Cassette sans pochette (ex. faite depuis le dossier) : on va chercher la vraie.
+            if etat.projet.pochetteURL == nil { Task { await etat.chercherVraiePochette() } }
         }
         .sheet(isPresented: $montrer3D) { Apercu3D(mise: etat.mise) { montrer3D = false } }
         .alert(action?.nom ?? "", isPresented: Binding(get: { action != nil }, set: { if !$0 { action = nil } }), presenting: action) { a in
@@ -233,13 +236,17 @@ struct EcranJaquette: View {
             Groupe(titre: "Textes") {
                 Text("Maison de disque")
                 Champ(invite: "LAFLEURSTUDIO", texte: $etat.projet.maisonDeDisque)
-                Text("Tranche")
                 HStack {
-                    Champ(invite: etat.projet.trancheAuto, texte: Binding(
-                        get: { etat.design.texteTranche ?? "" },
-                        set: { t in var d = etat.design; d.texteTranche = t.isEmpty ? nil : t; etat.design = d }))
+                    Text("Tranche")
+                    Spacer()
                     Button("Auto") { var d = etat.design; d.texteTranche = nil; etat.design = d }.buttonStyle(.w98)
                 }
+                // Sur deux lignes si besoin : le texte de tranche entier reste visible (42 caractères).
+                TextField(etat.projet.trancheAuto, text: Binding(
+                    get: { etat.design.texteTranche ?? "" },
+                    set: { t in var d = etat.design; d.texteTranche = t.isEmpty ? nil : t; etat.design = d }), axis: .vertical)
+                    .lineLimit(1...2).textFieldStyle(.plain).font(W98.police)
+                    .padding(.horizontal, 5).padding(.vertical, 4).creux()
                 Text("Notes (volet intérieur)")
                 TextEditor(text: lien(\.notes)).font(W98.police).frame(height: 60).creux()
                 Text("Crédits")
@@ -427,8 +434,9 @@ struct EcranJaquette: View {
                     }
                 }
                 HStack(spacing: 4) {
-                    Champ(invite: "Demande à Claude… (« plus sombre », « plus 90s »)", texte: $demande)
+                    Champ(invite: "Demande à Claude…", texte: $demande)
                         .onSubmit(envoyer)
+                        .help("Ex. « plus sombre », « plus 90s », « mets la vraie pochette », « mets le logo Sony »")
                     Button("Envoyer", action: envoyer).buttonStyle(.w98).disabled(demande.isEmpty || etat.occupe)
                 }
                 if etat.projet.mode == .album {
@@ -495,31 +503,12 @@ struct EcranJaquette: View {
 struct Apercu3D: View {
     let mise: Mise
     let fermer: () -> Void
-    @State private var angle: Double = -28
-    @State private var depart: Double = -28
-    private let u: CGFloat = 4
-
     var body: some View {
         Fenetre(titre: "Aperçu 3D", fermer: fermer) {
             VStack(spacing: 12) {
-                ZStack {
-                    HStack(spacing: 0) {
-                        TrancheVue(mise: mise, longueur: Gabarits.hauteurJ, epaisseur: Gabarits.tranche, u: u)
-                            .background(Color(hex: mise.design.variante.palette.fond))
-                            .rotation3DEffect(.degrees(-90), axis: (x: 0, y: 1, z: 0), anchor: .trailing, perspective: 0.3)
-                        RectoVue(mise: mise, largeur: Gabarits.recto, hauteur: Gabarits.hauteurJ, u: u)
-                            .background(Color(hex: mise.design.variante.palette.fond))
-                            .overlay(LinearGradient(colors: [.white.opacity(0.28), .clear, .white.opacity(0.08)],
-                                                    startPoint: .topLeading, endPoint: .bottomTrailing))
-                            .overlay(RoundedRectangle(cornerRadius: 3).stroke(Color.white.opacity(0.5), lineWidth: 2))
-                    }
-                    .rotation3DEffect(.degrees(angle), axis: (x: 0, y: 1, z: 0), perspective: 0.4)
-                    .shadow(color: .black.opacity(0.4), radius: 10, x: 6, y: 8)
-                }
-                .frame(width: 520, height: 470)
-                .contentShape(Rectangle())
-                .gesture(DragGesture().onChanged { angle = depart + $0.translation.width / 2 }.onEnded { _ in depart = angle })
-                Text("Glisse pour tourner la cassette").foregroundStyle(W98.ombre)
+                // Vrai boîtier en 3D : jaquette pliée dans la coque en plastique.
+                Boitier3DVue(mise: mise).frame(width: 520, height: 470).creux(W98.gris)
+                Text("Glisse pour tourner le boîtier, molette pour zoomer").foregroundStyle(W98.ombre)
             }
             .padding(12)
         }

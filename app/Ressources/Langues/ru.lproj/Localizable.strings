@@ -107,6 +107,7 @@
 "Bienvenue dans LaFleurStudio" = "Добро пожаловать в LaFleurStudio";
 "Biseauté" = "Скошенный";
 "Blanc" = "Белый";
+"Blanche" = "Белый";
 "Bord gauche → trait rouge :" = "Левый край → красная линия:";
 "Bord haut → trait rouge :" = "Верхний край → красная линия:";
 "Brouillon" = "Черновик";
@@ -169,6 +170,7 @@
 "Connexion à Spotify dans ton navigateur…" = "Подключение к Spotify в браузере…";
 "Continuer" = "Продолжить";
 "Contraste faible dans la zone %@ (%@:1) : le texte se lira mal." = "Слабый контраст в зоне «%@» (%@:1): текст будет плохо читаться.";
+"Coque" = "Корпус";
 "Corrections proposées par Claude : %lld" = "Исправлений от Claude: %lld";
 "Couleurs" = "Цвета";
 "Couleurs et polices" = "Цвета и шрифты";
@@ -179,6 +181,7 @@
 "Custom" = "Своя";
 "Custom " = "Своя ";
 "DROITE" = "ПРАВЫЙ";
+"Demande à Claude…" = "Попроси Claude…";
 "Demande à Claude… (« plus sombre », « plus 90s »)" = "Попроси Claude… («темнее», «больше 90-х»)";
 "Descendre" = "Вниз";
 "Design" = "Дизайн";
@@ -204,6 +207,7 @@
 "English" = "English";
 "Enregistrée" = "Записана";
 "Envoyer" = "Отправить";
+"Ex. « plus sombre », « plus 90s », « mets la vraie pochette », « mets le logo Sony »" = "Напр. «темнее», «больше 90-х», «поставь настоящую обложку», «добавь логотип Sony»";
 "Exporter" = "Экспорт";
 "Exporter quand même" = "Всё равно экспортировать";
 "FACE %@ TERMINÉE" = "СТОРОНА %@ ГОТОВА";
@@ -221,12 +225,14 @@
 "Fond" = "Фон";
 "Format" = "Формат";
 "Français" = "Français";
+"Fumée" = "Дымчатый";
 "GAUCHE" = "ЛЕВЫЙ";
 "Garder l'ordre (auto)" = "Сохранить порядок (авто)";
 "Glisse les codes dans l'aperçu de la J-card." = "Перетащи коды в окне просмотра вкладыша.";
 "Glisse les codes où tu veux" = "Перетащи коды куда хочешь";
 "Glisse ou clic droit pour réordonner · ⇄ change de face · × retire" = "Перетащи или правый клик для порядка · ⇄ сменить сторону · × убрать";
 "Glisse pour tourner la cassette" = "Тяни, чтобы повернуть кассету";
+"Glisse pour tourner le boîtier, molette pour zoomer" = "Тяни, чтобы повернуть коробку, колесо — масштаб";
 "Gratuit, sans compte : albums, tracklists, maisons de disque, scans des vraies éditions cassette." = "Бесплатно, без аккаунта: альбомы, треклисты, лейблы, сканы настоящих кассетных изданий.";
 "Guide pas à pas…" = "Пошаговая инструкция…";
 "Guide — connecter Spotify" = "Инструкция — подключить Spotify";
@@ -307,6 +313,7 @@
 "NR" = "NR";
 "Ne colle jamais ta clé ailleurs (conversation, message, site) : n'importe qui pourrait l'utiliser à tes frais. Si ça arrive, supprime-la dans API keys et crée-en une nouvelle." = "Никогда не вставляй ключ в другие места (чат, сообщение, сайт): им смогут пользоваться за твой счёт. Если так случилось, удали его в API keys и создай новый.";
 "Niveau réglé avec la tonalité" = "Уровень выставлен по тону";
+"Noire" = "Чёрный";
 "Normal" = "Обычный";
 "Notes (volet intérieur)" = "Заметки (внутренняя панель)";
 "Nouvelle cassette" = "Новая кассета";
@@ -438,6 +445,7 @@
 "Tout est corrigé ✓" = "Всё исправлено ✓";
 "Tout l'objet dans l'aperçu" = "Весь объект в окне";
 "Tranche" = "Корешок";
+"Transparente" = "Прозрачный";
 "Tu paies à l'usage : préparer une cassette coûte en général quelques centimes. La clé reste dans le trousseau de ton Mac. Claude reçoit les titres, les durées et les infos d'album, jamais tes fichiers audio." = "Оплата по факту: подготовка кассеты обычно стоит несколько центов. Ключ хранится в связке ключей Mac. Claude получает названия, длительности и данные альбома, но не аудиофайлы.";
 "Type" = "Тип";
 "Type I · Normal" = "Тип I · Normal";
@@ -452,6 +460,7 @@
 "Vider les faces" = "Очистить стороны";
 "Volet intérieur" = "Внутренняя панель";
 "Volets" = "Панели";
+"Vraie pochette trouvée (Cover Art Archive)" = "Настоящая обложка найдена (Cover Art Archive)";
 "Vraies éditions cassette" = "Настоящие кассетные издания";
 "Vérification avant impression" = "Проверка перед печатью";
 "Vérification de Claude : tout est bon ✓" = "Проверка Claude: всё в порядке ✓";

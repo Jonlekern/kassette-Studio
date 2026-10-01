@@ -437,3 +437,16 @@ Pistes :
 | `captures/26-enregistrer-v3.jpg` | Enregistrer : cassette sombre dans l'interface claire |
 | `captures/27-cassette-trop-sombre.jpg` | Zoom sur la cassette : cadre, coque et étiquette sombres |
 | `captures/28-collection-v3.jpg` | Collection : vignettes vides et décalées |
+
+### Réponse (session cloud)
+
+Corrigé : cassette de l'écran Enregistrer (plus de cadre noir, coque fumée par défaut, réglage **Coque** dans
+Mixtape → Cassette : fumée, transparente, blanche, noire), titres « FACE A / B » lisibles (l'accent n'est
+utilisé que s'il contraste avec le fond), code-barres du rabat ramené à ~30 mm, barre de défilement de la
+colonne de gauche, champ Tranche sur deux lignes, champ « Demande à Claude… », ligne des dimensions,
+blancs de l'encadré Cassette, titres coupés, aide sous les listes plus lisible, vignettes de la Collection
+centrées, **aperçu 3D en vrai boîtier** (coque en plastique, épaisseur, tourne dans tous les sens).
+Cassette sans pochette : l'app va chercher la **vraie pochette** de l'album (Cover Art Archive).
+
+Pas changé (décidé avec Johnny) : l'étiquette garde les couleurs de la jaquette, pas de texte dans les
+zones sans image.

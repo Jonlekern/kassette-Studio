@@ -9,7 +9,8 @@ struct EcranMixtape: View {
         HStack(alignment: .top, spacing: 12) {
             Sources().frame(width: 290)
             VStack(alignment: .leading, spacing: 10) {
-                ReglagesCassette()
+                // Hauteur naturelle : sinon l'encadré se partage la hauteur avec les listes et s'étire en blancs.
+                ReglagesCassette().fixedSize(horizontal: false, vertical: true)
                 HStack(alignment: .top, spacing: 10) {
                     ListeFace(face: .a)
                     ListeFace(face: .b)
@@ -162,13 +163,21 @@ private struct ReglagesCassette: View {
                 Picker("Bande", selection: $etat.projet.cassette.bande) {
                     ForEach(TypeBande.allCases, id: \.self) { Text(tr($0.nom)).tag($0) }
                 }
-                .frame(width: 210)
+                .fixedSize()
                 Picker("Réducteur de bruit", selection: $etat.projet.cassette.reducteur) {
                     ForEach(ReducteurBruit.allCases, id: \.self) { Text(tr($0.nom)).tag($0) }
                 }
-                .frame(width: 230)
-                Text("Marque / modèle")
-                Champ(invite: "TDK SA60", texte: $etat.projet.cassette.marque).frame(width: 110)
+                .fixedSize()
+                Spacer(minLength: 0)
+            }
+            HStack(spacing: 14) {
+                Picker("Coque", selection: $etat.projet.cassette.coque) {
+                    ForEach(CouleurCoque.allCases, id: \.self) { Text(tr($0.nom)).tag($0) }
+                }
+                .fixedSize()
+                Text("Marque / modèle").fixedSize()
+                Champ(invite: "TDK SA60", texte: $etat.projet.cassette.marque).frame(maxWidth: 160)
+                Spacer(minLength: 0)
             }
             HStack {
                 Text("Titre")
@@ -208,7 +217,8 @@ private struct ListeFace: View {
                 .onMove { etat.deplacer(face, depuis: $0, vers: $1) }
             }
             .listStyle(.plain).scrollContentBackground(.hidden).creux()
-            Text("Glisse ou clic droit pour réordonner · ⇄ change de face · × retire").foregroundStyle(W98.grisFonce).font(.custom("Arial", size: 10))
+            Text("Glisse ou clic droit pour réordonner · ⇄ change de face · × retire").foregroundStyle(W98.ombre).font(W98.police)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity)
     }
@@ -224,11 +234,13 @@ private struct LignePiste: View {
         HStack(spacing: 6) {
             Text("⋮⋮").foregroundStyle(W98.grisFonce)
             Text("\(numero)").foregroundStyle(W98.grisFonce).frame(width: 18, alignment: .trailing)
+            // Le titre prend toute la place libre avant la durée (avant, il se coupait trop tôt).
             VStack(alignment: .leading, spacing: 1) {
-                Text(piste.morceau.titre).bold().lineLimit(1).help(piste.morceau.titre)
+                Text(piste.morceau.titre).bold().lineLimit(1).truncationMode(.tail).help(piste.morceau.titre)
                 Text(piste.morceau.artiste).foregroundStyle(W98.ombre).lineLimit(1)
             }
-            Spacer(minLength: 4)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .layoutPriority(1)
             if piste.fichier == nil {
                 Text("⚠︎ fichier").foregroundStyle(W98.rouge).fixedSize()
                     .help("Aucun fichier audio associé : ce morceau ne peut pas être enregistré. Choisis ton dossier audio à gauche.")

@@ -141,6 +141,10 @@ struct Mise {
                   largeur: largeur, hauteur: 5.5, couleur: p.texte, fond: p.fond)
     }
 
+    /// Couleur des titres « FACE A / FACE B » : l'accent s'il se lit sur le fond (contraste ≥ 3:1,
+    /// texte gras), sinon la couleur du texte. Avant, un accent sombre sur fond sombre devenait illisible.
+    var couleurTitresFaces: String { Verification.contraste(p.accent, p.fond) >= 3 ? p.accent : p.texte }
+
     /// Hauteur de la tracklist (mm) pour une taille donnée.
     func tracklistTaille() -> CGFloat { 5.6 * e("tracklist") }
 
@@ -334,7 +338,7 @@ struct Mise {
     func largeurModule(_ c: CodeBarres1D) -> CGFloat {
         let place: CGFloat
         switch design.placeCode {
-        case .rabat: place = 40  // couché dans la longueur du rabat
+        case .rabat: place = 30  // couché dans le rabat : EAN à 80 %, ~30 mm, comme sur les vraies K7
         case .tranche: place = 30
         case .interieur: place = 40
         case .libre: place = 25
@@ -354,7 +358,7 @@ struct Mise {
             let zone = "\(f(p.x))–\(f(p.x + p.largeur)) mm"
             switch p.genre {
             case .rabat:
-                l.append("• Rabat (dos court, \(zone)) : en haut le badge de bande (« \(badge(largeur: p.largeur - 2).replacingOccurrences(of: "\n", with: " / ")) ») ; en bas, de haut en bas : \(design.qr && design.placeQR == .rabat ? "QR code, " : "")\(design.codeSpotify && design.placeCode == .rabat ? "code Spotify, " : "")\(design.codeBarres && design.placeCode == .rabat ? "texte « \(texteCode) » puis code-barres \(design.genreCode.nom) \(numeroCode) couché dans la longueur (~40 mm de haut), " : "")ligne « \(projet.ligneDroits) ».")
+                l.append("• Rabat (dos court, \(zone)) : en haut le badge de bande (« \(badge(largeur: p.largeur - 2).replacingOccurrences(of: "\n", with: " / ")) ») ; en bas, de haut en bas : \(design.qr && design.placeQR == .rabat ? "QR code, " : "")\(design.codeSpotify && design.placeCode == .rabat ? "code Spotify, " : "")\(design.codeBarres && design.placeCode == .rabat ? "texte « \(texteCode) » puis code-barres \(design.genreCode.nom) \(numeroCode) couché dans la longueur (~30 mm de haut, barres de 10 mm), " : "")ligne « \(projet.ligneDroits) ».")
             case .tranche:
                 l.append("• Tranche (\(zone), texte tourné, se lit de haut en bas) : logo/nom de la maison de disque « \(projet.maisonDeDisque) » en haut, texte « \(texteTranche) » au centre, \(design.codeBarres && design.placeCode == .tranche ? "code-barres" : "catalogue « \(projet.numeroCatalogue) »") en bas.")
             case .recto:

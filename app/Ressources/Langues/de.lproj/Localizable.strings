@@ -107,6 +107,7 @@
 "Bienvenue dans LaFleurStudio" = "Willkommen bei LaFleurStudio";
 "Biseauté" = "Abgeschrägt";
 "Blanc" = "Weiß";
+"Blanche" = "Weiß";
 "Bord gauche → trait rouge :" = "Linker Rand → rote Linie:";
 "Bord haut → trait rouge :" = "Oberer Rand → rote Linie:";
 "Brouillon" = "Entwurf";
@@ -169,6 +170,7 @@
 "Connexion à Spotify dans ton navigateur…" = "Verbinde mit Spotify im Browser…";
 "Continuer" = "Weiter";
 "Contraste faible dans la zone %@ (%@:1) : le texte se lira mal." = "Schwacher Kontrast im Bereich %@ (%@:1): schlecht lesbar.";
+"Coque" = "Gehäuse";
 "Corrections proposées par Claude : %lld" = "Korrekturen von Claude: %lld";
 "Couleurs" = "Farben";
 "Couleurs et polices" = "Farben und Schriften";
@@ -179,6 +181,7 @@
 "Custom" = "Eigene";
 "Custom " = "Eigene ";
 "DROITE" = "RECHTS";
+"Demande à Claude…" = "Frag Claude…";
 "Demande à Claude… (« plus sombre », « plus 90s »)" = "Frag Claude… („dunkler“, „mehr 90er“)";
 "Descendre" = "Nach unten";
 "Design" = "Design";
@@ -204,6 +207,7 @@
 "English" = "English";
 "Enregistrée" = "Aufgenommen";
 "Envoyer" = "Senden";
+"Ex. « plus sombre », « plus 90s », « mets la vraie pochette », « mets le logo Sony »" = "Z. B. „dunkler“, „mehr 90er“, „nimm das echte Cover“, „füg das Sony-Logo ein“";
 "Exporter" = "Exportieren";
 "Exporter quand même" = "Trotzdem exportieren";
 "FACE %@ TERMINÉE" = "SEITE %@ FERTIG";
@@ -221,12 +225,14 @@
 "Fond" = "Hintergrund";
 "Format" = "Format";
 "Français" = "Français";
+"Fumée" = "Rauchgrau";
 "GAUCHE" = "LINKS";
 "Garder l'ordre (auto)" = "Reihenfolge behalten (auto)";
 "Glisse les codes dans l'aperçu de la J-card." = "Zieh die Codes in der J-Card-Vorschau.";
 "Glisse les codes où tu veux" = "Zieh die Codes, wohin du willst";
 "Glisse ou clic droit pour réordonner · ⇄ change de face · × retire" = "Ziehen oder Rechtsklick zum Ordnen · ⇄ Seite wechseln · × entfernen";
 "Glisse pour tourner la cassette" = "Ziehen, um die Kassette zu drehen";
+"Glisse pour tourner le boîtier, molette pour zoomer" = "Ziehen zum Drehen, Mausrad zum Zoomen";
 "Gratuit, sans compte : albums, tracklists, maisons de disque, scans des vraies éditions cassette." = "Kostenlos, ohne Konto: Alben, Tracklists, Labels, Scans echter Kassettenausgaben.";
 "Guide pas à pas…" = "Schritt-für-Schritt-Anleitung…";
 "Guide — connecter Spotify" = "Anleitung — Spotify verbinden";
@@ -307,6 +313,7 @@
 "NR" = "NR";
 "Ne colle jamais ta clé ailleurs (conversation, message, site) : n'importe qui pourrait l'utiliser à tes frais. Si ça arrive, supprime-la dans API keys et crée-en une nouvelle." = "Füge deinen Schlüssel nie woanders ein (Chat, Nachricht, Website): jeder könnte ihn auf deine Kosten nutzen. Falls doch, lösche ihn unter API keys und erstelle einen neuen.";
 "Niveau réglé avec la tonalité" = "Pegel mit dem Ton eingestellt";
+"Noire" = "Schwarz";
 "Normal" = "Normal";
 "Notes (volet intérieur)" = "Notizen (Innenfeld)";
 "Nouvelle cassette" = "Neue Kassette";
@@ -438,6 +445,7 @@
 "Tout est corrigé ✓" = "Alles korrigiert ✓";
 "Tout l'objet dans l'aperçu" = "Das ganze Objekt in der Vorschau";
 "Tranche" = "Rücken";
+"Transparente" = "Transparent";
 "Tu paies à l'usage : préparer une cassette coûte en général quelques centimes. La clé reste dans le trousseau de ton Mac. Claude reçoit les titres, les durées et les infos d'album, jamais tes fichiers audio." = "Du zahlst nach Nutzung: eine Kassette vorzubereiten kostet meist ein paar Cent. Der Schlüssel bleibt im Schlüsselbund deines Mac. Claude bekommt Titel, Dauer und Albuminfos, nie deine Audiodateien.";
 "Type" = "Typ";
 "Type I · Normal" = "Typ I · Normal";
@@ -452,6 +460,7 @@
 "Vider les faces" = "Seiten leeren";
 "Volet intérieur" = "Innenfeld";
 "Volets" = "Felder";
+"Vraie pochette trouvée (Cover Art Archive)" = "Echtes Cover gefunden (Cover Art Archive)";
 "Vraies éditions cassette" = "Echte Kassettenausgaben";
 "Vérification avant impression" = "Prüfung vor dem Druck";
 "Vérification de Claude : tout est bon ✓" = "Claudes Prüfung: alles gut ✓";

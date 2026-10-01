@@ -121,7 +121,7 @@ struct PileCodes: View {
                     let m = mise.largeurModule(c)
                     if vertical {
                         let extra = (d.chiffresCode ? m * 8.5 * 1.1 : 0) + m * 2
-                        let cb = CodeBarresVue(code: c, module: m, hauteur: max(6, min(16, largeur - extra)), barres: Color(hex: b),
+                        let cb = CodeBarresVue(code: c, module: m, hauteur: max(6, min(10, largeur - extra)), barres: Color(hex: b),
                                                fond: Color(hex: f), chiffres: d.chiffresCode, u: u)
                         cb.rotationEffect(.degrees(-90))
                             .frame(width: cb.hauteurTotale * u, height: cb.largeurTotale * u)

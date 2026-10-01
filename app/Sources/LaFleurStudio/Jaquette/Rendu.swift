@@ -350,7 +350,7 @@ struct BlocVue: View {
                     let lignes = mise.lignes(face)
                     if !lignes.isEmpty {
                         Text("FACE \(face.rawValue) · \(formaterDuree(Faces.duree(mise.projet.pistes(face), ReglagesPlatine())))")
-                            .font(fg).foregroundStyle(Color(hex: v.palette.accent == v.palette.fond ? v.palette.texte : v.palette.accent))
+                            .font(fg).foregroundStyle(Color(hex: mise.couleurTitresFaces))
                             .frame(height: ligne * u, alignment: .leading)
                         ForEach(lignes.indices, id: \.self) { i in
                             let ln = lignes[i]

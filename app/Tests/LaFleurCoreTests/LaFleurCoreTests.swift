@@ -328,6 +328,11 @@ final class RetouchesTests: XCTestCase {
         let ancien = try! JSONDecoder().decode(Design.self, from: Data("{\"orientation\":\"paysage\"}".utf8))
         XCTAssertEqual(ancien.cadrage, .carre)
         XCTAssertTrue(ClientClaude.conventionsK7.contains("JAMAIS SORTI EN CASSETTE"))
+        // Une cassette enregistrée avant la couleur de coque se relit, en coque fumée.
+        let k7 = try! JSONDecoder().decode(Cassette.self, from: Data("{\"bande\":\"typeIV\",\"marque\":\"TDK MA\"}".utf8))
+        XCTAssertEqual(k7.bande, .typeIV)
+        XCTAssertEqual(k7.marque, "TDK MA")
+        XCTAssertEqual(k7.coque, .fumee)
         XCTAssertEqual(d.echelle("titre"), 1.3, accuracy: 1e-9)
         XCTAssertEqual(d.placeQR, .interieur)
         XCTAssertEqual(p.titre, "Nouveau titre")

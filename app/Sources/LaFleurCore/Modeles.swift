@@ -98,12 +98,40 @@ public enum ReducteurBruit: String, Codable, CaseIterable, Sendable {
 }
 
 /// La cassette physique utilisée.
+/// Couleur du plastique de la cassette (dessin de l'écran Enregistrer).
+public enum CouleurCoque: String, Codable, CaseIterable, Sendable {
+    case fumee, transparente, blanche, noire
+    public var nom: String {
+        switch self {
+        case .fumee: "Fumée"
+        case .transparente: "Transparente"
+        case .blanche: "Blanche"
+        case .noire: "Noire"
+        }
+    }
+}
+
 public struct Cassette: Codable, Hashable, Sendable {
     public var longueur: LongueurCassette = .c60
     public var bande: TypeBande = .typeII
     public var reducteur: ReducteurBruit = .dolbyB
     public var marque: String = ""
+    public var coque: CouleurCoque = .fumee
     public init() {}
+
+    enum CodingKeys: String, CodingKey { case longueur, bande, reducteur, marque, coque }
+
+    /// Décodage tolérant : les cassettes enregistrées avant l'ajout d'un champ restent lisibles.
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        let d = Cassette()
+        func v<T: Decodable>(_ k: CodingKeys, _ defaut: T) -> T { ((try? c.decodeIfPresent(T.self, forKey: k)) ?? nil) ?? defaut }
+        longueur = v(.longueur, d.longueur)
+        bande = v(.bande, d.bande)
+        reducteur = v(.reducteur, d.reducteur)
+        marque = v(.marque, d.marque)
+        coque = v(.coque, d.coque)
+    }
 }
 
 public enum TypePlatine: String, Codable, CaseIterable, Sendable { case simple, autoReverse }
