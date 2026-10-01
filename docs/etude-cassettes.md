@@ -1,8 +1,9 @@
 # Étude de 27 vraies cassettes (1982-2022)
 
 But : que Claude sache où va chaque élément d'une vraie K7, y compris pour un album qui n'est jamais
-sorti en cassette. Scans du Cover Art Archive (MusicBrainz), regardés un par un. Planches :
-[etude-cassettes/](etude-cassettes/).
+sorti en cassette. Scans du Cover Art Archive (MusicBrainz), regardés un par un. Les planches de scans
+(pochettes des maisons de disque) sont gardées dans un dépôt privé ; chaque cassette a son lien vers sa fiche
+dans le tableau des sources.
 
 ## Ce que font les vraies K7
 
