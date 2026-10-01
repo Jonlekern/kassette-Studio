@@ -5,7 +5,8 @@ import SwiftUI
 /// Réglages (⌘,) : audio, platine, impression, Claude, Spotify, sources, langue, conditions.
 struct Reglages: View {
     @EnvironmentObject var etat: EtatApp
-    @State private var rubrique = "Audio"
+    @State private var rubrique: String
+    init(rubrique: String = "Audio") { _rubrique = State(initialValue: rubrique) }
     private let rubriques = ["Audio", "Platine", "Impression", "IA", "Spotify", "Sources", "Langue", "Conditions"]
 
     var body: some View {

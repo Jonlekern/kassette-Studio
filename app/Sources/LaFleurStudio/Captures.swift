@@ -25,6 +25,10 @@ enum Captures {
         await ecran("ecran-2-jaquette.png", .jaquette)
         await ecran("ecran-3-enregistrer.png", .enregistrer)
         await ecran("ecran-4-collection.png", .collection)
+        for r in ["Audio", "IA"] {
+            await capturer(Reglages(rubrique: r).environmentObject(etat).environmentObject(moteur), CGSize(width: 760, height: 560),
+                           dossier.appendingPathComponent("reglages-\(r.lowercased()).png"))
+        }
         await capturer(Apercu3D(mise: etat.mise) {}.environmentObject(etat), CGSize(width: 560, height: 560),
                        dossier.appendingPathComponent("apercu-3d.png"))
         if let img = Boitier3D.image(etat.mise, taille: CGSize(width: 600, height: 600)), let t = img.tiffRepresentation,
