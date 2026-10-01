@@ -40,3 +40,18 @@ taille réelle** :
 Le plus simple à l'usage serait de **cliquer sur un élément dans l'aperçu** pour le sélectionner, puis
 de le **déplacer à la souris** et de régler sa **taille** (poignées ou curseur), comme dans un petit
 logiciel de mise en page.
+
+### 4. Étiquettes de K7 : un mode « pochette en fond »
+
+Dans **Étiquettes**, Johnny veut pouvoir choisir un **mode où la pochette remplit toute l'étiquette**,
+en fond, au lieu du fond uni actuel avec le petit carré d'image à gauche.
+
+- Un choix de style pour les étiquettes, par exemple « Fond uni » (actuel) / « Pochette en fond ».
+- En mode « Pochette en fond » : la pochette couvre toute l'étiquette (fond perdu compris), recadrée pour
+  remplir sans être déformée. Les textes (titre, face A/B, artiste, C60, type de bande) passent
+  par-dessus.
+- Pour que les textes restent lisibles, prévoir un voile sombre ou clair réglable, ou un bandeau
+  derrière le texte. L'alerte de contraste existante doit s'appliquer.
+- La fenêtre de la bande (le rectangle blanc) reste à sa place, par-dessus l'image.
+- Idéalement, on peut aussi déplacer l'image pour choisir la partie visible (comme la demande 1).
+- Le réglage est commun aux faces A et B, et enregistré avec la cassette.
