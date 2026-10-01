@@ -101,3 +101,31 @@ Concrètement :
   format, pas seulement sur le recto.
 - Chaque changement de Claude passe par l'**historique** (« Versions ») et s'annule en un clic.
 - Si une demande reste vraiment impossible, Claude le **dit clairement** (voir demande 5).
+
+### 7. Un « mode IA expert » où Claude a tous les droits
+
+Demande de Johnny : un **mode expert** où l'IA peut tout faire dans l'app, sans être limitée à une
+liste de réglages.
+
+**Activation** : Réglages → IA → case « Mode expert : l'IA a tous les droits », **désactivée par
+défaut**. Quand il est actif, un badge « IA expert » est visible dans la barre d'état et dans la zone
+Claude de la Jaquette.
+
+**Ce que l'IA peut faire en mode expert** :
+- **Jaquette** : tout ce qui est décrit dans la demande 6, sans exception, sur tous les formats.
+- **Mixtape** : changer l'ordre des morceaux, les faces, retirer ou ajouter des morceaux du dossier
+  audio, le type de cassette (C60/C90/custom), la bande, le Dolby, la coque, le titre et l'artiste.
+- **Réglages de la cassette** : blancs, marges, compte à rebours, égalisation.
+- **Collection** : créer, dupliquer ou renommer une cassette.
+- Enchaîner plusieurs actions d'un coup (« fais-moi une C90 ambiance pluie avec une jaquette sombre
+  et sans pochette sur l'étiquette »).
+
+**Garde-fous, même en mode expert** :
+- Tout passe par l'**historique** (« Versions ») et s'annule en un clic, y compris une série d'actions.
+- **Supprimer** une cassette de la Collection demande toujours une confirmation.
+- L'IA ne touche jamais aux **clés API**, aux comptes (Spotify, Discogs) ni aux fichiers audio sur le
+  disque. Elle ne lance pas non plus l'**enregistrement** ni l'**impression** toute seule : elle peut
+  tout préparer, l'utilisateur clique.
+- Un résumé clair de ce qui a été changé après chaque demande.
+
+**Hors mode expert** : comportement actuel, l'IA propose et l'utilisateur applique.
