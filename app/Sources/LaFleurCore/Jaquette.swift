@@ -121,6 +121,43 @@ public struct Variante: Codable, Hashable, Identifiable, Sendable {
     }
 }
 
+/// Pochette sur l'étiquette de la K7.
+public enum ModeEtiquette: String, Codable, CaseIterable, Sendable {
+    case petite, fond, aucune
+    public var nom: String {
+        switch self {
+        case .petite: "Petite pochette"
+        case .fond: "Pochette en fond"
+        case .aucune: "Sans pochette"
+        }
+    }
+}
+
+/// Réglage libre d'un élément de la jaquette (déplacé, agrandi, tourné, masqué…), par rapport à sa place normale.
+public struct Ajustement: Codable, Hashable, Sendable {
+    /// Décalage en mm (positif = vers la droite / vers le bas).
+    public var dx = 0.0
+    public var dy = 0.0
+    /// Taille (1 = normale).
+    public var echelle = 1.0
+    /// Rotation en degrés.
+    public var rotation = 0.0
+    public var opacite = 1.0
+    public var masque = false
+    /// Couleur forcée (#RRGGBB), vide = celle du design.
+    public var couleur = ""
+    public init() {}
+    public var estNeutre: Bool { self == Ajustement() }
+
+    enum CodingKeys: String, CodingKey { case dx, dy, echelle, rotation, opacite, masque, couleur }
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        func v<T: Decodable>(_ k: CodingKeys, _ defaut: T) -> T { ((try? c.decodeIfPresent(T.self, forKey: k)) ?? nil) ?? defaut }
+        dx = v(.dx, 0); dy = v(.dy, 0); echelle = v(.echelle, 1); rotation = v(.rotation, 0)
+        opacite = v(.opacite, 1); masque = v(.masque, false); couleur = v(.couleur, "")
+    }
+}
+
 public struct Design: Codable, Hashable, Sendable {
     // Formats cochés
     public var jcard = true
@@ -145,6 +182,17 @@ public struct Design: Codable, Hashable, Sendable {
     public var imagesPosees: [ImagePosee] = []
     /// Échelle du texte par zone (« tranche », « titre », « tracklist »…), 1 = taille normale.
     public var echelles: [String: Double] = [:]
+    /// Cadrage de l'image du recto quand elle est rognée (0 = calée à gauche / en haut, 0,5 = centrée, 1 = à droite / en bas).
+    public var cadrageX = 0.5
+    public var cadrageY = 0.5
+    /// Étiquettes de K7 : petite pochette, pochette en fond ou sans pochette.
+    public var etiquettePochette: ModeEtiquette = .petite
+    /// Pochette en fond : voile de la couleur de fond par-dessus l'image, pour lire les textes (0 à 0,9).
+    public var voileEtiquette = 0.45
+    public var cadrageEtiquetteX = 0.5
+    public var cadrageEtiquetteY = 0.5
+    /// Réglages libres par élément (« recto-titre », « etiquette-face »…, voir `ElementsJaquette`).
+    public var ajustements: [String: Ajustement] = [:]
 
     // Textes
     /// nil = automatique : « ARTISTE · TITRE ».
@@ -168,6 +216,11 @@ public struct Design: Codable, Hashable, Sendable {
     public var fondPerso = "#FFFFFF"
     public var chiffresCode = true
     public var echelleCode = 1.0
+    /// Taille réelle des codes en mm (0 = automatique).
+    public var largeurCodeMM = 0.0
+    public var hauteurCodeMM = 0.0
+    public var coteQRMM = 0.0
+    public var largeurSpotifyMM = 0.0
     public var qr = false
     public var contenuQR: ContenuQR = .spotify
     public var texteQR = ""
@@ -185,10 +238,11 @@ public struct Design: Codable, Hashable, Sendable {
     public var alertesForcees: Set<String> = []
 
     enum CodingKeys: String, CodingKey {
-        case jcard, ocard, etiquettes, obi, volets, dos, reperes, variante, propositions, historique, imagePerso, orientation, cadrage, imagesPosees, echelles, texteTranche, notes, credits, obiTexte, afficherLogoMaison, lienParoles, codeBarres, genreCode, numeroCode, texteCode, placeCode, couleursCode, barresPerso, fondPerso, chiffresCode, echelleCode, qr, contenuQR, texteQR, placeQR, codeSpotify, codeX, codeY, rotationCode, logoMaison, alertesForcees
+        case jcard, ocard, etiquettes, obi, volets, dos, reperes, variante, propositions, historique, imagePerso, orientation, cadrage, imagesPosees, echelles, cadrageX, cadrageY, etiquettePochette, voileEtiquette, cadrageEtiquetteX, cadrageEtiquetteY, ajustements, texteTranche, notes, credits, obiTexte, afficherLogoMaison, lienParoles, codeBarres, genreCode, numeroCode, texteCode, placeCode, couleursCode, barresPerso, fondPerso, chiffresCode, echelleCode, largeurCodeMM, hauteurCodeMM, coteQRMM, largeurSpotifyMM, qr, contenuQR, texteQR, placeQR, codeSpotify, codeX, codeY, rotationCode, logoMaison, alertesForcees
     }
 
     /// Décodage tolérant : un champ absent ou illisible prend sa valeur par défaut (les anciennes cassettes restent lisibles).
+    /// Généré par outils/regenerer-design.py.
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         let d = Design()
@@ -208,6 +262,13 @@ public struct Design: Codable, Hashable, Sendable {
         cadrage = v(.cadrage, d.cadrage)
         imagesPosees = v(.imagesPosees, d.imagesPosees)
         echelles = v(.echelles, d.echelles)
+        cadrageX = v(.cadrageX, d.cadrageX)
+        cadrageY = v(.cadrageY, d.cadrageY)
+        etiquettePochette = v(.etiquettePochette, d.etiquettePochette)
+        voileEtiquette = v(.voileEtiquette, d.voileEtiquette)
+        cadrageEtiquetteX = v(.cadrageEtiquetteX, d.cadrageEtiquetteX)
+        cadrageEtiquetteY = v(.cadrageEtiquetteY, d.cadrageEtiquetteY)
+        ajustements = v(.ajustements, d.ajustements)
         texteTranche = v(.texteTranche, d.texteTranche)
         notes = v(.notes, d.notes)
         credits = v(.credits, d.credits)
@@ -224,6 +285,10 @@ public struct Design: Codable, Hashable, Sendable {
         fondPerso = v(.fondPerso, d.fondPerso)
         chiffresCode = v(.chiffresCode, d.chiffresCode)
         echelleCode = v(.echelleCode, d.echelleCode)
+        largeurCodeMM = v(.largeurCodeMM, d.largeurCodeMM)
+        hauteurCodeMM = v(.hauteurCodeMM, d.hauteurCodeMM)
+        coteQRMM = v(.coteQRMM, d.coteQRMM)
+        largeurSpotifyMM = v(.largeurSpotifyMM, d.largeurSpotifyMM)
         qr = v(.qr, d.qr)
         contenuQR = v(.contenuQR, d.contenuQR)
         texteQR = v(.texteQR, d.texteQR)
@@ -239,6 +304,7 @@ public struct Design: Codable, Hashable, Sendable {
     public init() {}
 
     public func echelle(_ zone: String) -> Double { echelles[zone] ?? 1 }
+    public func ajustement(_ id: String) -> Ajustement { ajustements[id] ?? Ajustement() }
 
     /// Garde l'ancienne variante dans l'historique et passe à la nouvelle.
     public mutating func choisir(_ v: Variante) {

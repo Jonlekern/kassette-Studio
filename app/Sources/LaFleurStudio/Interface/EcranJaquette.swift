@@ -38,8 +38,11 @@ struct EcranJaquette: View {
                     let t = tailleApercu
                     let u = ajuster ? max(1, min((g.size.width - 48) / t.0, (g.size.height - 48) / t.1)) : zoom
                     ScrollView([.horizontal, .vertical]) {
-                        apercuVue(u).padding(24).shadow(color: .black.opacity(0.35), radius: 4, x: 2, y: 3)
+                        apercuVue(u).environment(\.editionJaquette, etat.edition)
+                            .padding(24).shadow(color: .black.opacity(0.35), radius: 4, x: 2, y: 3)
                             .frame(minWidth: g.size.width, minHeight: g.size.height)
+                            // Clic à côté de la jaquette : plus rien de sélectionné.
+                            .background(Color.clear.contentShape(Rectangle()).onTapGesture { etat.elementSelectionne = nil })
                     }
                     .onChange(of: u) { _, nouveau in if ajuster { zoom = nouveau } }
                     .onAppear { if ajuster { zoom = u } }
@@ -115,6 +118,8 @@ struct EcranJaquette: View {
                 Text("\(Int(zoom / Typo.ptParMM * 100)) %").fixedSize()
                 Button("Ajuster") { ajuster = true }.buttonStyle(ajuster ? .w98Gras : .w98).fixedSize().help("Tout l'objet dans l'aperçu")
                 Spacer(minLength: 4)
+                Button("↶ Annuler") { etat.annuler() }.buttonStyle(.w98).fixedSize()
+                    .keyboardShortcut("z", modifiers: .command).disabled(etat.annulations.isEmpty).help("Annuler la dernière modification (⌘Z)")
                 Button("Aperçu 3D") { montrer3D = true }.buttonStyle(.w98).fixedSize().disabled(!etat.design.jcard)
             }
         }
@@ -204,6 +209,16 @@ struct EcranJaquette: View {
                     .labelsHidden()
                     .pickerStyle(.segmented)
                 }
+                // Recadrage de l'image (demande 1) : utile quand elle est rognée (pleine hauteur ou paysage).
+                if etat.design.cadrage == .pleineHauteur || etat.design.orientation == .paysage {
+                    curseur("Position horizontale", etat.design.cadrageX) { v in etat.modifierDesign { $0.cadrageX = v } }
+                    curseur("Position verticale", etat.design.cadrageY) { v in etat.modifierDesign { $0.cadrageY = v } }
+                }
+                HStack {
+                    Text("Zoom de l'image")
+                    Slider(value: Binding(get: { etat.design.ajustement("recto-image").echelle },
+                                          set: { v in etat.ajuster("recto-image") { $0.echelle = (v * 20).rounded() / 20 } }), in: 1...3)
+                }
                 Picker("Style", selection: lien(\.variante.style)) { ForEach(StyleRecto.allCases, id: \.self) { Text(tr($0.nom)).tag($0) } }
                 HStack {
                     Button("Choisir une image…") { etat.choisirImagePerso() }.buttonStyle(.w98)
@@ -232,6 +247,9 @@ struct EcranJaquette: View {
                 Toggle("Titre en italique", isOn: lien(\.variante.titreItalique)).toggleStyle(.checkbox)
                 Button("Importer une police…") { etat.importerPolice() }.buttonStyle(.w98)
             }
+
+            if etat.design.etiquettes { GroupeEtiquettes() }
+            GroupeTailles()
 
             Groupe(titre: "Textes") {
                 Text("Maison de disque")
@@ -340,17 +358,41 @@ struct EcranJaquette: View {
                     set: { t in var n = etat.design; n.texteCode = t.isEmpty ? nil : t; etat.design = n }))
                 Picker("Place", selection: lien(\.placeCode)) { ForEach(PlaceCode.allCases, id: \.self) { Text(tr($0.nom)).tag($0) } }
                 Toggle("Chiffres sous les barres", isOn: lien(\.chiffresCode)).toggleStyle(.checkbox)
-                HStack { Text("Taille"); Slider(value: lien(\.echelleCode), in: 0.6...1.4) }
+                // Taille réelle en mm (demande 2) ; vide = automatique.
+                let t = m.tailleCodeBarres()
+                HStack(spacing: 4) {
+                    Text("Taille")
+                    ChampNombre(invite: t.map { ChampNombre.format(($0.largeur * 10).rounded() / 10) } ?? "auto", valeur: lien(\.largeurCodeMM))
+                    Text("×")
+                    ChampNombre(invite: t.map { ChampNombre.format(($0.hauteur * 10).rounded() / 10) } ?? "auto", valeur: lien(\.hauteurCodeMM))
+                    Text("mm")
+                    if d.largeurCodeMM > 0 || d.hauteurCodeMM > 0 {
+                        Button("Auto") { etat.modifierDesign { $0.largeurCodeMM = 0; $0.hauteurCodeMM = 0 } }.buttonStyle(.w98)
+                    }
+                }
+                if d.largeurCodeMM == 0 { HStack { Text("Échelle"); Slider(value: lien(\.echelleCode), in: 0.6...1.4) } }
             }
             if d.qr {
                 Picker("QR code", selection: lien(\.contenuQR)) { ForEach(ContenuQR.allCases, id: \.self) { Text(tr($0.nom)).tag($0) } }
                 if d.contenuQR != .spotify {
                     Champ(invite: d.contenuQR == .lienPerso ? "https://bandcamp.com/…" : "Texte du QR code", texte: lien(\.texteQR))
                 }
+                HStack(spacing: 4) {
+                    Text("Côté du QR")
+                    ChampNombre(invite: "15", valeur: lien(\.coteQRMM))
+                    Text("mm")
+                }
                 Picker("Place du QR", selection: lien(\.placeQR)) {
                     Text(tr(PlaceCode.rabat.nom)).tag(PlaceCode.rabat)
                     Text(tr(PlaceCode.interieur.nom)).tag(PlaceCode.interieur)
                     Text(tr(PlaceCode.libre.nom)).tag(PlaceCode.libre)
+                }
+            }
+            if d.codeSpotify {
+                HStack(spacing: 4) {
+                    Text("Largeur du code Spotify")
+                    ChampNombre(invite: "auto", valeur: lien(\.largeurSpotifyMM))
+                    Text("mm")
                 }
             }
             if d.placeCode == .libre || d.placeQR == .libre {
@@ -389,6 +431,7 @@ struct EcranJaquette: View {
     private var colonneClaude: some View {
         let d = etat.design
         return VStack(alignment: .leading, spacing: 10) {
+            PanneauElement()
             Groupe(titre: "Direction artistique · \(etat.fournisseurIA.nom)") {
                 if etat.conversation.isEmpty {
                     BulleClaude(cle: etat.projet.mode == .album

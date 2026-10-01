@@ -90,12 +90,12 @@ struct Mise {
     func tranche(longueur: CGFloat, epaisseur: CGFloat) -> SpecTexte {
         let n = texteTranche.components(separatedBy: "\n").count
         return SpecTexte(zone: "tranche", texte: texteTranche, famille: v.policeTexte, pt: (n > 1 ? 6.5 : 8) * e("tranche"), gras: true,
-                         kerning: 0.4, largeur: longueur - 28, hauteur: epaisseur - 2, lignes: n, couleur: p.texte, fond: p.fond)
+                         kerning: 0.4, largeur: longueur - 28, hauteur: epaisseur - 2, lignes: n, couleur: couleurZone("tranche"), fond: p.fond)
     }
 
     func titre(largeur: CGFloat, hauteur: CGFloat = 19) -> SpecTexte {
         SpecTexte(zone: "titre", texte: projet.titre.isEmpty ? "Sans titre" : projet.titre, famille: v.policeTitre, pt: 15 * e("titre"),
-                  italique: v.titreItalique, largeur: largeur, hauteur: hauteur, couleur: p.texte, fond: p.fond)
+                  italique: v.titreItalique, largeur: largeur, hauteur: hauteur, couleur: couleurZone("titre"), fond: p.fond)
     }
 
     /// Zones du texte du recto selon l'orientation (largeur du recto `l`, hauteur `h`, en mm).
@@ -120,30 +120,40 @@ struct Mise {
     func artiste(largeur: CGFloat) -> SpecTexte {
         SpecTexte(zone: "artiste", texte: (projet.artiste.isEmpty ? (projet.mode == .mixtape ? "MIXTAPE" : "") : projet.artiste).uppercased(),
                   famille: v.policeTexte, pt: 6.5 * e("artiste"), kerning: 1, largeur: largeur, hauteur: 4, lignes: 1,
-                  couleur: p.texte, fond: p.fond)
+                  couleur: couleurZone("artiste"), fond: p.fond)
     }
 
     func badgeSpec(largeur: CGFloat) -> SpecTexte {
         let lignesBadge = self.badge(largeur: largeur)
         let n = lignesBadge.components(separatedBy: "\n").count
         return SpecTexte(zone: "badge", texte: lignesBadge, famille: v.policeTexte, pt: 5 * e("badge"), gras: true,
-                         largeur: largeur, hauteur: CGFloat(n) * 2.6, lignes: n, couleur: p.texte, fond: p.fond)
+                         largeur: largeur, hauteur: CGFloat(n) * 2.6, lignes: n, couleur: couleurZone("badge"), fond: p.fond)
     }
 
     /// Ligne au-dessus du code-barres : passe sur deux lignes si besoin.
     func texteCodeSpec(largeur: CGFloat) -> SpecTexte {
         SpecTexte(zone: "code", texte: texteCode, famille: v.policeTexte, pt: 5 * e("code"),
-                  largeur: largeur, hauteur: 5.5, couleur: p.texte, fond: p.fond)
+                  largeur: largeur, hauteur: 5.5, couleur: couleurZone("code"), fond: p.fond)
     }
 
     func droitsSpec(largeur: CGFloat) -> SpecTexte {
         SpecTexte(zone: "droits", texte: projet.ligneDroits, famille: v.policeTexte, pt: 5 * e("droits"),
-                  largeur: largeur, hauteur: 5.5, couleur: p.texte, fond: p.fond)
+                  largeur: largeur, hauteur: 5.5, couleur: couleurZone("droits"), fond: p.fond)
     }
 
     /// Couleur des titres « FACE A / FACE B » : l'accent s'il se lit sur le fond (contraste ≥ 3:1,
     /// texte gras), sinon la couleur du texte. Avant, un accent sombre sur fond sombre devenait illisible.
     var couleurTitresFaces: String { Verification.contraste(p.accent, p.fond) >= 3 ? p.accent : p.texte }
+
+    /// Élément de la jaquette qui porte chaque zone de texte (pour sa couleur forcée, voir `Ajustement.couleur`).
+    static let elementDeZone = ["titre": "recto-titre", "artiste": "recto-artiste", "tranche": "tranche-texte", "badge": "rabat-badge",
+                                "droits": "rabat-droits", "code": "rabat-codes", "tracklist": "volets-tracklist", "notes": "volets-notes",
+                                "credits": "volets-credits", "etiquette": "etiquette-titre", "obi": "obi-texte"]
+
+    func couleurZone(_ zone: String, _ defaut: String? = nil) -> String {
+        if let id = Self.elementDeZone[zone], let c = design.ajustements[id]?.couleur, !c.isEmpty { return c }
+        return defaut ?? p.texte
+    }
 
     /// Hauteur de la tracklist (mm) pour une taille donnée.
     func tracklistTaille() -> CGFloat { 5.6 * e("tracklist") }
@@ -156,17 +166,17 @@ struct Mise {
         // Première zone : la liste entière, pour vérifier qu'elle tient en hauteur.
         var specs = [SpecTexte(zone: "tracklist", texte: l.isEmpty ? "" : "FACE A", famille: v.policeTexte, pt: tracklistTaille(),
                                largeur: largeur, hauteur: hauteur, lignes: max(1, Int(lignesTotales.rounded(.up))),
-                               couleur: p.texte, fond: p.fond)]
+                               couleur: couleurZone("tracklist"), fond: p.fond)]
         for (num, t, d) in l {
             specs.append(SpecTexte(zone: "tracklist", texte: "\(num)  \(t)  \(d)", famille: v.policeTexte, pt: tracklistTaille(),
-                                   largeur: largeur, hauteur: hauteur, lignes: 1, couleur: p.texte, fond: p.fond))
+                                   largeur: largeur, hauteur: hauteur, lignes: 1, couleur: couleurZone("tracklist"), fond: p.fond))
         }
         return specs
     }
 
     func notesSpec(largeur: CGFloat, hauteur: CGFloat) -> SpecTexte {
         SpecTexte(zone: "notes", texte: design.notes, famille: v.policeTexte, pt: 6 * e("notes"),
-                  largeur: largeur, hauteur: hauteur, couleur: p.texte, fond: p.fond)
+                  largeur: largeur, hauteur: hauteur, couleur: couleurZone("notes"), fond: p.fond)
     }
 
     /// Crédits imprimés, avec le lien vers les paroles si demandé.
@@ -177,18 +187,18 @@ struct Mise {
 
     func creditsSpec(largeur: CGFloat, hauteur: CGFloat) -> SpecTexte {
         SpecTexte(zone: "credits", texte: texteCredits, famille: v.policeTexte, pt: 5 * e("credits"),
-                  largeur: largeur, hauteur: hauteur, couleur: p.texte, fond: p.fond)
+                  largeur: largeur, hauteur: hauteur, couleur: couleurZone("credits"), fond: p.fond)
     }
 
     func etiquetteTitre() -> SpecTexte {
         SpecTexte(zone: "etiquette", texte: projet.titre.isEmpty ? "Sans titre" : projet.titre, famille: v.policeTitre, pt: 10 * e("etiquette"),
-                  italique: v.titreItalique, largeur: 89 - 8 - 14, hauteur: 7, lignes: 1, couleur: p.texte, fond: p.fond)
+                  italique: v.titreItalique, largeur: 89 - 8 - 14, hauteur: 7, lignes: 1, couleur: couleurZone("etiquette"), fond: p.fond)
     }
 
     func obiSpec() -> SpecTexte {
         let t = design.obiTexte.isEmpty ? texteTranche : design.obiTexte
         return SpecTexte(zone: "obi", texte: t, famille: v.policeTitre, pt: 9 * e("obi"), gras: true,
-                         largeur: 108 - 16, hauteur: 16, lignes: 1, couleur: couleurObi, fond: p.accent)
+                         largeur: 108 - 16, hauteur: 16, lignes: 1, couleur: couleurZone("obi", couleurObi), fond: p.accent)
     }
 
     /// Texte de l'obi : la couleur de la palette qui se lit le mieux sur l'accent.
@@ -331,6 +341,22 @@ struct Mise {
             a.append(Alerte(id: "spotify-absent", zone: "code", gravite: .bloquante,
                             message: String(localized: "Code Spotify : cette cassette n'a pas été importée depuis Spotify.")))
         }
+        if design.etiquettes && design.etiquettePochette == .fond && design.voileEtiquette < 0.3 {
+            a.append(Alerte(id: "etiquette-voile", zone: "etiquette", gravite: .conseil,
+                            message: String(localized: "Étiquette avec la pochette en fond : voile faible, les textes risquent d'être difficiles à lire sur l'image.")))
+        }
+        if design.hauteurCodeMM > 0 && design.hauteurCodeMM < 6 && design.codeBarres {
+            a.append(Alerte(id: "code-hauteur", zone: "code", gravite: .bloquante,
+                            message: String(localized: "Code-barres trop bas (\(String(format: "%.0f", design.hauteurCodeMM)) mm) : 6 mm minimum pour être scanné.")))
+        }
+        if design.qr && design.coteQRMM > 0 && design.coteQRMM < 10 {
+            a.append(Alerte(id: "qr-petit", zone: "code", gravite: .bloquante,
+                            message: String(localized: "QR code trop petit (\(String(format: "%.0f", design.coteQRMM)) mm) : 10 mm minimum pour être scanné par un téléphone.")))
+        }
+        if design.codeSpotify && design.largeurSpotifyMM > 0 && design.largeurSpotifyMM < 20 {
+            a.append(Alerte(id: "spotify-petit", zone: "code", gravite: .bloquante,
+                            message: String(localized: "Code Spotify trop petit (\(String(format: "%.0f", design.largeurSpotifyMM)) mm) : 20 mm de large minimum.")))
+        }
         return a.filter { !design.alertesForcees.contains($0.id) }
     }
 
@@ -343,7 +369,23 @@ struct Mise {
         case .interieur: place = 40
         case .libre: place = 25
         }
+        // Largeur choisie en mm (demande 2) : elle prime sur le curseur de taille.
+        if design.largeurCodeMM > 0 { return CGFloat(design.largeurCodeMM) / CGFloat(c.modules.count + 2 * CodeBarresVue.marge) }
         return min(0.33, place / CGFloat(c.modules.count + 20)) * CGFloat(design.echelleCode)
+    }
+
+    /// Hauteur des barres (mm) : celle choisie, sinon `defaut`.
+    func hauteurBarres(_ defaut: CGFloat) -> CGFloat { design.hauteurCodeMM > 0 ? CGFloat(design.hauteurCodeMM) : defaut }
+    func coteQR(_ defaut: CGFloat) -> CGFloat { design.coteQRMM > 0 ? CGFloat(design.coteQRMM) : defaut }
+    func largeurSpotify(_ defaut: CGFloat) -> CGFloat { design.largeurSpotifyMM > 0 ? CGFloat(design.largeurSpotifyMM) : defaut }
+
+    /// Taille réelle du code-barres tel qu'il est dessiné (mm, largeur × hauteur des barres), pour l'interface.
+    func tailleCodeBarres() -> (largeur: CGFloat, hauteur: CGFloat)? {
+        guard let c = CodesBarres.generer(design.genreCode, numeroCode) else { return nil }
+        let m = largeurModule(c)
+        let largeur = m * CGFloat(c.modules.count + 2 * CodeBarresVue.marge)
+        let defaut: CGFloat = design.placeCode == .rabat ? 10 : min(12, 42 * m)
+        return (largeur, hauteurBarres(defaut))
     }
 
     // MARK: Plan de la cassette pour Claude

@@ -81,6 +81,9 @@ struct ImageRecto: View {
         return mise.projet.toutes.compactMap(\.morceau.pochetteURL).filter { vues.insert($0).inserted }.prefix(16).map { $0 }
     }
     var principale: URL? { mise.design.imagePerso ?? mise.projet.pochetteURL ?? covers.first }
+    /// Recadrage (demande 1) et agrandissement de l'image, réglés à la souris, au curseur ou par l'IA.
+    var cadre: CGPoint { CGPoint(x: mise.design.cadrageX, y: mise.design.cadrageY) }
+    var zoom: CGFloat { CGFloat(mise.design.ajustement("recto-image").echelle) }
 
     var body: some View {
         let v = mise.design.variante
@@ -88,10 +91,11 @@ struct ImageRecto: View {
             Rectangle().fill(Color(hex: v.palette.fond))
             switch v.style {
             case .pochette:
-                ImageCache(url: mise.projet.pochetteURL ?? covers.first, opacite: v.opaciteImage)
+                ImageCache(url: mise.projet.pochetteURL ?? covers.first, opacite: v.opaciteImage, position: cadre, zoom: zoom)
                     .frame(width: largeur * u, height: hauteur * u).clipped()
             case .imagePerso:
-                ImageCache(url: principale, opacite: v.opaciteImage).frame(width: largeur * u, height: hauteur * u).clipped()
+                ImageCache(url: principale, opacite: v.opaciteImage, position: cadre, zoom: zoom)
+                    .frame(width: largeur * u, height: hauteur * u).clipped()
             case .collage:
                 let n = max(1, Int(ceil(sqrt(Double(max(1, covers.count))))))
                 let c = largeur / CGFloat(n), l = hauteur / CGFloat(n)
@@ -144,16 +148,16 @@ struct RectoVue: View {
                 // Composé à l'horizontale (hauteur × largeur), puis tourné d'un quart de tour :
                 // l'image carrée se retrouve en bas du recto, le texte en haut, à lire en penchant la tête.
                 ZStack(alignment: .topLeading) {
-                    ImageRecto(mise: mise, largeur: largeur + perduHaut, hauteur: largeur + perduDroite, u: u)
+                    ImageRecto(mise: mise, largeur: largeur + perduHaut, hauteur: largeur + perduDroite, u: u).cadrageImage(mise, u, angle: -90)
                         .offset(x: -perduHaut * u)
                     ImagesPosees(images: mise.design.imagesPosees, largeur: hauteur, hauteur: largeur, u: u)
                     VStack(spacing: 1.5 * u) {
-                        TexteMM(spec: r.titre, u: u)
-                        TexteMM(spec: r.artiste, u: u)
+                        TexteMM(spec: r.titre, u: u).element("recto-titre", mise, u, angle: -90)
+                        TexteMM(spec: r.artiste, u: u).element("recto-artiste", mise, u, angle: -90)
                     }
                     .placer(largeur + 3, 4, hauteur - largeur - 6, largeur - 14, u, .center)
                     if mise.design.afficherLogoMaison {
-                        LogoMaison(mise: mise, u: u).placer(largeur + (hauteur - largeur) / 2 - 12, largeur - 7, 24, 5, u, .center)
+                        LogoMaison(mise: mise, u: u).element("recto-logo", mise, u, angle: -90).placer(largeur + (hauteur - largeur) / 2 - 12, largeur - 7, 24, 5, u, .center)
                     }
                 }
                 .frame(width: hauteur * u, height: largeur * u, alignment: .topLeading)
@@ -161,16 +165,16 @@ struct RectoVue: View {
                 .frame(width: largeur * u, height: hauteur * u)
             } else {
                 ZStack(alignment: .topLeading) {
-                    ImageRecto(mise: mise, largeur: largeur + perduDroite, hauteur: largeur + perduHaut, u: u)
+                    ImageRecto(mise: mise, largeur: largeur + perduDroite, hauteur: largeur + perduHaut, u: u).cadrageImage(mise, u)
                         .offset(y: -perduHaut * u)
                     ImagesPosees(images: mise.design.imagesPosees, largeur: largeur, hauteur: hauteur, u: u)
                     VStack(spacing: 1.5 * u) {
-                        TexteMM(spec: r.titre, u: u)
-                        TexteMM(spec: r.artiste, u: u)
+                        TexteMM(spec: r.titre, u: u).element("recto-titre", mise, u)
+                        TexteMM(spec: r.artiste, u: u).element("recto-artiste", mise, u)
                     }
                     .placer(4, largeur + 2.5, largeur - 8, hauteur - largeur - 9, u, .top)
                     if mise.design.afficherLogoMaison {
-                        LogoMaison(mise: mise, u: u).placer(largeur / 2 - 12, hauteur - 9, 24, 6, u, .bottom)
+                        LogoMaison(mise: mise, u: u).element("recto-logo", mise, u).placer(largeur / 2 - 12, hauteur - 9, 24, 6, u, .bottom)
                     }
                 }
                 .frame(width: largeur * u, height: hauteur * u, alignment: .topLeading)
@@ -190,7 +194,7 @@ struct RectoVue: View {
         let pw = paysage ? perduHaut : perduDroite, ph = paysage ? perduDroite : perduHaut
         let cadre = ZStack(alignment: .topLeading) {
             // En paysage, l'image touche le haut et le bas du recto : fond perdu des deux côtés.
-            ImageRecto(mise: mise, largeur: w + (paysage ? 2 * pw : pw), hauteur: h - b + (paysage ? 0 : ph), u: u)
+            ImageRecto(mise: mise, largeur: w + (paysage ? 2 * pw : pw), hauteur: h - b + (paysage ? 0 : ph), u: u).cadrageImage(mise, u, angle: paysage ? -90 : 0)
                 .offset(x: paysage ? -pw * u : 0, y: paysage ? 0 : -ph * u)
             ImagesPosees(images: mise.design.imagesPosees, largeur: w, hauteur: h, u: u)
             Rectangle().fill(Color(hex: p.fond))
@@ -200,21 +204,21 @@ struct RectoVue: View {
                 .offset(x: paysage ? -pw * u : 0, y: (h - b) * u)
             if paysage {
                 VStack(alignment: .leading, spacing: 1 * u) {
-                    TexteMM(spec: r.titre, u: u)
-                    TexteMM(spec: r.artiste, u: u)
+                    TexteMM(spec: r.titre, u: u).element("recto-titre", mise, u, angle: paysage ? -90 : 0)
+                    TexteMM(spec: r.artiste, u: u).element("recto-artiste", mise, u, angle: paysage ? -90 : 0)
                 }
                 .placer(4, h - b + 2, w - 36, b - 4, u, .leading)
                 if mise.design.afficherLogoMaison {
-                    LogoMaison(mise: mise, u: u).placer(w - 29, h - b + 5, 25, 8, u, .center)
+                    LogoMaison(mise: mise, u: u).element("recto-logo", mise, u, angle: paysage ? -90 : 0).placer(w - 29, h - b + 5, 25, 8, u, .center)
                 }
             } else {
                 VStack(spacing: 1.5 * u) {
-                    TexteMM(spec: r.titre, u: u)
-                    TexteMM(spec: r.artiste, u: u)
+                    TexteMM(spec: r.titre, u: u).element("recto-titre", mise, u, angle: paysage ? -90 : 0)
+                    TexteMM(spec: r.artiste, u: u).element("recto-artiste", mise, u, angle: paysage ? -90 : 0)
                 }
                 .placer(4, h - b + 2, w - 8, b - 9.5, u, .top)
                 if mise.design.afficherLogoMaison {
-                    LogoMaison(mise: mise, u: u).placer(w / 2 - 12, h - 6.5, 24, 4.5, u, .bottom)
+                    LogoMaison(mise: mise, u: u).element("recto-logo", mise, u, angle: paysage ? -90 : 0).placer(w / 2 - 12, h - 6.5, 24, 4.5, u, .bottom)
                 }
             }
         }
@@ -287,18 +291,22 @@ struct TrancheVue: View {
                 }
             }
             .frame(width: 14 * u)
-            TexteMM(spec: mise.tranche(longueur: longueur, epaisseur: epaisseur), u: u)
+            .element("tranche-logo", mise, u, angle: 90)
+            TexteMM(spec: mise.tranche(longueur: longueur, epaisseur: epaisseur), u: u).element("tranche-texte", mise, u, angle: 90)
             Group {
                 if avecCode, let c = CodesBarres.generer(mise.design.genreCode, mise.numeroCode) {
                     let (b, f) = mise.couleursCode
                     let m = min(0.13, 13 / CGFloat(c.modules.count + 20))
                     CodeBarresVue(code: c, module: m, hauteur: epaisseur - 3.5, barres: Color(hex: b), fond: Color(hex: f), chiffres: false, u: u)
                 } else {
-                    Text(mise.projet.numeroCatalogue).font(petit).foregroundStyle(Color(hex: p.texte))
+                    Text(mise.projet.numeroCatalogue)
+                        .font(Typo.font(mise.design.variante.policeTexte, 4.6 * mise.e("catalogue") * u / Typo.ptParMM))
+                        .foregroundStyle(Color(hex: p.texte))
                         .lineLimit(1).minimumScaleFactor(0.5)
                 }
             }
             .frame(width: 14 * u)
+            .element("tranche-catalogue", mise, u, angle: 90)
         }
         .frame(width: longueur * u, height: epaisseur * u)
         .rotationEffect(.degrees(90))
@@ -315,11 +323,12 @@ struct RabatVue: View {
     var body: some View {
         let l = largeur - 2
         VStack(spacing: 1.2 * u) {
-            TexteMM(spec: mise.badgeSpec(largeur: l), u: u)
+            TexteMM(spec: mise.badgeSpec(largeur: l), u: u).element("rabat-badge", mise, u)
             Spacer(minLength: 0)
             PileCodes(mise: mise, largeur: l, u: u,
                       avecQR: mise.design.placeQR == .rabat, avecBarres: mise.design.placeCode == .rabat, vertical: true)
-            TexteMM(spec: mise.droitsSpec(largeur: l), u: u)
+                .element("rabat-codes", mise, u)
+            TexteMM(spec: mise.droitsSpec(largeur: l), u: u).element("rabat-droits", mise, u)
         }
         .padding(.vertical, 3 * u)
         .frame(width: largeur * u, height: hauteur * u)
@@ -346,26 +355,29 @@ struct BlocVue: View {
                 let f = Typo.font(v.policeTexte, t * u / Typo.ptParMM)
                 let fg = Typo.font(v.policeTexte, t * u / Typo.ptParMM, gras: true)
                 let ligne = Typo.hauteurLigneMM(Typo.nsFont(v.policeTexte, t)) * Mise.interligne
-                ForEach([Face.a, .b], id: \.self) { face in
-                    let lignes = mise.lignes(face)
-                    if !lignes.isEmpty {
-                        Text("FACE \(face.rawValue) · \(formaterDuree(Faces.duree(mise.projet.pistes(face), ReglagesPlatine())))")
-                            .font(fg).foregroundStyle(Color(hex: mise.couleurTitresFaces))
-                            .frame(height: ligne * u, alignment: .leading)
-                        ForEach(lignes.indices, id: \.self) { i in
-                            let ln = lignes[i]
-                            HStack(spacing: 1.5 * u) {
-                                Text(ln.0).font(fg).frame(width: 5 * u, alignment: .leading)
-                                Text(ln.1).font(f).lineLimit(1).fixedSize()
-                                Spacer(minLength: 1 * u)
-                                Text(ln.2).font(f)
+                VStack(alignment: .leading, spacing: 0) {
+                    ForEach([Face.a, .b], id: \.self) { face in
+                        let lignes = mise.lignes(face)
+                        if !lignes.isEmpty {
+                            Text("FACE \(face.rawValue) · \(formaterDuree(Faces.duree(mise.projet.pistes(face), ReglagesPlatine())))")
+                                .font(fg).foregroundStyle(Color(hex: mise.couleurTitresFaces))
+                                .frame(height: ligne * u, alignment: .leading)
+                            ForEach(lignes.indices, id: \.self) { i in
+                                let ln = lignes[i]
+                                HStack(spacing: 1.5 * u) {
+                                    Text(ln.0).font(fg).frame(width: 5 * u, alignment: .leading)
+                                    Text(ln.1).font(f).lineLimit(1).fixedSize()
+                                    Spacer(minLength: 1 * u)
+                                    Text(ln.2).font(f)
+                                }
+                                .foregroundStyle(Color(hex: v.palette.texte))
+                                .frame(width: l * u, height: ligne * u, alignment: .leading)
                             }
-                            .foregroundStyle(Color(hex: v.palette.texte))
-                            .frame(width: l * u, height: ligne * u, alignment: .leading)
+                            Spacer().frame(height: ligne * u)
                         }
-                        Spacer().frame(height: ligne * u)
                     }
                 }
+                .element("volets-tracklist", mise, u)
                 Spacer(minLength: 0)
                 if tousLesCodes {
                     PileCodes(mise: mise, largeur: 26, u: u, cote: true).frame(maxWidth: .infinity)
@@ -375,15 +387,15 @@ struct BlocVue: View {
                         .frame(maxWidth: .infinity)
                 }
             case .notes:
-                TexteMM(spec: mise.notesSpec(largeur: l, hauteur: hauteur - 10), u: u, alignement: .leading)
+                TexteMM(spec: mise.notesSpec(largeur: l, hauteur: hauteur - 10), u: u, alignement: .leading).element("volets-notes", mise, u)
                 Spacer(minLength: 0)
             case .credits:
-                TexteMM(spec: mise.creditsSpec(largeur: l, hauteur: hauteur - 10), u: u, alignement: .leading)
+                TexteMM(spec: mise.creditsSpec(largeur: l, hauteur: hauteur - 10), u: u, alignement: .leading).element("volets-credits", mise, u)
                 Spacer(minLength: 0)
             case .notesEtCredits:
-                TexteMM(spec: mise.notesSpec(largeur: l, hauteur: hauteur - 10), u: u, alignement: .leading)
+                TexteMM(spec: mise.notesSpec(largeur: l, hauteur: hauteur - 10), u: u, alignement: .leading).element("volets-notes", mise, u)
                 Spacer().frame(height: 4 * u)
-                TexteMM(spec: mise.creditsSpec(largeur: l, hauteur: hauteur - 10), u: u, alignement: .leading)
+                TexteMM(spec: mise.creditsSpec(largeur: l, hauteur: hauteur - 10), u: u, alignement: .leading).element("volets-credits", mise, u)
                 Spacer(minLength: 0)
             }
         }
@@ -556,20 +568,35 @@ struct EtiquetteVue: View {
         let p = mise.design.variante.palette
         let fe = Gabarits.fenetreEtiquette
         let petit = Typo.font(mise.design.variante.policeTexte, 4.8 * u / Typo.ptParMM)
+        let d = mise.design
+        let pochette = mise.projet.pochetteURL ?? mise.projet.toutes.first?.morceau.pochetteURL
         ZStack(alignment: .topLeading) {
             Rectangle().fill(Color(hex: p.fond))
+            // « Pochette en fond » : l'image remplit toute l'étiquette (fond perdu compris), un voile garde les textes lisibles.
+            if d.etiquettePochette == .fond {
+                ImageCache(url: pochette, position: CGPoint(x: d.cadrageEtiquetteX, y: d.cadrageEtiquetteY),
+                           zoom: CGFloat(d.ajustement("etiquette-pochette").echelle))
+                    .frame(width: (89 + 2 * perdu) * u, height: (42 + 2 * perdu) * u).clipped()
+                    .cadrageImage(mise, u, id: "etiquette-pochette", largeur: 89, hauteur: 42)
+                Rectangle().fill(Color(hex: p.fond).opacity(min(0.9, max(0, d.voileEtiquette)))).allowsHitTesting(false)
+            }
             ZStack(alignment: .topLeading) {
                 Rectangle().fill(Color(hex: p.accent)).frame(width: 89 * u, height: 2 * u).offset(y: 13.5 * u)
-                TexteMM(spec: mise.etiquetteTitre(), u: u, alignement: .leading).placer(4, 4, 67, 8, u, .leading)
+                TexteMM(spec: mise.etiquetteTitre(), u: u, alignement: .leading).element("etiquette-titre", mise, u)
+                    .placer(4, 4, 67, 8, u, .leading)
                 Text(face.rawValue).font(Typo.font(mise.design.variante.policeTitre, 9 * u, gras: true))
-                    .foregroundStyle(Color(hex: p.texte)).placer(74, 1.5, 12, 11, u, .center)
-                ImageCache(url: mise.projet.pochetteURL ?? mise.projet.toutes.first?.morceau.pochetteURL)
-                    .frame(width: 11 * u, height: 11 * u).clipped().offset(x: 4 * u, y: 18 * u)
+                    .foregroundStyle(Color(hex: p.texte)).element("etiquette-face", mise, u).placer(74, 1.5, 12, 11, u, .center)
+                if d.etiquettePochette == .petite {
+                    ImageCache(url: pochette)
+                        .frame(width: 11 * u, height: 11 * u).clipped()
+                        .element("etiquette-pochette", mise, u)
+                        .offset(x: 4 * u, y: 18 * u)
+                }
                 VStack(spacing: 0.6 * u) {
                     Text(mise.projet.cassette.longueur.nom).font(Typo.font(mise.design.variante.policeTexte, 2.6 * u, gras: true))
                     Text(mise.projet.cassette.reducteur == .aucun ? "" : "NR").font(petit)
                 }
-                .foregroundStyle(Color(hex: p.texte)).placer(74, 18, 12, 11, u, .center)
+                .foregroundStyle(Color(hex: p.texte)).element("etiquette-longueur", mise, u).placer(74, 18, 12, 11, u, .center)
                 if fenetreADecouper {
                     RoundedRectangle(cornerRadius: 2 * u).fill(Color.white)
                         .overlay(RoundedRectangle(cornerRadius: 2 * u).stroke(Color.gray, style: StrokeStyle(lineWidth: 0.4, dash: [2, 2])))
@@ -582,6 +609,7 @@ struct EtiquetteVue: View {
                     Text(mise.projet.cassette.bande.badge).lineLimit(1)
                 }
                 .font(petit).foregroundStyle(Color(hex: p.texte))
+                .element("etiquette-bas", mise, u)
                 .placer(4, 32.5, 81, 6, u, .leading)
             }
             .offset(x: perdu * u, y: perdu * u)
@@ -631,6 +659,7 @@ struct ObiVue: View {
             ZStack(alignment: .topLeading) {
                 vertical("\(mise.projet.numeroCatalogue) · \(mise.projet.cassette.bande.badge)", 5.5, 22)
                 TexteMM(spec: spec, u: u).frame(width: spec.largeur * u, height: 18 * u)
+                    .element("obi-texte", mise, u, angle: 90)
                     .rotationEffect(.degrees(90)).frame(width: 18 * u, height: g.hauteur * u).offset(x: 22 * u)
                 vertical(mise.projet.artiste.uppercased() + " · CASSETTE", 6, 22).offset(x: 40 * u)
                 if guides { Plis(plis: g.plis, hauteur: g.hauteur, u: u) }

@@ -68,10 +68,25 @@ struct ImageCache: View {
     let url: URL?
     var remplir = true
     var opacite = 1.0
+    /// En mode remplir : partie visible quand l'image est rognée (0 = gauche / haut, 0,5 = centre, 1 = droite / bas).
+    var position = CGPoint(x: 0.5, y: 0.5)
+    /// Agrandissement en plus du remplissage (1 = juste de quoi remplir).
+    var zoom: CGFloat = 1
     @ObservedObject private var images = Images.partage
     var body: some View {
         if let i = images.image(url) {
-            Image(nsImage: i).resizable().aspectRatio(contentMode: remplir ? .fill : .fit).opacity(opacite)
+            if remplir && (position != CGPoint(x: 0.5, y: 0.5) || zoom != 1) {
+                GeometryReader { g in
+                    let iw = max(1, i.size.width), ih = max(1, i.size.height)
+                    let k = max(g.size.width / iw, g.size.height / ih) * max(1, zoom)
+                    let w = iw * k, h = ih * k
+                    Image(nsImage: i).resizable().frame(width: w, height: h)
+                        .offset(x: (g.size.width - w) * min(1, max(0, position.x)), y: (g.size.height - h) * min(1, max(0, position.y)))
+                        .opacity(opacite)
+                }
+            } else {
+                Image(nsImage: i).resizable().aspectRatio(contentMode: remplir ? .fill : .fit).opacity(opacite)
+            }
         } else {
             Rectangle().fill(Color.gray.opacity(0.25))
         }

@@ -110,10 +110,10 @@ struct PileCodes: View {
         let (b, f) = mise.couleursCode
         return VStack(spacing: 1.2 * u) {
             if avecQR && d.qr, let m = CodeQR.modules(mise.contenuQR) {
-                QRVue(modules: m, cote: min(largeur, 15), barres: Color(hex: b), fond: Color(hex: f), u: u)
+                QRVue(modules: m, cote: mise.coteQR(min(largeur, 15)), barres: Color(hex: b), fond: Color(hex: f), u: u)
             }
             if avecBarres && d.codeSpotify, let url = mise.urlCodeSpotify {
-                ImageCache(url: url, remplir: false).frame(width: largeur * u, height: largeur / 4 * u)
+                ImageCache(url: url, remplir: false).frame(width: mise.largeurSpotify(largeur) * u, height: mise.largeurSpotify(largeur) / 4 * u)
             }
             if avecBarres && d.codeBarres, let c = CodesBarres.generer(d.genreCode, mise.numeroCode) {
                 VStack(spacing: 0.4 * u) {
@@ -121,12 +121,12 @@ struct PileCodes: View {
                     let m = mise.largeurModule(c)
                     if vertical {
                         let extra = (d.chiffresCode ? m * 8.5 * 1.1 : 0) + m * 2
-                        let cb = CodeBarresVue(code: c, module: m, hauteur: max(6, min(10, largeur - extra)), barres: Color(hex: b),
+                        let cb = CodeBarresVue(code: c, module: m, hauteur: mise.hauteurBarres(max(6, min(10, largeur - extra))), barres: Color(hex: b),
                                                fond: Color(hex: f), chiffres: d.chiffresCode, u: u)
                         cb.rotationEffect(.degrees(-90))
                             .frame(width: cb.hauteurTotale * u, height: cb.largeurTotale * u)
                     } else {
-                        CodeBarresVue(code: c, module: m, hauteur: min(12, 42 * m), barres: Color(hex: b), fond: Color(hex: f),
+                        CodeBarresVue(code: c, module: m, hauteur: mise.hauteurBarres(min(12, 42 * m)), barres: Color(hex: b), fond: Color(hex: f),
                                       chiffres: d.chiffresCode, u: u)
                     }
                 }
