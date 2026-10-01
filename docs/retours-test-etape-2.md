@@ -126,3 +126,24 @@ En plus du niveau 1, l'IA peut :
   disque. Elle ne lance pas non plus l'**enregistrement** ni l'**impression** toute seule : elle peut
   tout préparer, l'utilisateur clique.
 - Un **résumé clair** de ce qui a été changé après chaque demande.
+
+### 7. Historique des demandes faites à l'IA
+
+Demande de Johnny : voir **un historique de tout ce qu'il a demandé à l'IA**.
+
+- Un panneau « Historique IA » (dans la zone IA de la Jaquette, et accessible depuis la Collection pour
+  chaque cassette), qui liste chaque échange :
+  - **date et heure** ;
+  - **la demande** telle que tapée (ou le bouton utilisé : « Proposer », « Vérifier avec Claude »,
+    « Chercher les infos de l'album », « Équilibrer », « Composer la sélection »…) ;
+  - **le moteur** utilisé (Claude, GPT, Gemini) ;
+  - **la réponse** de l'IA (son message) ;
+  - **ce qui a été changé** (liste des réglages modifiés, avant → après), ou « rien n'a été changé » ;
+  - si possible, le coût approximatif de la demande.
+- Un clic sur une ligne **revient à la version** de la jaquette juste après cette demande (lien avec
+  « Versions »).
+- Bouton « Refaire cette demande » pour la renvoyer telle quelle.
+- L'historique est **enregistré avec chaque cassette**, et garde aussi les demandes du mode expert
+  (niveau 2 de la demande 6).
+- Un bouton pour effacer l'historique d'une cassette.
+- L'historique n'enregistre jamais les clés API.
