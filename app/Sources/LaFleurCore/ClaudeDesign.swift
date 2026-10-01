@@ -169,7 +169,9 @@ extension ClientClaude {
             - Retouche (« mets le titre plus gros », « passe le QR à l'intérieur », « orientation paysage »…) : applique-la \
             avec `modifications` (champ + valeur en texte) et renvoie `variantes` vide. Tu ne proposes 3 variantes que pour \
             une première proposition ou quand on te demande d'autres pistes.
-            - Champs modifiables et valeurs : \(ChampsDesign.aide)
+            - Champs modifiables et valeurs : \(ChampsDesign.aide) ; et aussi n'importe quel réglage du design par son chemin \
+            « design.<chemin> » (ex. design.etiquettePochette = aucune, design.ajustements.recto-titre.echelle = 1.4, \
+            design.cadrageX = 0.2, design.largeurCodeMM = 30). Éléments réglables : \(ElementsJaquette.aide).
             - Images : pour mettre une image, un logo ou un écusson (ex. « l'écusson Sony »), ajoute-la dans `images` : \
             `requete` = mots-clés (en anglais pour un logo, ex. « Sony logo » ; pour la pochette d'un album, « Artiste - Album », \
             cherchée d'abord dans Cover Art Archive), `url` = adresse directe d'un \
@@ -189,7 +191,7 @@ extension ClientClaude {
             """,
             schema: objet(["message": chaine, "variantes": liste(variante), "texte_tranche": chaine, "notes": chaine,
                            "credits": chaine, "texte_code": chaine,
-                           "modifications": liste(objet(["champ": choix(ChampsDesign.tous), "valeur": chaine])),
+                           "modifications": liste(objet(["champ": chaine, "valeur": chaine])),
                            "images": liste(objet(["requete": chaine, "url": chaine, "usage": choix(["recto", "logo", "element"]),
                                                   "x": nombre, "y": nombre, "largeur": nombre, "hauteur": nombre]))]),
             effort: "high", images: images)

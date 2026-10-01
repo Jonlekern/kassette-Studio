@@ -181,7 +181,12 @@ extension EtatApp {
             if d.texteCode == nil && !r.texte_code.isEmpty && r.texte_code != projet.texteCodeAuto { d.texteCode = r.texte_code }
             // Retouches directes demandées par l'utilisateur.
             var p = projet
-            for m in r.modifications { ChampsDesign.appliquer(m.champ, m.valeur, projet: &p, design: &d) }
+            var reglages = prefs
+            var refus: [String] = []
+            for m in r.modifications {
+                do { _ = try appliquerChemin(m.champ, m.valeur, &p, &d, &reglages) } catch { refus.append(error.localizedDescription) }
+            }
+            if !refus.isEmpty { conversation.append(MessageDesign(deClaude: true, texte: refus.joined(separator: "\n"))) }
             p.design = d
             projet = p
             conversation.append(MessageDesign(deClaude: true, texte: r.message))
