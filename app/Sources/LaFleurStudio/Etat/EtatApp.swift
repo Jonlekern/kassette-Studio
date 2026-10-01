@@ -77,7 +77,7 @@ final class EtatApp: ObservableObject {
         projet = courant
         collection = projets
         cleClaude = Trousseau.lire("claude") ?? ""
-        nomIA = prefs.fournisseurIA.nom
+        nomIA = p.fournisseurIA.nom
         clesIA = [.openai: Trousseau.lire("openai") ?? "", .gemini: Trousseau.lire("gemini") ?? ""]
         jetonDiscogs = Trousseau.lire("discogs") ?? ""
         spotifyConnecte = Trousseau.lireJSON("spotify-jetons", ClientSpotify.Jetons.self) != nil
