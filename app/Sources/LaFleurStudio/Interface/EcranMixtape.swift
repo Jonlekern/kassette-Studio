@@ -232,7 +232,7 @@ private struct LignePiste: View {
 
     var body: some View {
         HStack(spacing: 6) {
-            Text("⋮⋮").foregroundStyle(W98.grisFonce)
+            Text("⋮⋮").foregroundStyle(W98.grisFonce).fixedSize()
             Text("\(numero)").foregroundStyle(W98.grisFonce).frame(width: 18, alignment: .trailing)
             // Le titre prend toute la place libre avant la durée (avant, il se coupait trop tôt).
             VStack(alignment: .leading, spacing: 1) {
@@ -240,16 +240,16 @@ private struct LignePiste: View {
                 Text(piste.morceau.artiste).foregroundStyle(W98.ombre).lineLimit(1)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .layoutPriority(1)
             if piste.fichier == nil {
                 Text("⚠︎ fichier").foregroundStyle(W98.rouge).fixedSize()
                     .help("Aucun fichier audio associé : ce morceau ne peut pas être enregistré. Choisis ton dossier audio à gauche.")
             }
-            Text(formaterDuree(piste.duree)).monospacedDigit()
-            Button("⇄") { etat.changerDeFace(piste.id) }.buttonStyle(.plain)
+            // Durée et boutons toujours entiers : c'est le titre qui se coupe s'il manque de la place.
+            Text(formaterDuree(piste.duree)).monospacedDigit().fixedSize()
+            Button("⇄") { etat.changerDeFace(piste.id) }.buttonStyle(.plain).fixedSize()
                 .help(face == .a ? "Passer au début de la face B" : "Passer à la fin de la face A")
             Button { etat.retirer(piste.id) } label: { Text("×").bold().foregroundStyle(W98.rouge) }
-                .buttonStyle(.plain).help("Retirer de la cassette (ne sera pas enregistré)").accessibilityLabel("Retirer ce morceau")
+                .buttonStyle(.plain).fixedSize().help("Retirer de la cassette (ne sera pas enregistré)").accessibilityLabel("Retirer ce morceau")
         }
         .font(W98.police)
         .contextMenu {

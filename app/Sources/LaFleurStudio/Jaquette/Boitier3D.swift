@@ -18,7 +18,7 @@ enum Boitier3D {
         let papier = (l: CGFloat(Gabarits.recto), h: CGFloat(Gabarits.hauteurJ), e: CGFloat(Gabarits.tranche))
 
         let boitier = SCNNode()
-        boitier.eulerAngles = SCNVector3(0.12, -0.5, 0)
+        boitier.eulerAngles = SCNVector3(0.12, 0.5, 0)  // tourné pour montrer la tranche, côté charnière
         scene.rootNode.addChildNode(boitier)
 
         // La J-card pliée : un pavé dont la face avant est le recto et le côté gauche la tranche.
