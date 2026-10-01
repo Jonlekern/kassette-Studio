@@ -77,3 +77,27 @@ les images posées, `opacite_image` concerne le recto, `taille_etiquette` les te
   **dire clairement** (« je ne peux pas encore changer X dans l'app ») au lieu de ne rien faire.
 - Garder cette règle pour la suite : chaque nouveau réglage visible dans l'interface doit aussi être
   ajouté aux champs que Claude peut modifier.
+
+### 6. Claude doit pouvoir **tout** changer sur la jaquette
+
+Demande de Johnny : « donne la possibilité de tout changer ». Aujourd'hui, Claude ne touche qu'à une
+liste de champs choisis à la main (`ChampsDesign.tous`). Il faut que **tout ce que l'utilisateur peut
+régler, Claude puisse le régler aussi**, et même ce qui n'a pas encore de bouton.
+
+Concrètement :
+- **Tous les champs du design** (`DesignJaquette` dans `LaFleurCore/Jaquette.swift`) sont modifiables
+  par Claude, sans exception : formats, volets, dos, orientation, cadrage, styles, couleurs, polices,
+  textes, codes, logos, images posées, alertes… Idéalement, la liste des champs est **générée à partir
+  du modèle**, pour qu'un nouveau réglage soit automatiquement accessible à Claude.
+- **Chaque élément de chaque format** (J-card recto, verso, tranche, rabat, O-card, étiquettes A/B,
+  obi) a une **position, une taille, une rotation, une couleur, une opacité et un état visible/masqué**
+  que Claude peut changer. C'est la même base que la demande 3 (sélectionner un élément, le déplacer,
+  le redimensionner).
+- **Images** : Claude peut afficher, masquer, déplacer, recadrer et redimensionner la pochette sur
+  chaque format (recto, étiquettes, O-card…), pas seulement retirer les images posées. Ça inclut les
+  modes d'étiquette de la demande 4.
+- **Textes** : contenu, taille, police, alignement, italique/gras, nombre de lignes, pour chaque zone.
+- **Formes et décors** : ajouter, modifier ou supprimer des éléments graphiques sur n'importe quel
+  format, pas seulement sur le recto.
+- Chaque changement de Claude passe par l'**historique** (« Versions ») et s'annule en un clic.
+- Si une demande reste vraiment impossible, Claude le **dit clairement** (voir demande 5).
