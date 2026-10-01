@@ -60,7 +60,7 @@ en fond, au lieu du fond uni actuel avec le petit carré d'image à gauche.
 - Idéalement, on peut aussi déplacer l'image pour choisir la partie visible (comme la demande 1).
 - Le réglage est commun aux faces A et B, et enregistré avec la cassette.
 
-### 5. ~~Claude ne peut pas retirer la pochette de l'étiquette~~ — **annulée par Johnny** (couverte par les demandes 6 et 7)
+### 5. ~~Claude ne peut pas retirer la pochette de l'étiquette~~ — **annulée par Johnny** (couverte par la demande 6)
 
 Johnny a demandé au Claude de l'onglet Jaquette d'**enlever la pochette de l'étiquette**. Ça n'a pas
 marché.
@@ -78,54 +78,51 @@ les images posées, `opacite_image` concerne le recto, `taille_etiquette` les te
 - Garder cette règle pour la suite : chaque nouveau réglage visible dans l'interface doit aussi être
   ajouté aux champs que Claude peut modifier.
 
-### 6. Claude doit pouvoir **tout** changer sur la jaquette
+### 6. Mode IA expert : l'IA peut tout changer (fusion des anciennes demandes 6 et 7)
 
-Demande de Johnny : « donne la possibilité de tout changer ». Aujourd'hui, Claude ne touche qu'à une
-liste de champs choisis à la main (`ChampsDesign.tous`). Il faut que **tout ce que l'utilisateur peut
-régler, Claude puisse le régler aussi**, et même ce qui n'a pas encore de bouton.
+Demandes de Johnny : « donne la possibilité de tout changer », puis « fais un mode IA expert où il a
+tous les droits ». Les deux sont réunies ici, en **deux niveaux**. Aujourd'hui, l'IA ne touche qu'à une
+liste de champs choisis à la main (`ChampsDesign.tous`).
 
-Concrètement :
-- **Tous les champs du design** (`DesignJaquette` dans `LaFleurCore/Jaquette.swift`) sont modifiables
-  par Claude, sans exception : formats, volets, dos, orientation, cadrage, styles, couleurs, polices,
-  textes, codes, logos, images posées, alertes… Idéalement, la liste des champs est **générée à partir
-  du modèle**, pour qu'un nouveau réglage soit automatiquement accessible à Claude.
+#### Niveau 1 : mode normal, l'IA peut tout changer sur la jaquette
+
+Tout ce que l'utilisateur peut régler sur la jaquette, l'IA peut le régler aussi, et même ce qui n'a
+pas encore de bouton :
+- **Tous les champs du design** (`DesignJaquette` dans `LaFleurCore/Jaquette.swift`), sans
+  exception : formats, volets, dos, orientation, cadrage, styles, couleurs, polices, textes, codes,
+  logos, images posées, alertes… Idéalement, la liste des champs est **générée à partir du modèle**,
+  pour qu'un nouveau réglage soit automatiquement accessible à l'IA.
 - **Chaque élément de chaque format** (J-card recto, verso, tranche, rabat, O-card, étiquettes A/B,
   obi) a une **position, une taille, une rotation, une couleur, une opacité et un état visible/masqué**
-  que Claude peut changer. C'est la même base que la demande 3 (sélectionner un élément, le déplacer,
-  le redimensionner).
-- **Images** : Claude peut afficher, masquer, déplacer, recadrer et redimensionner la pochette sur
-  chaque format (recto, étiquettes, O-card…), pas seulement retirer les images posées. Ça inclut les
-  modes d'étiquette de la demande 4.
+  que l'IA peut changer. C'est la même base que la demande 3.
+- **Images** : l'IA peut afficher, masquer, déplacer, recadrer et redimensionner la pochette sur chaque
+  format (recto, étiquettes, O-card…), y compris les modes d'étiquette de la demande 4 (« retire la
+  pochette de l'étiquette » doit marcher).
 - **Textes** : contenu, taille, police, alignement, italique/gras, nombre de lignes, pour chaque zone.
 - **Formes et décors** : ajouter, modifier ou supprimer des éléments graphiques sur n'importe quel
-  format, pas seulement sur le recto.
-- Chaque changement de Claude passe par l'**historique** (« Versions ») et s'annule en un clic.
-- Si une demande reste vraiment impossible, Claude le **dit clairement** (voir demande 5).
+  format.
+- Chaque changement passe par l'**historique** (« Versions ») et s'annule en un clic.
+- Si une demande reste vraiment impossible, l'IA le **dit clairement** au lieu de ne rien faire.
+- Règle pour la suite : **chaque nouveau réglage de l'interface doit aussi être modifiable par l'IA.**
 
-### 7. Un « mode IA expert » où Claude a tous les droits
-
-Demande de Johnny : un **mode expert** où l'IA peut tout faire dans l'app, sans être limitée à une
-liste de réglages.
+#### Niveau 2 : mode expert, l'IA a tous les droits dans l'app
 
 **Activation** : Réglages → IA → case « Mode expert : l'IA a tous les droits », **désactivée par
-défaut**. Quand il est actif, un badge « IA expert » est visible dans la barre d'état et dans la zone
-Claude de la Jaquette.
+défaut**. Quand il est actif, un badge « IA expert » est visible dans la barre d'état et dans la zone IA
+de la Jaquette.
 
-**Ce que l'IA peut faire en mode expert** :
-- **Jaquette** : tout ce qui est décrit dans la demande 6, sans exception, sur tous les formats.
-- **Mixtape** : changer l'ordre des morceaux, les faces, retirer ou ajouter des morceaux du dossier
-  audio, le type de cassette (C60/C90/custom), la bande, le Dolby, la coque, le titre et l'artiste.
-- **Réglages de la cassette** : blancs, marges, compte à rebours, égalisation.
-- **Collection** : créer, dupliquer ou renommer une cassette.
-- Enchaîner plusieurs actions d'un coup (« fais-moi une C90 ambiance pluie avec une jaquette sombre
+En plus du niveau 1, l'IA peut :
+- **Mixtape** : changer l'ordre des morceaux et les faces, retirer ou ajouter des morceaux du dossier
+  audio, le type de cassette (C60/C90/custom), la bande, le Dolby, la coque, le titre et l'artiste ;
+- **Réglages de la cassette** : blancs, marges, compte à rebours, égalisation ;
+- **Collection** : créer, dupliquer, renommer une cassette ;
+- **enchaîner plusieurs actions d'un coup** (« fais-moi une C90 ambiance pluie avec une jaquette sombre
   et sans pochette sur l'étiquette »).
 
 **Garde-fous, même en mode expert** :
-- Tout passe par l'**historique** (« Versions ») et s'annule en un clic, y compris une série d'actions.
+- Tout passe par l'**historique** et s'annule en un clic, y compris une série d'actions.
 - **Supprimer** une cassette de la Collection demande toujours une confirmation.
 - L'IA ne touche jamais aux **clés API**, aux comptes (Spotify, Discogs) ni aux fichiers audio sur le
   disque. Elle ne lance pas non plus l'**enregistrement** ni l'**impression** toute seule : elle peut
   tout préparer, l'utilisateur clique.
-- Un résumé clair de ce qui a été changé après chaque demande.
-
-**Hors mode expert** : comportement actuel, l'IA propose et l'utilisateur applique.
+- Un **résumé clair** de ce qui a été changé après chaque demande.
