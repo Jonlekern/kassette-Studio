@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/icone.png" width="96" alt="Icône LaFleurStudio">
+  <img src="docs/images/icone.png" width="96" alt="LaFleurStudio icon">
 </p>
 
 <h1 align="center">
@@ -10,113 +10,102 @@
 </h1>
 
 <p align="center">
-  <b>Fabrique de vraies cassettes audio, de A à Z, sur ton Mac.</b><br>
-  Tu prépares les faces, Claude dessine la jaquette, tu imprimes, et l'app enregistre la K7 pile au bon moment.
+  <b>Make real audio cassettes, start to finish, on your Mac.</b><br>
+  You plan the sides, an AI art director designs the J-card, you print it, and the app records the tape right on time.
 </p>
 
 <h3 align="center">
-  <a href="https://github.com/Jonlekern/kassette-Studio/releases/latest/download/LaFleurStudio.zip">⬇️ Télécharger LaFleurStudio pour Mac</a>
+  <a href="https://github.com/Jonlekern/kassette-Studio/releases/latest/download/LaFleurStudio.zip">⬇️ Download LaFleurStudio for Mac</a>
 </h3>
-<p align="center"><a href="README.en.md">🇬🇧 English version</a></p>
-<p align="center">macOS 14 Sonoma ou plus récent · Mac Apple Silicon ou Intel · toujours la dernière version</p>
+<p align="center"><a href="README.md">🇫🇷 Version française</a></p>
+<p align="center">macOS 14 Sonoma or later · Apple Silicon or Intel · always the latest version</p>
 
 <p align="center">
-  <img src="docs/images/jaquette.jpg" width="820" alt="L'écran Jaquette">
+  <img src="docs/images/en/jaquette.jpg" width="820" alt="The J-card screen">
 </p>
 
 ---
 
-## Installer (2 minutes)
+## Install (2 minutes)
 
-1. **Télécharge** [LaFleurStudio.zip](https://github.com/Jonlekern/kassette-Studio/releases/latest/download/LaFleurStudio.zip).
-2. **Double-clique** sur le zip, puis glisse **LaFleurStudio.app** dans le dossier **Applications**.
-3. **Premier lancement** : l'app n'est pas signée par Apple, donc macOS la bloque la première fois.
-   - Ouvre l'app une fois. macOS affiche un message : clique **OK**.
-   - Va dans **Réglages Système → Confidentialité et sécurité**, descends tout en bas et clique
-     **Ouvrir quand même**.
-   - Si ça ne marche toujours pas, colle ceci dans le Terminal :
+1. **Download** [LaFleurStudio.zip](https://github.com/Jonlekern/kassette-Studio/releases/latest/download/LaFleurStudio.zip).
+2. **Double-click** the zip, then drag **LaFleurStudio.app** into your **Applications** folder.
+3. **First launch**: the app isn't signed by Apple, so macOS blocks it the first time.
+   - Open the app once. macOS shows a warning: click **OK**.
+   - Go to **System Settings → Privacy & Security**, scroll to the bottom and click **Open Anyway**.
+   - If it still won't open, paste this into Terminal:
      ```bash
      xattr -dr com.apple.quarantine /Applications/LaFleurStudio.app
      ```
 
-C'est tout. Les fois suivantes, elle s'ouvre normalement. Pour mettre à jour : retélécharge et remplace
-l'app, tes cassettes et tes réglages sont gardés.
+That's it. After that it opens normally. To update, download it again and replace the app: your
+cassettes and settings are kept.
 
-## Ce qu'il te faut
+The app speaks English, French, Russian and German (Settings → Language).
+
+## What you need
 
 | | | |
 |---|---|---|
-| ✅ | **Une clé API d'IA** | **Claude** (recommandé), ou **GPT** (OpenAI) ou **Gemini** (Google), au choix dans Réglages → IA. Ce n'est **pas** un abonnement Claude Pro / ChatGPT Plus : c'est un compte à part, payé à l'usage ([Claude](https://platform.claude.com), [OpenAI](https://platform.openai.com/api-keys), [Gemini](https://aistudio.google.com/apikey)). Le bouton **i** de l'app explique tout. |
-| ✅ | **Tes fichiers audio** | Un dossier avec tes morceaux (MP3, FLAC, WAV, AIFF, M4A). |
-| ✅ | **Une platine K7 + un câble** | Sortie casque ou carte son USB du Mac → entrée LINE IN de la platine. |
-| ✅ | **Une imprimante** | Papier 170 à 250 g/m² pour les jaquettes, papier autocollant pour les étiquettes. |
-| ➖ | **Spotify Premium** | Facultatif. Sans lui : recherche MusicBrainz, ou « Cassette depuis le dossier ». |
-| ➖ | **Jeton Discogs** | Facultatif. Donne les crédits et les photos des vraies éditions cassette. |
+| ✅ | **An AI API key** | **Claude** (recommended), **GPT** (OpenAI) or **Gemini** (Google), chosen in Settings → AI. This is **not** a Claude Pro / ChatGPT Plus subscription: it's a separate pay-as-you-go account ([Claude](https://platform.claude.com), [OpenAI](https://platform.openai.com/api-keys), [Gemini](https://aistudio.google.com/apikey)). The **i** button in the app explains everything. |
+| ✅ | **Your audio files** | A folder with your tracks (MP3, FLAC, WAV, AIFF, M4A). |
+| ✅ | **A cassette deck + a cable** | Mac headphone output or USB sound card → the deck's LINE IN. |
+| ✅ | **A printer** | 170–250 g/m² paper for J-cards, sticker paper for the labels. |
+| ➖ | **Spotify Premium** | Optional. Without it: MusicBrainz search, or “Cassette from folder”. |
+| ➖ | **Discogs token** | Optional. Adds credits and photos of real cassette editions. |
 
-Le pas à pas complet (clés, Spotify, premier démarrage) : [app/LISEZMOI.md](app/LISEZMOI.md).
+## What the app does
 
-## Ce que fait l'app
+### 1. Mixtape: plan the sides
 
-### 1. Mixtape : préparer les faces
+Search for an album (Spotify or MusicBrainz) or start from your folder. The app splits the tracks across
+sides A and B to fit your tape (C60, C90…) and links each track to its file. For a mixtape, describe a mood
+and the AI suggests tracks.
 
-Cherche un album (Spotify ou MusicBrainz) ou pars de ton dossier. L'app répartit les morceaux sur les faces
-A et B selon ta cassette (C60, C90…) et relie chaque morceau à son fichier. Pour une mixtape, tu décris
-l'ambiance et Claude propose.
+<img src="docs/images/en/mixtape.jpg" width="820" alt="The Mixtape screen">
 
-<img src="docs/images/mixtape.jpg" width="820" alt="L'écran Mixtape">
+### 2. J-card: an AI art director
 
-### 2. Jaquette : Claude directeur artistique
+- **Formats**: 3- to 8-panel J-cards, cassingle O-cards, cassette labels, obi strips.
+- The AI looks up **real cassette editions** of the album and takes inspiration from them. If the album was
+  never released on tape, it starts from the **back of the CD or vinyl**. It knows the exact layout of a
+  cassette, based on a study of 27 real tapes.
+- **Talk to it**: “darker”, “add the Sony logo”, “use the real cover”. It can change anything.
+- **Codes that scan**: EAN-13 / UPC-A / Code 128 barcodes, QR codes, Spotify codes.
+- **Pre-print check**: text that overflows, text too small, low contrast, unreadable codes.
+- **Export**: PDF with bleed and crop marks, 600 DPI PNG, or direct printing **calibrated with a ruler**
+  for your printer.
 
-- **Formats** : J-card de 3 à 8 volets, O-card cassingle, étiquettes de K7, obi.
-- **Claude** va chercher les **vraies éditions cassette** de l'album et s'en inspire. Si l'album n'est
-  jamais sorti en K7, il part du **dos du CD ou du vinyle**. Il connaît le plan exact d'une cassette,
-  tiré de l'étude de 27 vraies K7 ([docs/etude-cassettes.md](docs/etude-cassettes.md)).
-- **Tu lui parles** : « plus sombre », « mets le logo Sony », « mets la vraie pochette ». Il peut tout changer.
-- **Codes qui se scannent** : code-barres EAN-13 / UPC-A / Code 128, QR code, code Spotify.
-- **Vérification avant impression** : textes qui débordent, trop petits, contraste, codes illisibles.
-- **Export** : PDF avec fond perdu et traits de coupe, PNG 600 DPI, ou impression directe
-  **calibrée à la règle** pour ton imprimante.
-
-<img src="docs/images/j-card.jpg" width="820" alt="Une J-card à plat">
+<img src="docs/images/j-card.jpg" width="820" alt="A flat J-card">
 
 <p>
-  <img src="docs/images/apercu-3d.jpg" width="300" alt="Aperçu 3D du boîtier">
-  <img src="docs/images/etiquettes.jpg" width="510" alt="Étiquettes de K7">
+  <img src="docs/images/apercu-3d.jpg" width="300" alt="3D case preview">
+  <img src="docs/images/etiquettes.jpg" width="510" alt="Cassette labels">
 </p>
 
-### 3. Enregistrer : la platine
+### 3. Record: the deck
 
-Une platine façon Windows 98 avec VU-mètres. Elle joue la face depuis tes fichiers, avec le compte à
-rebours, les blancs entre les morceaux, et s'arrête net à la fin de la face.
+A Windows 98-style deck with VU meters. It plays the side from your files, with a countdown, gaps between
+tracks, and a clean stop at the end of the side. The cassette shows your label, and you pick the shell colour.
 
-<img src="docs/images/enregistrer.jpg" width="820" alt="L'écran Enregistrer">
+<img src="docs/images/en/enregistrer.jpg" width="820" alt="The Record screen">
 
-La cassette porte ton étiquette, et tu choisis la couleur de la coque :
-
-<img src="docs/images/coques.jpg" width="820" alt="Les 4 couleurs de coque">
+<img src="docs/images/coques.jpg" width="820" alt="The 4 shell colours">
 
 ### 4. Collection
 
-Toutes tes cassettes, à rouvrir ou à dupliquer.
+All your cassettes, to reopen or duplicate.
 
-<img src="docs/images/collection.jpg" width="820" alt="L'écran Collection">
+<img src="docs/images/en/collection.jpg" width="820" alt="The Collection screen">
 
 ---
 
-L'app parle français, anglais, russe et allemand (Réglages → Langue).
+Every push to GitHub builds the app, runs the tests, takes a screenshot of every screen and publishes the
+new version in [Releases](https://github.com/Jonlekern/kassette-Studio/releases/latest). Full manual
+(French): [app/LISEZMOI.md](app/LISEZMOI.md).
 
-## Pour les curieux
+## License
 
-- [app/LISEZMOI.md](app/LISEZMOI.md) : mode d'emploi complet, et comment compiler soi-même avec Xcode.
-- [docs/etude-cassettes.md](docs/etude-cassettes.md) : comment sont faites les vraies K7 (étude de 27 cassettes).
-- [docs/brainstorm.md](docs/brainstorm.md) : les décisions prises pendant la conception.
-- [docs/analyse-texs.md](docs/analyse-texs.md) : analyse de Tapercraft (vhs.texs.org), l'outil de référence.
-- [maquettes/](maquettes/) et [prototype-v0/](prototype-v0/) : les maquettes et le tout premier prototype.
-- À chaque envoi de code, GitHub compile l'app, lance les tests, photographie chaque écran et publie la
-  nouvelle version dans [Releases](https://github.com/Jonlekern/kassette-Studio/releases/latest).
-
-## Licence
-
-Code libre sous [licence MIT](LICENSE) : tu peux le réutiliser, le modifier et le partager, **à condition de
-créditer LaFleurStudio** (garder la mention de copyright). Le nom, le logo et l'icône LaFleurStudio ne sont
-pas libres. Les polices gardent leur propre licence.
+Free and open source under the [MIT License](LICENSE): reuse, modify and share it, **as long as you credit
+LaFleurStudio** (keep the copyright notice). The LaFleurStudio name, logo and icon are not covered. Fonts
+keep their own licenses.
