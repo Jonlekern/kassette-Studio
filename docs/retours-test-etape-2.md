@@ -147,3 +147,25 @@ Demande de Johnny : voir **un historique de tout ce qu'il a demandé à l'IA**.
   (niveau 2 de la demande 6).
 - Un bouton pour effacer l'historique d'une cassette.
 - L'historique n'enregistre jamais les clés API.
+
+### 8. Une boîte IA dédiée aux modifications
+
+Demande de Johnny : une **boîte IA réservée aux modifications**, séparée de la direction artistique.
+
+Aujourd'hui, la zone « Direction artistique » mélange tout : le message de Claude, « Proposer » (3
+variantes), le petit champ « Demande à Claude… » et « Chercher les infos de l'album ». Le champ de
+demande est minuscule, et son texte d'exemple est coupé.
+
+- Une **boîte « Modifier avec l'IA »** bien visible, avec un **grand champ de texte** (plusieurs lignes)
+  et un bouton « Appliquer » (ou Entrée).
+- On y tape une modification en langage courant : « mets le titre en plus gros », « retire la pochette
+  de l'étiquette », « décale l'image vers la gauche », « code-barres de 30 mm », « tranche en rouge »…
+- L'IA applique **directement** les changements (dans les limites du niveau 1 ou 2 de la demande 6), puis
+  répond dans la boîte avec un **résumé** de ce qui a changé (avant → après) et un bouton « Annuler ».
+- La boîte garde le fil de la **conversation** : on peut enchaîner (« encore plus gros », « non, remets
+  comme avant »).
+- Chaque échange va dans l'**historique IA** (demande 7).
+- La zone « Direction artistique » garde « Proposer » (variantes) et « Vérifier » ; les modifications
+  ponctuelles passent par la nouvelle boîte.
+- Si possible, la boîte est disponible aussi dans Mixtape (par exemple « mets Glass en face B »), en mode
+  expert.
