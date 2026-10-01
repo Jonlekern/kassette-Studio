@@ -17,7 +17,7 @@
 <h3 align="center">
   <a href="https://github.com/Jonlekern/kassette-Studio/releases/latest/download/LaFleurStudio.zip">⬇️ Télécharger LaFleurStudio pour Mac</a>
 </h3>
-<p align="center"><a href="README.en.md">🇬🇧 English version</a></p>
+<p align="center"><a href="README.md">🇬🇧 English version</a></p>
 <p align="center">macOS 14 Sonoma ou plus récent · Mac Apple Silicon ou Intel · toujours la dernière version</p>
 
 <p align="center">
