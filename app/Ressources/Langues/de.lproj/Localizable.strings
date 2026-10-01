@@ -114,6 +114,7 @@
 "Bord haut → trait rouge :" = "Oberer Rand → rote Linie:";
 "Brouillon" = "Entwurf";
 "C'est celui-là" = "Das ist er";
+"C'est normal après chaque mise à jour : l'app n'est pas signée par Apple, alors macOS vérifie que c'est bien elle." = "Das ist nach jedem Update normal: Die App ist nicht von Apple signiert, darum prüft macOS, ob sie es wirklich ist.";
 "C60 · 30 min/face" = "C60 · 30 Min./Seite";
 "C90 · 45 min/face" = "C90 · 45 Min./Seite";
 "Cadrage" = "Bildausschnitt";
@@ -333,6 +334,7 @@
 "Notes (volet intérieur)" = "Notizen (Innenfeld)";
 "Nouvelle cassette" = "Neue Kassette";
 "Nouvelle cassette…" = "Neue Kassette…";
+"Nouvelle version installée" = "Neue Version installiert";
 "Numéro" = "Nummer";
 "Numéro « %@ » impossible en %@ : chiffres seulement, 12 ou 13 pour l'EAN, 11 ou 12 pour l'UPC." = "Nummer „%@“ in %@ nicht möglich: nur Ziffern, 12 oder 13 für EAN, 11 oder 12 für UPC.";
 "Numéro « %@ » impossible en Code 128 : caractères ASCII seulement." = "Nummer „%@“ in Code 128 nicht möglich: nur ASCII-Zeichen.";
@@ -445,6 +447,7 @@
 "Supprimer %@ ?" = "%@ löschen?";
 "Ta propre image" = "Dein eigenes Bild";
 "Taille" = "Größe";
+"Tape le mot de passe de ta session Mac, puis clique « Toujours autoriser »." = "Gib dein Mac-Anmeldepasswort ein und klick auf „Immer erlauben“.";
 "Terminer" = "Fertig";
 "Tester" = "Testen";
 "Texte" = "Text";
@@ -494,6 +497,7 @@
 "centimètres" = "Zentimetern";
 "crédits" = "Credits";
 "ligne ℗/©" = "℗/©-Zeile";
+"macOS va te demander si LaFleurStudio peut utiliser tes clés (Claude, GPT, Gemini, Spotify, Discogs) rangées dans le trousseau du Mac." = "macOS fragt, ob LaFleurStudio deine Schlüssel (Claude, GPT, Gemini, Spotify, Discogs) aus dem Mac-Schlüsselbund verwenden darf.";
 "mixtape" = "Mixtape";
 "mm" = "mm";
 "notes" = "Notizen";

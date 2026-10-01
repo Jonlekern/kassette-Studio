@@ -18,7 +18,7 @@ struct PremierDemarrage: View {
                         .fixedSize(horizontal: false, vertical: true)
                     Groupe(titre: "1. Clé API Claude") {
                         HStack {
-                            Champ(invite: "sk-ant-…", texte: $etat.cleClaude, secret: true)
+                            Champ(invite: "sk-ant-…", texte: $etat.cleClaude, secret: true).disabled(!etat.clesChargees)
                             Button("Tester") { tester() }.buttonStyle(.w98)
                             Text(testCle).foregroundStyle(testCle == "OK" ? W98.vert : W98.rouge).bold()
                                 .frame(width: 150, alignment: .leading).lineLimit(1)

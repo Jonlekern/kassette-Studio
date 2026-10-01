@@ -157,7 +157,7 @@ struct Reglages: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
             Groupe(titre: "Discogs (jeton personnel gratuit)") {
-                Champ(invite: "Jeton Discogs", texte: $etat.jetonDiscogs, secret: true)
+                Champ(invite: "Jeton Discogs", texte: $etat.jetonDiscogs, secret: true).disabled(!etat.clesChargees)
                 Text("1. Connecte-toi sur discogs.com (compte gratuit).")
                 Text("2. Settings → Developers → « Generate new token ».")
                 Link("   Ouvrir la page Developers de Discogs", destination: URL(string: "https://www.discogs.com/settings/developers")!).foregroundStyle(W98.bleu)
@@ -207,7 +207,7 @@ struct Reglages: View {
             }
             Groupe(titre: "Clé API \(f.nom)") {
                 HStack {
-                    Champ(invite: f.inviteCle, texte: etat.lienCle(f), secret: true)
+                    Champ(invite: f.inviteCle, texte: etat.lienCle(f), secret: true).disabled(!etat.clesChargees)
                     Button("Tester") { testerIA() }.buttonStyle(.w98)
                     Text(testIA).foregroundStyle(testIA == "OK" ? W98.vert : W98.rouge).bold().lineLimit(1)
                 }

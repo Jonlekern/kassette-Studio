@@ -5,6 +5,7 @@ enum Ecran: Hashable { case mixtape, jaquette, enregistrer, collection }
 
 struct Racine: View {
     @EnvironmentObject var etat: EtatApp
+    @State private var avisTrousseau = false
     var body: some View {
         ZStack {
             W98.bureau.ignoresSafeArea()
@@ -13,6 +14,15 @@ struct Racine: View {
             } else {
                 ScrollView { PremierDemarrage().padding(24).frame(maxWidth: .infinity) }
             }
+            if avisTrousseau {
+                Color.black.opacity(0.25).ignoresSafeArea()
+                AvisTrousseau { avisTrousseau = false; Task { await etat.chargerCles() } }.frame(width: 460)
+            }
+        }
+        // Les clés sont lues après l'affichage de la fenêtre. Après une mise à jour, macOS va demander
+        // l'accès au trousseau : on prévient d'abord, pour que l'app ne semble pas bloquée.
+        .onAppear {
+            if etat.trousseauVaDemander { avisTrousseau = true } else { Task { await etat.chargerCles() } }
         }
         .w98()
         .sansEffetDeBord()
@@ -89,5 +99,25 @@ extension View {
         } else {
             self
         }
+    }
+}
+
+/// Prévient avant la question du trousseau de macOS, qui revient après chaque mise à jour.
+struct AvisTrousseau: View {
+    var continuer: () -> Void
+    var body: some View {
+        Fenetre(titre: "Nouvelle version installée") {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("macOS va te demander si LaFleurStudio peut utiliser tes clés (Claude, GPT, Gemini, Spotify, Discogs) rangées dans le trousseau du Mac.")
+                    .fixedSize(horizontal: false, vertical: true)
+                Text("Tape le mot de passe de ta session Mac, puis clique « Toujours autoriser ».").bold()
+                    .fixedSize(horizontal: false, vertical: true)
+                Text("C'est normal après chaque mise à jour : l'app n'est pas signée par Apple, alors macOS vérifie que c'est bien elle.")
+                    .foregroundStyle(W98.ombre).fixedSize(horizontal: false, vertical: true)
+                HStack { Spacer(); Button("Continuer") { continuer() }.buttonStyle(.w98Gras).keyboardShortcut(.defaultAction) }
+            }
+            .padding(14)
+        }
+        .w98()
     }
 }

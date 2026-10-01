@@ -31,12 +31,14 @@ final class EtatApp: ObservableObject {
     }
     @Published var projet: Projet { didSet { if projet != oldValue { try? stockage.enregistrer(projet) } } }
     @Published private(set) var collection: [Projet] = []
-    @Published var cleClaude: String { didSet { Trousseau.ecrire("claude", cleClaude) } }
+    @Published var cleClaude = "" { didSet { if clesChargees { Trousseau.ecrire("claude", cleClaude); noterCle(cleClaude) } } }
     /// Clés des autres moteurs d'IA (GPT, Gemini), aussi dans le trousseau.
     @Published var clesIA: [FournisseurIA: String] = [:] {
-        didSet { for (f, c) in clesIA where c != oldValue[f] { Trousseau.ecrire(f.entreeTrousseau, c) } }
+        didSet { if clesChargees { for (f, c) in clesIA where c != oldValue[f] { Trousseau.ecrire(f.entreeTrousseau, c); noterCle(c) } } }
     }
-    @Published private(set) var spotifyConnecte: Bool
+    @Published private(set) var spotifyConnecte = false
+    /// Les clés sont lues dans le trousseau après l'affichage de la fenêtre (voir `chargerCles`).
+    @Published private(set) var clesChargees = false
 
     @Published var statut = String(localized: "Prêt")
     @Published var occupe = false
@@ -57,7 +59,7 @@ final class EtatApp: ObservableObject {
     @Published var imagesTrouvees: [String: [URL]] = [:]
     @Published var avisClaude: AvisRendu?
     @Published var policesDisponibles: [String] = Typo.disponibles
-    @Published var jetonDiscogs: String { didSet { Trousseau.ecrire("discogs", jetonDiscogs) } }
+    @Published var jetonDiscogs = "" { didSet { if clesChargees { Trousseau.ecrire("discogs", jetonDiscogs); noterCle(jetonDiscogs) } } }
 
     private var spotify: ClientSpotify?
     private let retour = RetourConnexion()
@@ -76,15 +78,44 @@ final class EtatApp: ObservableObject {
         prefs = p
         projet = courant
         collection = projets
-        cleClaude = Trousseau.lire("claude") ?? ""
         nomIA = p.fournisseurIA.nom
-        clesIA = [.openai: Trousseau.lire("openai") ?? "", .gemini: Trousseau.lire("gemini") ?? ""]
-        jetonDiscogs = Trousseau.lire("discogs") ?? ""
-        spotifyConnecte = Trousseau.lireJSON("spotify-jetons", ClientSpotify.Jetons.self) != nil
         try? s.enregistrer(p)
         // Une cassette neuve est enregistrée tout de suite : son numéro n'est jamais perdu.
         try? s.enregistrer(courant)
         collection = s.projets()
+    }
+
+    // MARK: Clés (trousseau)
+
+    /// Version de l'app : macOS redemande l'accès au trousseau à chaque nouvelle version (app non signée par Apple).
+    static var version: String {
+        let exe = Bundle.main.executableURL.flatMap { try? FileManager.default.attributesOfItem(atPath: $0.path)[.modificationDate] as? Date }
+        return (Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "") + "-" + String(Int(exe?.timeIntervalSince1970 ?? 0))
+    }
+
+    /// Vrai si macOS va sûrement demander l'accès au trousseau (nouvelle version, et des clés déjà enregistrées).
+    var trousseauVaDemander: Bool {
+        prefs.derniereVersion != Self.version && prefs.cleEnregistree
+    }
+
+    private func noterCle(_ c: String) { if !c.isEmpty && !prefs.cleEnregistree { prefs.cleEnregistree = true } }
+
+    /// Lit toutes les clés en une fois, hors du fil principal : la fenêtre reste affichée et réactive
+    /// pendant que macOS pose sa question.
+    func chargerCles() async {
+        guard !clesChargees else { return }
+        let (claude, openai, gemini, discogs, spotify) = await Task.detached {
+            Trousseau.charger()
+            return (Trousseau.lire("claude") ?? "", Trousseau.lire("openai") ?? "", Trousseau.lire("gemini") ?? "",
+                    Trousseau.lire("discogs") ?? "", Trousseau.lire("spotify-jetons") != nil)
+        }.value
+        cleClaude = claude
+        clesIA = [.openai: openai, .gemini: gemini]
+        jetonDiscogs = discogs
+        spotifyConnecte = spotify
+        clesChargees = true
+        prefs.derniereVersion = Self.version
+        prefs.cleEnregistree = !(claude + openai + gemini + discogs).isEmpty || spotify
     }
 
     // MARK: Tâches
@@ -183,6 +214,7 @@ final class EtatApp: ObservableObject {
             }
             try await c.terminerConnexion(code: code, verificateur: demande.verificateur)
             spotifyConnecte = true
+            noterCle("spotify")
             statut = String(localized: "Spotify connecté ✓")
         }
     }

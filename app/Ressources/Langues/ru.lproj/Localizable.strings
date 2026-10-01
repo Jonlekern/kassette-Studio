@@ -114,6 +114,7 @@
 "Bord haut → trait rouge :" = "Верхний край → красная линия:";
 "Brouillon" = "Черновик";
 "C'est celui-là" = "Вот этот";
+"C'est normal après chaque mise à jour : l'app n'est pas signée par Apple, alors macOS vérifie que c'est bien elle." = "Это нормально после каждого обновления: приложение не подписано Apple, поэтому macOS проверяет, что это то же приложение.";
 "C60 · 30 min/face" = "C60 · 30 мин/сторона";
 "C90 · 45 min/face" = "C90 · 45 мин/сторона";
 "Cadrage" = "Кадрирование";
@@ -333,6 +334,7 @@
 "Notes (volet intérieur)" = "Заметки (внутренняя панель)";
 "Nouvelle cassette" = "Новая кассета";
 "Nouvelle cassette…" = "Новая кассета…";
+"Nouvelle version installée" = "Установлена новая версия";
 "Numéro" = "Номер";
 "Numéro « %@ » impossible en %@ : chiffres seulement, 12 ou 13 pour l'EAN, 11 ou 12 pour l'UPC." = "Номер «%@» невозможен в %@: только цифры, 12 или 13 для EAN, 11 или 12 для UPC.";
 "Numéro « %@ » impossible en Code 128 : caractères ASCII seulement." = "Номер «%@» невозможен в Code 128: только символы ASCII.";
@@ -445,6 +447,7 @@
 "Supprimer %@ ?" = "Удалить %@?";
 "Ta propre image" = "Твоё изображение";
 "Taille" = "Размер";
+"Tape le mot de passe de ta session Mac, puis clique « Toujours autoriser »." = "Введи пароль от своей учётной записи Mac и нажми «Всегда разрешать».";
 "Terminer" = "Готово";
 "Tester" = "Проверить";
 "Texte" = "Текст";
@@ -494,6 +497,7 @@
 "centimètres" = "сантиметрах";
 "crédits" = "титры";
 "ligne ℗/©" = "строка ℗/©";
+"macOS va te demander si LaFleurStudio peut utiliser tes clés (Claude, GPT, Gemini, Spotify, Discogs) rangées dans le trousseau du Mac." = "macOS спросит, может ли LaFleurStudio использовать твои ключи (Claude, GPT, Gemini, Spotify, Discogs) из связки ключей Mac.";
 "mixtape" = "микстейп";
 "mm" = "мм";
 "notes" = "заметки";
