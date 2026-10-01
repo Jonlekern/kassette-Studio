@@ -424,7 +424,9 @@ extension EtatApp {
     }
 
     /// L'imprimante utilisée et sa correction.
-    var imprimanteCourante: String { prefs.imprimante ?? NSPrintInfo.shared.printer.name }
+    /// Imprimante par défaut du Mac : lue une seule fois (chaque lecture interroge le système d'impression, c'est lent).
+    private static let imprimanteParDefaut = NSPrintInfo.shared.printer.name
+    var imprimanteCourante: String { prefs.imprimante ?? Self.imprimanteParDefaut }
     var calibration: CalibrationImprimante? { prefs.calibrations[imprimanteCourante] }
 
     func imprimer() {

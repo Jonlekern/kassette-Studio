@@ -9,20 +9,10 @@ struct Reglages: View {
     private let rubriques = ["Audio", "Platine", "Impression", "IA", "Spotify", "Sources", "Langue", "Conditions"]
 
     var body: some View {
-        HStack(alignment: .top, spacing: 14) {
-            VStack(alignment: .leading, spacing: 0) {
-                ForEach(rubriques, id: \.self) { r in
-                    Button { rubrique = r } label: {
-                        Text(tr(r)).padding(.horizontal, 8).padding(.vertical, 5).frame(maxWidth: .infinity, alignment: .leading)
-                            .background(rubrique == r ? W98.bleu : .clear).foregroundStyle(rubrique == r ? .white : .black)
-                    }
-                    .buttonStyle(.plain)
-                }
-                Spacer()
-            }
-            .padding(2).frame(width: 150).creux()
-            VStack(alignment: .leading, spacing: 12) {
-                Text(tr(rubrique)).font(.custom("Arial", size: 15).bold())
+        // Onglets Windows 98, comme la fenêtre principale (avant : une liste façon macOS, peu lisible).
+        VStack(alignment: .leading, spacing: 0) {
+            Onglets(onglets: rubriques.map { ($0, $0) }, selection: $rubrique).padding(.leading, 4).zIndex(1)
+            Group {
                 switch rubrique {
                 case "Audio": audio
                 case "Platine": platine
@@ -33,9 +23,10 @@ struct Reglages: View {
                 case "Langue": langue
                 default: Groupe(titre: "Conditions d'utilisation") { TexteConditions() }
                 }
-                Spacer()
             }
+            .padding(12).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading).relief()
         }
+        .task { if imprimantes.isEmpty { imprimantes = await Task.detached { NSPrinter.printerNames }.value } }
         .padding(14).frame(width: 760, height: 560).background(W98.gris).w98().preferredColorScheme(.light)
     }
 
@@ -82,6 +73,8 @@ struct Reglages: View {
         }
     }
 
+    /// Liste des imprimantes : lente à obtenir (CUPS), lue une seule fois en arrière-plan.
+    @State private var imprimantes: [String] = []
     @State private var regleH = ""
     @State private var regleV = ""
     @State private var bordGauche = ""
@@ -96,7 +89,6 @@ struct Reglages: View {
         let cm = etat.prefs.uniteMesure == "cm"
         let attendu = cm ? 10.0 : 4.0
         let unite = cm ? "cm" : "in"
-        let imprimantes = NSPrinter.printerNames
         let c = etat.calibration
         return VStack(alignment: .leading, spacing: 12) {
             Groupe(titre: "Imprimante et papier") {

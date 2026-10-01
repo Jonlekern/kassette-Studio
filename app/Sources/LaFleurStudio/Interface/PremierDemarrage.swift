@@ -154,7 +154,9 @@ struct ChoixSortie: View {
             }
             Text("L'app joue seulement sur cette sortie ; le reste du Mac ne change pas.").foregroundStyle(W98.ombre)
         }
-        .onAppear { sorties = SortiesAudio.lister(); moteur.sortieCourante = etat.prefs.sortieAudioUID }
+        .onAppear { moteur.sortieCourante = etat.prefs.sortieAudioUID }
+        // Lecture des sorties audio (CoreAudio) hors du fil principal : l'écran s'affiche tout de suite.
+        .task { if sorties.isEmpty { sorties = await Task.detached { SortiesAudio.lister() }.value } }
         .onChange(of: etat.prefs.sortieAudioUID) { moteur.changerSortie(etat.prefs.sortieAudioUID) }
     }
 }
