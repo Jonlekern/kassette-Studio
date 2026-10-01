@@ -363,3 +363,77 @@ parle que du décalage, pas de l'échelle.
 - Choix assumé : la correction s'applique à **toutes les impressions**, mais **pas au PDF exporté**. Le PDF
   est à la taille exacte pour qu'une boutique (ou une autre imprimante) l'imprime juste ; corriger le PDF
   avec l'erreur de ton imprimante le fausserait partout ailleurs.
+
+---
+
+# Contrôle esthétique (version `948ef56`)
+
+1er octobre 2026. Release « derniere-version » (commit `948ef56`), installée par-dessus l'ancienne.
+Les cassettes et les réglages ont été gardés : LFS-003 se rouvre telle quelle. Le choix **Cadrage**
+(Image carrée / Pleine hauteur) est présent et marche. Ce passage ne concerne **que l'apparence**,
+aucune fonction n'a été testée.
+
+## Enregistrer : la cassette est trop sombre (remarque de Johnny)
+
+→ `captures/27-cassette-trop-sombre.jpg`, `captures/26-enregistrer-v3.jpg`
+
+Le problème n'est pas que la coque soit noire, c'est que **tout est sombre en même temps** :
+- **trois couches sombres** se superposent : un cadre noir autour de la cassette, une coque presque
+  noire et une étiquette bleu nuit. On distingue mal la forme de la cassette ;
+- **l'étiquette reprend les couleurs de la jaquette** (fond bleu nuit), trop proches de la coque ;
+- **le bas de la coque** (zone de la tête, trous) est presque invisible, noir sur noir ;
+- dans une interface gris clair façon Windows 98, la cassette fait un **« trou noir »** dans l'écran.
+
+Pistes :
+1. **Supprimer le cadre noir** autour : poser la cassette directement sur le gris.
+2. Une **coque gris fumé ou transparente** (genre TDK SA ou Maxell), avec un léger reflet sur les
+   arêtes.
+3. Ou garder la coque noire, mais avec un **liseré plus clair** sur les arêtes et une **étiquette
+   claire** (crème ou blanche, comme un vrai autocollant) au lieu des couleurs de la jaquette.
+4. Mieux encore : un réglage **couleur de coque** (noire, fumée, transparente, blanche), comme
+   Bande et Dolby.
+
+## Jaquette
+
+- **Recto « Pochette de l'album » sans pochette** : la zone de l'image est un carré gris foncé vide.
+  Mettre un texte (« Pas de pochette : choisis une image ») ou un motif. → `20`
+- **J-card verso** : les titres « FACE A · 25:11 » et « FACE B » sont bleu-vert foncé sur fond foncé,
+  donc peu lisibles. Les deux volets de droite sont entièrement vides. → `21`
+- **Étiquettes** : la fenêtre de la bande est un grand rectangle blanc pur qui tranche fort, et le
+  petit carré gris à gauche est vide. → `22`
+- **Colonne de gauche** : quand on fait défiler, la barre de défilement passe par-dessus le bord des
+  menus « Titre » et « Texte ». Le champ « Tranche » coupe son texte (« JEREMY SADIK · AN AFTERNOON »).
+  → `23`
+- **Champ « Demande à Claude… »** : le texte d'exemple est coupé (« (« plus sombre »).
+- **Ligne des dimensions sous l'aperçu** : elle se coupe en « 600 DPI… » quand la place manque.
+- **Aperçu 3D** : on voit une carte à plat inclinée, sans boîtier ni épaisseur. Ça fait plus
+  « carte » que « cassette ». → `24`
+
+## Mixtape
+
+- **Encadré « Cassette »** : grands blancs déséquilibrés, environ 90 px vides entre la ligne
+  Album/C60 et la ligne Bande, et encore entre Bande et Titre. → `25`
+- **Titres coupés** (« Pre-packaged Sandwi… », « Parked In The Front O… ») alors qu'il reste de la
+  place dans la colonne.
+- **Aide sous les listes** (« Glisse ou clic droit pour réordonner… ») : texte très petit et gris
+  clair, difficile à lire.
+
+## Collection
+
+- **Vignettes vides** : ce sont des carrés gris foncé sans rien dedans. Avant, elles affichaient
+  « LFS-002 ». Montrer le recto de la jaquette. → `28`
+- **Vignettes décalées** : collées à gauche dans leur carte, avec un espace vide à droite.
+
+## Captures
+
+| Fichier | Contenu |
+|---|---|
+| `captures/20-jaquette-recto.jpg` | Jaquette : J-card recto, carré de pochette vide |
+| `captures/21-jaquette-verso.jpg` | J-card verso : titres de face peu lisibles, volets vides |
+| `captures/22-jaquette-etiquettes.jpg` | Étiquettes A/B : rectangle blanc, carré gris vide |
+| `captures/23-jaquette-colonne-gauche.jpg` | Colonne de gauche défilée : barre sur les menus, « Tranche » coupée |
+| `captures/24-apercu-3d.jpg` | Aperçu 3D |
+| `captures/25-mixtape-v3.jpg` | Mixtape : blancs dans « Cassette », titres coupés |
+| `captures/26-enregistrer-v3.jpg` | Enregistrer : cassette sombre dans l'interface claire |
+| `captures/27-cassette-trop-sombre.jpg` | Zoom sur la cassette : cadre, coque et étiquette sombres |
+| `captures/28-collection-v3.jpg` | Collection : vignettes vides et décalées |
