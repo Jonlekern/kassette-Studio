@@ -4,6 +4,11 @@ on:
   push:
   workflow_dispatch:
 
+# Une seule compilation à la fois par branche : la plus récente remplace celle en cours.
+concurrency:
+  group: compilation-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   compiler:
     runs-on: macos-latest
@@ -35,7 +40,9 @@ jobs:
           path: app/dist/LaFleurStudio.zip
           retention-days: 30
       - name: Publier la dernière version (page Releases, lien de téléchargement du README)
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/etape-1')
+        # Seulement depuis main : deux publications en parallèle (main et etape-1) se marchaient dessus
+        # et laissaient la version en brouillon.
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
@@ -49,7 +56,7 @@ jobs:
 
           Version du $(date -u +%d.%m.%Y), code ${GITHUB_SHA::7}.
           EOF
-          gh release create derniere-version dist/LaFleurStudio.zip --target "$GITHUB_SHA" --latest \
+          gh release create derniere-version dist/LaFleurStudio.zip --target "$GITHUB_SHA" --latest --draft=false \
             --title "LaFleurStudio — dernière version" --notes-file notes.md
       - name: Extraire les textes à traduire
         continue-on-error: true
