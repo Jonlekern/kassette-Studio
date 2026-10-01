@@ -19,6 +19,12 @@ struct Racine: View {
                 AvisTrousseau { avisTrousseau = false; Task { await etat.chargerCles() } }.frame(width: 460)
             }
         }
+        // Suppression demandée par l'IA (mode expert) : jamais sans ton accord.
+        .alert("Supprimer \(etat.suppressionDemandee?.numeroCatalogue ?? "") ?", isPresented: Binding(
+            get: { etat.suppressionDemandee != nil }, set: { if !$0 { etat.suppressionDemandee = nil } })) {
+            Button("Supprimer", role: .destructive) { if let p = etat.suppressionDemandee { etat.supprimer(p) }; etat.suppressionDemandee = nil }
+            Button("Annuler", role: .cancel) { etat.suppressionDemandee = nil }
+        } message: { Text("L'IA demande de supprimer cette cassette de la Collection. Tes fichiers audio ne sont pas touchés.") }
         // Les clés sont lues après l'affichage de la fenêtre. Après une mise à jour, macOS va demander
         // l'accès au trousseau : on prévient d'abord, pour que l'app ne semble pas bloquée.
         .onAppear {
@@ -68,6 +74,7 @@ struct FenetrePrincipale: View {
                     if etat.occupe { ProgressView().controlSize(.small).padding(.leading, 4) }
                     Text(etat.statut).lineLimit(1).padding(.horizontal, 6).frame(maxWidth: .infinity, alignment: .leading).frame(height: 20).creux(W98.gris)
                     Text(etat.spotifyConnecte ? "Spotify : connecté" : "Spotify : non connecté").padding(.horizontal, 6).frame(height: 20).creux(W98.gris)
+                    if etat.modeExpert { BadgeExpert() }
                     Text(etat.cle(etat.fournisseurIA).isEmpty ? "\(etat.fournisseurIA.nom) : pas de clé" : "\(etat.fournisseurIA.nom) : prêt").padding(.horizontal, 6).frame(height: 20).creux(W98.gris)
                 }
                 .padding(8)

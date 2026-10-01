@@ -221,6 +221,12 @@ struct Reglages: View {
                 }
                 Text("Vide = modèle conseillé (\(f.modeleParDefaut)).").foregroundStyle(W98.ombre)
             }
+            Groupe(titre: "Mode expert") {
+                Toggle("Mode expert : l'IA a tous les droits", isOn: $etat.prefs.modeExpertIA).toggleStyle(.checkbox)
+                Text("En plus de la jaquette, l'IA peut changer la Mixtape (ordre, faces, morceaux, C60/C90, bande, Dolby, coque, titre), les réglages de la cassette et la Collection (créer, dupliquer, renommer). Tout s'annule en un clic. Elle demande toujours avant de supprimer une cassette, ne touche jamais aux clés, aux comptes ni aux fichiers audio, et ne lance ni l'enregistrement ni l'impression.")
+                    .foregroundStyle(W98.ombre).fixedSize(horizontal: false, vertical: true)
+                if etat.prefs.modeExpertIA { BadgeExpert() }
+            }
             if f == .claude { GuideCleClaude() }
             Groupe(titre: "Recherche web") {
                 Toggle("L'IA peut chercher sur des sites choisis (sources citées)", isOn: $etat.prefs.rechercheWebClaude).toggleStyle(.checkbox)

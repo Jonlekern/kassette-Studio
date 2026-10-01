@@ -177,6 +177,8 @@ public struct Projet: Codable, Identifiable, Hashable, Sendable {
     public var droits: String?
     /// Jaquette, étiquettes, O-card, obi (nil tant que l'écran Jaquette n'a pas été ouvert).
     public var design: Design?
+    /// Demandes faites à l'IA pour cette cassette (voir `echangesIA`). Optionnel : les anciennes cassettes restent lisibles.
+    public var historiqueIA: [EchangeIA]?
     public var enregistree: Set<Face> = []
     public var creeLe = Date()
     public var modifieLe = Date()

@@ -62,6 +62,12 @@ final class EtatApp: ObservableObject {
     @Published var elementSelectionne: String?
     /// Designs précédents, pour « Annuler » (⌘Z) : retouches à la main et changements de l'IA.
     @Published var annulations: [Design] = []
+    /// Fil de la boîte « Modifier avec l'IA » (cassette courante).
+    @Published var filModif: [MessageModif] = []
+    /// État d'avant chaque échange de la boîte, pour son bouton « Annuler » (en mémoire seulement).
+    var instantanesIA: [UUID: InstantaneIA] = [:]
+    /// Suppression demandée par l'IA (mode expert) : toujours confirmée par l'utilisateur.
+    @Published var suppressionDemandee: Projet?
     @Published var policesDisponibles: [String] = Typo.disponibles
     @Published var jetonDiscogs = "" { didSet { if clesChargees { Trousseau.ecrire("discogs", jetonDiscogs); noterCle(jetonDiscogs) } } }
 
@@ -151,7 +157,9 @@ final class EtatApp: ObservableObject {
         let f = fournisseurIA
         let c = cle(f).trimmingCharacters(in: .whitespacesAndNewlines)
         guard !c.isEmpty else { throw ClientClaude.Erreur.http(401, String(localized: "ajoute ta clé API \(f.nom) dans Réglages")) }
-        return ClientClaude(cleAPI: c, langue: langueClaude, fournisseur: f, modele: prefs.modelesIA[f.rawValue])
+        var client = ClientClaude(cleAPI: c, langue: langueClaude, fournisseur: f, modele: prefs.modelesIA[f.rawValue])
+        client.compteur = CompteurJetons()  // pour le coût de chaque demande, dans l'historique IA
+        return client
     }
 
     // MARK: Collection
@@ -469,18 +477,24 @@ final class EtatApp: ObservableObject {
         let tout = projet.toutes
         guard !tout.isEmpty else { return }
         lancer(String(localized: "Claude répartit les faces…")) { [self] in
-            let o = try await claude().equilibrer(tout, cassette: projet.cassette, reglages: prefs.platine,
-                                                  garderOrdre: projet.mode == .album)
+            let c = try claude()
+            let o = try await c.equilibrer(tout, cassette: projet.cassette, reglages: prefs.platine,
+                                           garderOrdre: projet.mode == .album)
             let r = Faces.appliquerOrdre(tout, indicesA: o.face_a, indicesB: o.face_b, projet.cassette, prefs.platine)
             projet.faceA = r.faceA; projet.faceB = r.faceB
             commentaireClaude = o.commentaire + (r.horsBande.isEmpty ? "" : " (\(r.horsBande.count) morceau(x) ne tiennent pas et sont retirés.)")
             statut = String(localized: "Faces réparties par Claude ✓")
+            noterEchange(String(localized: "Équilibrer les faces"), o.commentaire,
+                         [String(localized: "Face A : \(r.faceA.count) morceaux · face B : \(r.faceB.count) morceaux")], client: c)
         }
     }
 
     func composer(ambiance: String) {
         lancer(String(localized: "Claude compose la sélection…")) { [self] in
-            let prop = try await claude().composer(ambiance: ambiance, cassette: projet.cassette, reglages: prefs.platine, deja: projet.toutes)
+            let c = try claude()
+            let prop = try await c.composer(ambiance: ambiance, cassette: projet.cassette, reglages: prefs.platine, deja: projet.toutes)
+            noterEchange(String(localized: "Composer : \(ambiance)"), prop.titre + " — " + prop.morceaux.map { "\($0.artiste) – \($0.titre)" }.joined(separator: ", "),
+                         [], client: c, refaisable: false)
             if projet.titre.isEmpty { projet.titre = prop.titre }
             statut = String(localized: "Recherche des titres sur Spotify…")
             let sp = try clientSpotify()

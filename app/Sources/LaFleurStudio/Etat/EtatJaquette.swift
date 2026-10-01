@@ -185,6 +185,9 @@ extension EtatApp {
             p.design = d
             projet = p
             conversation.append(MessageDesign(deClaude: true, texte: r.message))
+            noterEchange(texte.isEmpty ? (regenerer.map { String(localized: "Régénérer la variante \($0)") } ?? String(localized: "Proposer")) : texte,
+                         r.message, r.modifications.map { "\($0.champ) → \($0.valeur)" } + nouvelles.map { String(localized: "Variante \($0.nom)") },
+                         client: c, refaisable: !texte.isEmpty)
             statut = nouvelles.isEmpty ? String(localized: "Modifications de Claude appliquées ✓")
                                        : String(localized: "Claude a proposé \(nouvelles.count) variantes")
             // Images demandées par Claude : téléchargées et posées tout de suite.
@@ -270,7 +273,8 @@ extension EtatApp {
     func chercherInfosWeb() {
         guard prefs.rechercheWebClaude else { statut = String(localized: "La recherche web de Claude est désactivée (Réglages → Claude)."); return }
         lancer(String(localized: "Claude cherche les infos de l'album sur le web…")) { [self] in
-            let i = try await claude().chercherInfos(projet: projet)
+            let c = try claude()
+            let i = try await c.chercherInfos(projet: projet)
             if !i.maison_de_disque.isEmpty {
                 projet.labelOrigine = i.distributeur.isEmpty ? i.maison_de_disque : "\(i.maison_de_disque) / \(i.distributeur)"
             }
@@ -284,6 +288,7 @@ extension EtatApp {
             conversation.append(MessageDesign(deClaude: true, texte: (trouve.isEmpty ? "Rien de sûr trouvé : les cases restent à remplir." : "Trouvé : " + trouve.joined(separator: ", ") + ".")
                                               + (i.sources.isEmpty ? "" : "\nSources : " + i.sources.joined(separator: " · "))))
             statut = String(localized: "Infos de l'album mises à jour")
+            noterEchange(String(localized: "Chercher les infos de l'album sur le web"), conversation.last?.texte ?? "", trouve, client: c)
         }
     }
 
@@ -377,6 +382,7 @@ extension EtatApp {
             guard let png = Export.planchePourClaude(mise) else { throw Souci(message: "Impossible de faire l'image de la jaquette.") }
             let avis = try await c.verifierRendu(png: png, alertes: alertes, projet: projet, design: design)
             avisClaude = avis
+            noterEchange(String(localized: "Vérifier avec l'IA"), avis.message, avis.corrections.map { "\($0.zone) : \($0.explication)" }, client: c)
             statut = avis.ok && avis.corrections.isEmpty ? String(localized: "Vérification de Claude : tout est bon ✓") : String(localized: "Corrections proposées par Claude : \(avis.corrections.count)")
         }
     }

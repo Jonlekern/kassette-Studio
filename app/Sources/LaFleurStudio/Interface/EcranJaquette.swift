@@ -16,8 +16,8 @@ struct EcranJaquette: View {
     @State private var zoom: CGFloat = 4
     /// Zoom automatique : l'objet entier tient dans l'aperçu.
     @State private var ajuster = true
-    @State private var demande = ""
     @State private var montrer3D = false
+    @State private var historiqueOuvert = false
     @State private var action: ActionExport?
 
     private func lien<T>(_ kp: WritableKeyPath<Design, T>) -> Binding<T> {
@@ -435,7 +435,7 @@ struct EcranJaquette: View {
             Groupe(titre: "Direction artistique · \(etat.fournisseurIA.nom)") {
                 if etat.conversation.isEmpty {
                     BulleClaude(cle: etat.projet.mode == .album
-                                ? "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Dis-moi l'ambiance, ou clique sur « Proposer »."
+                                ? "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Clique sur « Proposer » pour 3 variantes ; pour une retouche précise, écris-la dans « Modifier avec l'IA »."
                                 : "Pour ta mixtape je propose d'abord un collage des covers, puis ta propre image, le style K7 maison, ou un design dessiné. Dis-moi l'ambiance.")
                 }
                 ForEach(etat.conversation) { m in
@@ -476,15 +476,17 @@ struct EcranJaquette: View {
                         .fixedSize()
                     }
                 }
-                HStack(spacing: 4) {
-                    Champ(invite: "Demande à Claude…", texte: $demande)
-                        .onSubmit(envoyer)
-                        .help("Ex. « plus sombre », « plus 90s », « mets la vraie pochette », « mets le logo Sony »")
-                    Button("Envoyer", action: envoyer).buttonStyle(.w98).disabled(demande.isEmpty || etat.occupe)
-                }
                 if etat.projet.mode == .album {
                     Button("Chercher les infos de l'album sur le web") { etat.chercherInfosWeb() }
                         .buttonStyle(.w98).disabled(etat.occupe || !etat.prefs.rechercheWebClaude)
+                }
+            }
+
+            // Modifications précises en langage courant, appliquées tout de suite (demande 8).
+            BoiteModifierIA()
+            Groupe(titre: "Historique IA (\(etat.projet.echangesIA.count))") {
+                DisclosureGroup(isExpanded: $historiqueOuvert) { HistoriqueIAVue() } label: {
+                    Text(historiqueOuvert ? "Masquer" : "Afficher les demandes faites à l'IA")
                 }
             }
 
@@ -535,11 +537,6 @@ struct EcranJaquette: View {
         }
     }
 
-    private func envoyer() {
-        guard !demande.isEmpty, !etat.occupe else { return }
-        etat.dirigerDesign(demande)
-        demande = ""
-    }
 }
 
 /// Aperçu du boîtier : la J-card pliée dans une K7, qu'on fait tourner à la souris.

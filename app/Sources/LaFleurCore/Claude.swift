@@ -8,6 +8,8 @@ public struct ClientClaude: Sendable {
     public var modele = FournisseurIA.claude.modeleParDefaut
     /// Langue des réponses (celle de l'app).
     public var langue = "français"
+    /// Jetons consommés (pour le coût affiché dans l'historique IA) ; nil = pas de comptage.
+    public var compteur: CompteurJetons?
     public init(cleAPI: String, langue: String = "français", fournisseur: FournisseurIA = .claude, modele: String? = nil) {
         self.cleAPI = cleAPI; self.langue = langue; self.fournisseur = fournisseur
         self.modele = (modele?.isEmpty == false ? modele! : fournisseur.modeleParDefaut)
@@ -64,7 +66,7 @@ public struct ClientClaude: Sendable {
             "system": [["type": "text", "text": systeme, "cache_control": ["type": "ephemeral"]]],
         ]
         if !rechercheWeb.isEmpty {
-            corps["tools"] = [["type": "web_search_20250305", "name": "web_search", "max_uses": 5, "allowed_domains": rechercheWeb]]
+            corps["tools"] = [["type": "web_search_20260209", "name": "web_search", "max_uses": 5, "allowed_domains": rechercheWeb]]
         }
 
         // La recherche web peut mettre le tour en pause : on relance avec ce qui a déjà été fait.
@@ -88,6 +90,11 @@ public struct ClientClaude: Sendable {
                 throw Erreur.http(code, "Claude — \(msg)")
             }
             let r = try JSONDecoder().decode(ReponseMessages.self, from: data)
+            if let u = r.usage {
+                // Écriture en cache : facturée 1,25 fois l'entrée.
+                compteur?.ajouter(entree: (u.input_tokens ?? 0) + (u.cache_creation_input_tokens ?? 0) * 5 / 4,
+                                  sortie: u.output_tokens ?? 0, cacheLu: u.cache_read_input_tokens ?? 0)
+            }
             if r.stop_reason == "refusal" { throw Erreur.refus(r.stop_details?.category ?? "sans catégorie") }
             if r.stop_reason == "max_tokens" { throw Erreur.tronquee }
             if r.stop_reason == "pause_turn",
@@ -114,9 +121,13 @@ public struct ClientClaude: Sendable {
     private struct ReponseMessages: Decodable {
         struct Bloc: Decodable { let type: String; let text: String? }
         struct Details: Decodable { let category: String? }
+        struct Usage: Decodable {
+            let input_tokens: Int?, output_tokens: Int?, cache_read_input_tokens: Int?, cache_creation_input_tokens: Int?
+        }
         let content: [Bloc]
         let stop_reason: String?
         let stop_details: Details?
+        let usage: Usage?
     }
 }
 

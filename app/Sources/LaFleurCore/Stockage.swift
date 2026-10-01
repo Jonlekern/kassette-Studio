@@ -133,9 +133,11 @@ public struct Preferences: Codable, Equatable, Sendable {
     public var modelesIA: [String: String] = [:]
     /// Dernière version lancée, et s'il y a des clés dans le trousseau : pour prévenir avant la question de macOS.
     public var derniereVersion = ""
+    /// Mode IA expert : l'IA peut aussi agir sur la Mixtape, les réglages de la cassette et la Collection (désactivé par défaut).
+    public var modeExpertIA = false
     public var cleEnregistree = false
     enum CodingKeys: String, CodingKey {
-        case conditionsAcceptees, spotifyClientID, dossierAudio, sortieAudioUID, platine, egaliserVolume, rechercheWebClaude, langue, prochainNumero, prefixeCatalogue, calibrations, imprimante, papierCalibrage, uniteMesure, fournisseurIA, modelesIA, derniereVersion, cleEnregistree
+        case conditionsAcceptees, spotifyClientID, dossierAudio, sortieAudioUID, platine, egaliserVolume, rechercheWebClaude, langue, prochainNumero, prefixeCatalogue, calibrations, imprimante, papierCalibrage, uniteMesure, fournisseurIA, modelesIA, derniereVersion, cleEnregistree, modeExpertIA
     }
 
     /// Décodage tolérant : un réglage absent (ancienne version) prend sa valeur par défaut.
@@ -161,6 +163,7 @@ public struct Preferences: Codable, Equatable, Sendable {
         modelesIA = v(.modelesIA, d.modelesIA)
         derniereVersion = v(.derniereVersion, d.derniereVersion)
         cleEnregistree = v(.cleEnregistree, d.cleEnregistree)
+        modeExpertIA = v(.modeExpertIA, d.modeExpertIA)
     }
 
     public init() {}

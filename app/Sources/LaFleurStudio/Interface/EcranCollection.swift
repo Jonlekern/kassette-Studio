@@ -8,6 +8,7 @@ struct EcranCollection: View {
     var reimprimer: () -> Void = {}
     @State private var recherche = ""
     @State private var aSupprimer: Projet?
+    @State private var historique: Projet?
 
     private var liste: [Projet] {
         let r = recherche.lowercased()
@@ -43,6 +44,9 @@ struct EcranCollection: View {
                                 Button("×") { aSupprimer = p }.buttonStyle(.w98).help("Supprimer")
                             }
                             Button("Réimprimer la jaquette") { ouvrir(p); reimprimer() }.buttonStyle(.w98)
+                            if !p.echangesIA.isEmpty {
+                                Button("Historique IA (\(p.echangesIA.count))") { historique = p }.buttonStyle(.w98)
+                            }
                         }
                         .padding(8).relief()
                     }
@@ -55,6 +59,16 @@ struct EcranCollection: View {
                                            : "\(etat.collection.count) cassette · prochain numéro : \(prochain)")
         }
         .onAppear { etat.rafraichirCollection() }
+        .sheet(item: $historique) { p in
+            Fenetre(titre: "Historique IA · \(p.numeroCatalogue)", fermer: { historique = nil }) {
+                VStack(alignment: .leading, spacing: 8) {
+                    HistoriqueIAVue(projet: p)
+                    Button("Ouvrir la cassette") { historique = nil; ouvrir(p) }.buttonStyle(.w98Gras)
+                }
+                .padding(12).frame(width: 480)
+            }
+            .w98()
+        }
         .alert("Supprimer \(aSupprimer?.numeroCatalogue ?? "") ?", isPresented: Binding(get: { aSupprimer != nil }, set: { if !$0 { aSupprimer = nil } })) {
             Button("Supprimer", role: .destructive) { if let p = aSupprimer { etat.supprimer(p) }; aSupprimer = nil }
             Button("Annuler", role: .cancel) { aSupprimer = nil }

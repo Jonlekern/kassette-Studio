@@ -67,9 +67,14 @@ private struct ReponseOpenAI: Decodable {
         let content: [Contenu]?
     }
     struct Incomplet: Decodable { let reason: String? }
+    struct Usage: Decodable {
+        struct Details: Decodable { let cached_tokens: Int? }
+        let input_tokens: Int?, output_tokens: Int?, input_tokens_details: Details?
+    }
     let status: String?
     let output: [Element]
     let incomplete_details: Incomplet?
+    let usage: Usage?
 }
 
 private struct ReponseGemini: Decodable {
@@ -82,8 +87,10 @@ private struct ReponseGemini: Decodable {
         let finishReason: String?
     }
     struct Retour: Decodable { let blockReason: String? }
+    struct Usage: Decodable { let promptTokenCount: Int?, candidatesTokenCount: Int?, thoughtsTokenCount: Int?, cachedContentTokenCount: Int? }
     let candidates: [Candidat]?
     let promptFeedback: Retour?
+    let usageMetadata: Usage?
 }
 
 extension ClientClaude {
@@ -119,6 +126,10 @@ extension ClientClaude {
         req.httpBody = try JSONSerialization.data(withJSONObject: corps)
 
         let r = try JSONDecoder().decode(ReponseOpenAI.self, from: try await envoyer(req))
+        if let u = r.usage {
+            let cache = u.input_tokens_details?.cached_tokens ?? 0
+            compteur?.ajouter(entree: (u.input_tokens ?? 0) - cache, sortie: u.output_tokens ?? 0, cacheLu: cache)
+        }
         if r.status == "incomplete" {
             if r.incomplete_details?.reason == "content_filter" { throw Erreur.refus("content_filter") }
             throw Erreur.tronquee
@@ -172,6 +183,11 @@ extension ClientClaude {
         req.httpBody = try JSONSerialization.data(withJSONObject: corps)
 
         let r = try JSONDecoder().decode(ReponseGemini.self, from: try await envoyer(req))
+        if let u = r.usageMetadata {
+            let cache = u.cachedContentTokenCount ?? 0
+            compteur?.ajouter(entree: (u.promptTokenCount ?? 0) - cache, sortie: (u.candidatesTokenCount ?? 0) + (u.thoughtsTokenCount ?? 0),
+                              cacheLu: cache)
+        }
         if let raison = r.promptFeedback?.blockReason { throw Erreur.refus(raison) }
         guard let c = r.candidates?.first else { throw Erreur.reponseVide }
         switch c.finishReason {

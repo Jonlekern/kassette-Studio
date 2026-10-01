@@ -7,7 +7,14 @@ struct EcranMixtape: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            Sources().frame(width: 290)
+            VStack(spacing: 10) {
+                Sources()
+                // Mode expert : la boîte IA marche aussi ici (« mets Glass en face B »).
+                if etat.modeExpert {
+                    BoiteModifierIA(exemple: "Ex. « mets Glass en face B », « passe en C90 », « bande Type I sans Dolby »")
+                }
+            }
+            .frame(width: 290)
             VStack(alignment: .leading, spacing: 10) {
                 // Hauteur naturelle : sinon l'encadré se partage la hauteur avec les listes et s'étire en blancs.
                 ReglagesCassette().fixedSize(horizontal: false, vertical: true)
