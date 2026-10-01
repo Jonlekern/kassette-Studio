@@ -103,3 +103,9 @@ All your cassettes, to reopen or duplicate.
 Every push to GitHub builds the app, runs the tests, takes a screenshot of every screen and publishes the
 new version in [Releases](https://github.com/Jonlekern/kassette-Studio/releases/latest). Full manual
 (French): [app/LISEZMOI.md](app/LISEZMOI.md).
+
+## License
+
+Free and open source under the [MIT License](LICENSE): reuse, modify and share it, **as long as you credit
+LaFleurStudio** (keep the copyright notice). The LaFleurStudio name, logo and icon are not covered. Fonts
+keep their own licenses.

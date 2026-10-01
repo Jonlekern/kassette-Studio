@@ -115,4 +115,8 @@ L'app parle français, anglais, russe et allemand (Réglages → Langue).
 - À chaque envoi de code, GitHub compile l'app, lance les tests, photographie chaque écran et publie la
   nouvelle version dans [Releases](https://github.com/Jonlekern/kassette-Studio/releases/latest).
 
-Usage personnel uniquement.
+## Licence
+
+Code libre sous [licence MIT](LICENSE) : tu peux le réutiliser, le modifier et le partager, **à condition de
+créditer LaFleurStudio** (garder la mention de copyright). Le nom, le logo et l'icône LaFleurStudio ne sont
+pas libres. Les polices gardent leur propre licence.
