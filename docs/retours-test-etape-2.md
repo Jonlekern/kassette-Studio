@@ -41,12 +41,16 @@ Le plus simple à l'usage serait de **cliquer sur un élément dans l'aperçu** 
 de le **déplacer à la souris** et de régler sa **taille** (poignées ou curseur), comme dans un petit
 logiciel de mise en page.
 
-### 4. Étiquettes de K7 : un mode « pochette en fond »
+### 4. Étiquettes de K7 : pochette en fond, petite pochette ou sans pochette
 
 Dans **Étiquettes**, Johnny veut pouvoir choisir un **mode où la pochette remplit toute l'étiquette**,
 en fond, au lieu du fond uni actuel avec le petit carré d'image à gauche.
 
-- Un choix de style pour les étiquettes, par exemple « Fond uni » (actuel) / « Pochette en fond ».
+- Un choix de style pour les étiquettes, avec **trois modes** :
+  - « **Petite pochette** » : le style actuel, fond uni et petit carré d'image à gauche ;
+  - « **Pochette en fond** » : la pochette remplit toute l'étiquette (détails ci-dessous) ;
+  - « **Sans pochette** » : aucune image sur l'étiquette, seulement le fond uni et les textes.
+    Le carré gris disparaît, et les textes peuvent prendre la place libérée.
 - En mode « Pochette en fond » : la pochette couvre toute l'étiquette (fond perdu compris), recadrée pour
   remplir sans être déformée. Les textes (titre, face A/B, artiste, C60, type de bande) passent
   par-dessus.
