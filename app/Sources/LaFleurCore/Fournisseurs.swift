@@ -1,7 +1,13 @@
 import Foundation
 
 /// Le moteur d'IA qui fait le travail de directeur artistique : Claude (par défaut), GPT ou Gemini.
-/// Les trois reçoivent les mêmes demandes (texte, images, schéma JSON imposé) ; seul l'appel HTTP change.
+/// Les trois reçoivent exactement les mêmes demandes : même prompt système (plan de la cassette, conventions,
+/// accès complet aux champs et aux images), mêmes images jointes, même schéma JSON imposé, même recherche web.
+/// Seul l'appel HTTP change. Documentation suivie (octobre 2026) :
+/// - OpenAI : API Responses, `text.format` json_schema strict, outil `web_search` avec `filters.allowed_domains`,
+///   cache explicite du prompt système (`prompt_cache_breakpoint`, modèles GPT-5.6 et suivants).
+/// - Gemini : API generateContent (stable), `generationConfig.responseJsonSchema`, outil `google_search`
+///   (combinable avec le schéma sur Gemini 3), `thinkingConfig.thinkingLevel`, filtres de sécurité au minimum.
 public enum FournisseurIA: String, Codable, CaseIterable, Sendable {
     case claude, openai, gemini
 
@@ -21,11 +27,12 @@ public enum FournisseurIA: String, Codable, CaseIterable, Sendable {
         }
     }
 
+    /// Modèle conseillé : le plus capable de chaque maison qui gère images, schéma JSON et recherche web.
     public var modeleParDefaut: String {
         switch self {
         case .claude: "claude-opus-5-5"
-        case .openai: "gpt-5"
-        case .gemini: "gemini-2.5-pro"
+        case .openai: "gpt-6-astra"
+        case .gemini: "gemini-3.8-flash"
         }
     }
 
@@ -51,22 +58,56 @@ public enum FournisseurIA: String, Codable, CaseIterable, Sendable {
     public var entreeTrousseau: String { self == .claude ? "claude" : rawValue }
 }
 
+// MARK: - Réponses des API (décodage)
+
+private struct ReponseOpenAI: Decodable {
+    struct Element: Decodable {
+        struct Contenu: Decodable { let type: String; let text: String?; let refusal: String? }
+        let type: String
+        let content: [Contenu]?
+    }
+    struct Incomplet: Decodable { let reason: String? }
+    let status: String?
+    let output: [Element]
+    let incomplete_details: Incomplet?
+}
+
+private struct ReponseGemini: Decodable {
+    struct Candidat: Decodable {
+        struct Contenu: Decodable {
+            struct Partie: Decodable { let text: String?; let thought: Bool? }
+            let parts: [Partie]?
+        }
+        let content: Contenu?
+        let finishReason: String?
+    }
+    struct Retour: Decodable { let blockReason: String? }
+    let candidates: [Candidat]?
+    let promptFeedback: Retour?
+}
+
 extension ClientClaude {
-    /// Envoie la demande à OpenAI (API Responses) avec sortie JSON stricte.
+    /// OpenAI, API Responses. Le prompt système va dans un message « developer » marqué comme point de cache :
+    /// les demandes suivantes ne repaient pas le plan de la cassette (modèles GPT-5.6 et suivants).
     func demanderOpenAI<T: Decodable>(_ type: T.Type, systeme: String, message: String, schema: [String: Any],
                                       effort: String, images: [Data], rechercheWeb: [String]) async throws -> T {
         var contenu: [[String: Any]] = images.map {
-            ["type": "input_image", "image_url": "data:\(Self.typeImage($0));base64,\($0.base64EncodedString())"]
+            ["type": "input_image", "image_url": "data:\(Self.typeImage($0));base64,\($0.base64EncodedString())", "detail": "high"]
         }
         contenu.append(["type": "input_text", "text": message])
+        var regles: [String: Any] = ["type": "input_text", "text": systeme]
         var corps: [String: Any] = [
             "model": modele,
-            "instructions": systeme,
-            "input": [["role": "user", "content": contenu]],
-            "max_output_tokens": 16000,
+            "max_output_tokens": 32000,
             "reasoning": ["effort": effort == "high" ? "high" : "medium"],
             "text": ["format": ["type": "json_schema", "name": "reponse", "schema": schema, "strict": true]],
+            "store": false,
         ]
+        if Self.cacheExplicite(modele) {
+            regles["prompt_cache_breakpoint"] = ["mode": "explicit"]
+            corps["prompt_cache_options"] = ["mode": "explicit"]
+        }
+        corps["input"] = [["role": "developer", "content": [regles]], ["role": "user", "content": contenu]]
         if !rechercheWeb.isEmpty {
             corps["tools"] = [["type": "web_search", "filters": ["allowed_domains": rechercheWeb]]]
         }
@@ -76,20 +117,8 @@ extension ClientClaude {
         req.setValue("application/json", forHTTPHeaderField: "content-type")
         req.setValue("Bearer \(cleAPI)", forHTTPHeaderField: "authorization")
         req.httpBody = try JSONSerialization.data(withJSONObject: corps)
-        let data = try await envoyer(req)
 
-        struct Reponse: Decodable {
-            struct Element: Decodable {
-                struct Contenu: Decodable { let type: String; let text: String?; let refusal: String? }
-                let type: String
-                let content: [Contenu]?
-            }
-            struct Incomplet: Decodable { let reason: String? }
-            let status: String?
-            let output: [Element]
-            let incomplete_details: Incomplet?
-        }
-        let r = try JSONDecoder().decode(Reponse.self, from: data)
+        let r = try JSONDecoder().decode(ReponseOpenAI.self, from: try await envoyer(req))
         if r.status == "incomplete" {
             if r.incomplete_details?.reason == "content_filter" { throw Erreur.refus("content_filter") }
             throw Erreur.tronquee
@@ -99,20 +128,41 @@ extension ClientClaude {
         return try decoder(T.self, contenus.filter { $0.type == "output_text" }.compactMap(\.text).joined())
     }
 
-    /// Envoie la demande à Gemini (generateContent) avec sortie JSON imposée par le schéma.
+    /// Le cache explicite (`prompt_cache_options`) n'existe qu'à partir de GPT-5.6 ; avant, le cache est automatique.
+    static func cacheExplicite(_ modele: String) -> Bool {
+        guard modele.hasPrefix("gpt-") else { return false }
+        let chiffres = modele.dropFirst(4).prefix { $0.isNumber || $0 == "." }
+        let parties = chiffres.split(separator: ".").compactMap { Int($0) }
+        guard let majeur = parties.first else { return false }
+        return majeur > 5 || (majeur == 5 && (parties.dropFirst().first ?? 0) >= 6)
+    }
+
+    /// Gemini, API generateContent. Pas de filtre de domaines pour la recherche Google côté API :
+    /// les sites conseillés sont donnés dans la consigne.
     func demanderGemini<T: Decodable>(_ type: T.Type, systeme: String, message: String, schema: [String: Any],
-                                      images: [Data], rechercheWeb: [String]) async throws -> T {
+                                      effort: String, images: [Data], rechercheWeb: [String]) async throws -> T {
         var parties: [[String: Any]] = images.map {
-            ["inline_data": ["mime_type": Self.typeImage($0), "data": $0.base64EncodedString()]]
+            ["inlineData": ["mimeType": Self.typeImage($0), "data": $0.base64EncodedString()]]
         }
         parties.append(["text": message])
-        var corps: [String: Any] = [
-            "systemInstruction": ["parts": [["text": systeme]]],
-            "contents": [["role": "user", "parts": parties]],
-            "generationConfig": ["responseMimeType": "application/json", "responseJsonSchema": schema, "maxOutputTokens": 16000],
+        let consigne = rechercheWeb.isEmpty ? systeme
+            : systeme + "\nRecherche web : utilise en priorité ces sites et cite-les : " + rechercheWeb.joined(separator: ", ") + "."
+        var config: [String: Any] = [
+            "responseMimeType": "application/json",
+            "responseJsonSchema": schema,
+            "maxOutputTokens": 32000,
         ]
-        // Recherche Google : si le modèle la refuse avec un schéma imposé, l'appelant réessaie sans (erreur 400).
-        if !rechercheWeb.isEmpty { corps["tools"] = [["google_search": [String: Any]()]] }
+        if modele.hasPrefix("gemini-3") { config["thinkingConfig"] = ["thinkingLevel": effort == "high" ? "HIGH" : "MEDIUM"] }
+        var corps: [String: Any] = [
+            "systemInstruction": ["parts": [["text": consigne]]],
+            "contents": [["role": "user", "parts": parties]],
+            "generationConfig": config,
+            // Accès complet : on n'ajoute aucun filtre au-delà des règles de base de Google.
+            "safetySettings": ["HARM_CATEGORY_HATE_SPEECH", "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                               "HARM_CATEGORY_DANGEROUS_CONTENT", "HARM_CATEGORY_HARASSMENT"].map { ["category": $0, "threshold": "BLOCK_NONE"] },
+        ]
+        // Recherche Google + schéma JSON : seulement sur Gemini 3. Sinon l'API répond 400 et l'appelant réessaie sans web.
+        if !rechercheWeb.isEmpty { corps["tools"] = [["googleSearch": [String: Any]()]] }
         let nomModele = modele.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? modele
         var req = URLRequest(url: URL(string: "https://generativelanguage.googleapis.com/v1beta/models/\(nomModele):generateContent")!)
         req.httpMethod = "POST"
@@ -120,26 +170,16 @@ extension ClientClaude {
         req.setValue("application/json", forHTTPHeaderField: "content-type")
         req.setValue(cleAPI, forHTTPHeaderField: "x-goog-api-key")
         req.httpBody = try JSONSerialization.data(withJSONObject: corps)
-        let data = try await envoyer(req)
 
-        struct Reponse: Decodable {
-            struct Candidat: Decodable {
-                struct Contenu: Decodable { struct Partie: Decodable { let text: String?; let thought: Bool? }; let parts: [Partie]? }
-                let content: Contenu?
-                let finishReason: String?
-            }
-            struct Blocage: Decodable { let blockReason: String? }
-            let candidates: [Candidat]?
-            let promptFeedback: Blocage?
-        }
-        let r = try JSONDecoder().decode(Reponse.self, from: data)
+        let r = try JSONDecoder().decode(ReponseGemini.self, from: try await envoyer(req))
         if let raison = r.promptFeedback?.blockReason { throw Erreur.refus(raison) }
         guard let c = r.candidates?.first else { throw Erreur.reponseVide }
         switch c.finishReason {
         case "MAX_TOKENS": throw Erreur.tronquee
-        case "SAFETY", "PROHIBITED_CONTENT", "BLOCKLIST", "RECITATION": throw Erreur.refus(c.finishReason ?? "")
+        case "SAFETY", "PROHIBITED_CONTENT", "BLOCKLIST", "RECITATION", "SPII", "LANGUAGE": throw Erreur.refus(c.finishReason ?? "")
         default: break
         }
+        // Les pensées du modèle (thought = true) ne font pas partie de la réponse.
         let texte = (c.content?.parts ?? []).filter { $0.thought != true }.compactMap(\.text).joined()
         return try decoder(T.self, texte)
     }

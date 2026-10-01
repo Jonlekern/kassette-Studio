@@ -45,7 +45,7 @@ public struct ClientClaude: Sendable {
         switch fournisseur {
         case .openai: return try await demanderOpenAI(type, systeme: systeme, message: message, schema: schema, effort: effort,
                                                       images: images, rechercheWeb: rechercheWeb)
-        case .gemini: return try await demanderGemini(type, systeme: systeme, message: message, schema: schema,
+        case .gemini: return try await demanderGemini(type, systeme: systeme, message: message, schema: schema, effort: effort,
                                                       images: images, rechercheWeb: rechercheWeb)
         case .claude: break
         }

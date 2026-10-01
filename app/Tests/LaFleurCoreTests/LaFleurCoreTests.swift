@@ -340,6 +340,12 @@ final class RetouchesTests: XCTestCase {
         XCTAssertEqual(gpt.modele, FournisseurIA.openai.modeleParDefaut)
         XCTAssertEqual(ClientClaude(cleAPI: "x", fournisseur: .gemini, modele: "gemini-perso").modele, "gemini-perso")
         XCTAssertTrue(try! gpt.decoder(R.self, "```json\n{\"ok\": true}\n```").ok)
+        // Cache explicite d'OpenAI : seulement GPT-5.6 et suivants.
+        XCTAssertTrue(ClientClaude.cacheExplicite("gpt-6-astra"))
+        XCTAssertTrue(ClientClaude.cacheExplicite("gpt-5.6"))
+        XCTAssertFalse(ClientClaude.cacheExplicite("gpt-5.5"))
+        XCTAssertFalse(ClientClaude.cacheExplicite("gpt-5"))
+        XCTAssertFalse(ClientClaude.cacheExplicite("o3"))
         let prefs = try! JSONDecoder().decode(Preferences.self, from: Data("{\"langue\":\"en\"}".utf8))
         XCTAssertEqual(prefs.fournisseurIA, .claude)
         XCTAssertEqual(prefs.langue, "en")
