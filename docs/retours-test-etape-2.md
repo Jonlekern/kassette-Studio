@@ -59,3 +59,21 @@ en fond, au lieu du fond uni actuel avec le petit carré d'image à gauche.
 - La fenêtre de la bande (le rectangle blanc) reste à sa place, par-dessus l'image.
 - Idéalement, on peut aussi déplacer l'image pour choisir la partie visible (comme la demande 1).
 - Le réglage est commun aux faces A et B, et enregistré avec la cassette.
+
+### 5. Claude ne peut pas retirer la pochette de l'étiquette (et ne le dit pas)
+
+Johnny a demandé au Claude de l'onglet Jaquette d'**enlever la pochette de l'étiquette**. Ça n'a pas
+marché.
+
+**Cause** (lecture du code) : Claude ne peut changer que les champs de `ChampsDesign.tous`
+(`LaFleurCore/Retouches.swift`). **Aucun champ ne contrôle l'image de l'étiquette** : le petit carré
+de pochette est toujours dessiné. Les champs proches ne suffisent pas : `images_retirer` ne retire que
+les images posées, `opacite_image` concerne le recto, `taille_etiquette` les textes de l'étiquette.
+
+**À faire** :
+- Avec la demande 4, ajouter un champ, par exemple `etiquette_pochette (petite | fond | aucune)`, à
+  `ChampsDesign.tous` et à l'aide (`ChampsDesign.aide`), pour que Claude puisse changer le mode.
+- Plus généralement : quand une demande ne correspond à **aucun champ modifiable**, Claude doit le
+  **dire clairement** (« je ne peux pas encore changer X dans l'app ») au lieu de ne rien faire.
+- Garder cette règle pour la suite : chaque nouveau réglage visible dans l'interface doit aussi être
+  ajouté aux champs que Claude peut modifier.
