@@ -60,7 +60,7 @@ en fond, au lieu du fond uni actuel avec le petit carré d'image à gauche.
 - Idéalement, on peut aussi déplacer l'image pour choisir la partie visible (comme la demande 1).
 - Le réglage est commun aux faces A et B, et enregistré avec la cassette.
 
-### 5. Claude ne peut pas retirer la pochette de l'étiquette (et ne le dit pas)
+### 5. ~~Claude ne peut pas retirer la pochette de l'étiquette~~ — **annulée par Johnny** (couverte par les demandes 6 et 7)
 
 Johnny a demandé au Claude de l'onglet Jaquette d'**enlever la pochette de l'étiquette**. Ça n'a pas
 marché.
