@@ -9,9 +9,14 @@ enum Captures {
     static func lancer(_ dossier: URL) async {
         try? FileManager.default.createDirectory(at: dossier, withIntermediateDirectories: true)
         let tmp = FileManager.default.temporaryDirectory.appendingPathComponent("lafleurstudio-captures-\(UUID().uuidString)")
-        let etat = EtatApp(stockage: Stockage(racine: tmp))
-        etat.prefs.conditionsAcceptees = true
-        etat.projet = demo(pochette: pochette(dans: tmp))
+        // La cassette d'exemple est enregistrée avant le démarrage : la Collection n'a pas de cassette vide en plus.
+        let stockage = Stockage(racine: tmp)
+        var prefs = stockage.preferences()
+        prefs.conditionsAcceptees = true
+        prefs.prochainNumero = 2
+        try? stockage.enregistrer(prefs)
+        try? stockage.enregistrer(demo(pochette: pochette(dans: tmp)))
+        let etat = EtatApp(stockage: stockage)
         let moteur = MoteurEnregistrement()
         await etat.prechargerImages()
 
