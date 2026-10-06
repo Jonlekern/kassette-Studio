@@ -160,7 +160,7 @@ public struct Projet: Codable, Identifiable, Hashable, Sendable {
     public var numeroCatalogue: String
     public var titre: String = ""
     public var artiste: String = ""
-    public var maisonDeDisque: String = "LAFLEURSTUDIO"
+    public var maisonDeDisque: String = "STUDIOLAFLEUR"
     public var mode: ModeCassette = .album
     public var cassette = Cassette()
     public var faceA: [Piste] = []

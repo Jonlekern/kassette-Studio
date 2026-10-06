@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Compile LaFleurStudio et fabrique « LaFleurStudio.app » (signature locale, pour usage perso).
+# Compile l'app et fabrique « STUDIOLAFLEUR.app » (signature locale, pour usage perso).
 # Usage : ./construire-app.sh            → crée l'app dans ./dist
 #         ./construire-app.sh --installer → la copie aussi dans /Applications
 set -euo pipefail
@@ -15,7 +15,7 @@ fi
 swift build -c release
 BIN="$(swift build -c release --show-bin-path)/LaFleurStudio"
 
-APP="dist/LaFleurStudio.app"
+APP="dist/STUDIOLAFLEUR.app"
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN" "$APP/Contents/MacOS/LaFleurStudio"
@@ -34,8 +34,8 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-  <key>CFBundleName</key><string>LaFleurStudio</string>
-  <key>CFBundleDisplayName</key><string>LaFleurStudio</string>
+  <key>CFBundleName</key><string>STUDIOLAFLEUR</string>
+  <key>CFBundleDisplayName</key><string>STUDIOLAFLEUR</string>
   <key>CFBundleIdentifier</key><string>ch.lafleurstudio.app</string>
   <key>CFBundleExecutable</key><string>LaFleurStudio</string>
   <key>CFBundlePackageType</key><string>APPL</string>
@@ -58,7 +58,7 @@ codesign --force --deep --sign - -r='designated => identifier "ch.lafleurstudio.
 echo "✓ $APP"
 
 if [[ "${1:-}" == "--installer" ]]; then
-  rm -rf "/Applications/LaFleurStudio.app"
+  rm -rf "/Applications/LaFleurStudio.app" "/Applications/STUDIOLAFLEUR.app"  # l'ancien nom aussi
   cp -R "$APP" /Applications/
   echo "✓ Installée dans /Applications"
 fi

@@ -43,7 +43,7 @@ public actor ClientMusicBrainz {
         var c = URLComponents(string: "https://musicbrainz.org/ws/2" + chemin)!
         c.queryItems = (params.merging(["fmt": "json"]) { a, _ in a }).sorted { $0.key < $1.key }.map { URLQueryItem(name: $0.key, value: $0.value) }
         var req = URLRequest(url: c.url!)
-        req.setValue("LaFleurStudio/0.1 ( https://lafleurstudio.ch )", forHTTPHeaderField: "User-Agent")
+        req.setValue("STUDIOLAFLEUR/0.1 ( https://lafleurstudio.ch )", forHTTPHeaderField: "User-Agent")
         let (data, rep) = try await URLSession.shared.data(for: req)
         let code = (rep as? HTTPURLResponse)?.statusCode ?? 0
         guard code == 200 else { throw Erreur.http(code) }
@@ -83,7 +83,7 @@ public actor ClientMusicBrainz {
     /// Les scans d'une édition (Cover Art Archive), sans limite de débit côté MusicBrainz.
     public func images(_ id: String) async throws -> [ImageArchive] {
         var req = URLRequest(url: URL(string: "https://coverartarchive.org/release/\(id)")!)
-        req.setValue("LaFleurStudio/0.1 ( https://lafleurstudio.ch )", forHTTPHeaderField: "User-Agent")
+        req.setValue("STUDIOLAFLEUR/0.1 ( https://lafleurstudio.ch )", forHTTPHeaderField: "User-Agent")
         let (data, rep) = try await URLSession.shared.data(for: req)
         let code = (rep as? HTTPURLResponse)?.statusCode ?? 0
         if code == 404 { return [] }

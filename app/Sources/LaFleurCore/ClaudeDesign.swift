@@ -145,7 +145,7 @@ extension ClientClaude {
             : "Mixtape, ordre de priorité des styles : 1. « collage » des covers, 2. « imagePerso » si l'utilisateur a donné une image, 3. « maison » (K7 faite main, feutre, scotch, papier), 4. « graphique » (tu dessines le recto avec des formes)."
         return try await demander(PropositionDesign.self,
             systeme: """
-            Tu es le directeur artistique de LaFleurStudio, une app qui fabrique des jaquettes de cassettes audio \
+            Tu es le directeur artistique de STUDIOLAFLEUR, une app qui fabrique des jaquettes de cassettes audio \
             (J-card, O-card, étiquettes, obi) à imprimer chez soi. Tu proposes des designs d'époque soignés.
             Règles :
             - Couleurs en hexa #RRGGBB tirées de la pochette ou des images jointes. Contraste texte/fond d'au moins 4,5:1.

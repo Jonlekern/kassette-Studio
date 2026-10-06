@@ -253,7 +253,7 @@ struct EcranJaquette: View {
 
             Groupe(titre: "Textes") {
                 Text("Maison de disque")
-                Champ(invite: "LAFLEURSTUDIO", texte: $etat.projet.maisonDeDisque)
+                Champ(invite: "STUDIOLAFLEUR", texte: $etat.projet.maisonDeDisque)
                 HStack {
                     Text("Tranche")
                     Spacer()
@@ -276,7 +276,7 @@ struct EcranJaquette: View {
                     Champ(invite: etat.mise.texteTranche, texte: lien(\.obiTexte))
                 }
                 Toggle("Logo de la maison de disque", isOn: lien(\.afficherLogoMaison)).toggleStyle(.checkbox)
-                if etat.projet.maisonDeDisque.uppercased() != "LAFLEURSTUDIO" {
+                if !Mise.estLaMaison(etat.projet.maisonDeDisque) {
                     HStack {
                         Button("Importer un logo…") { etat.importerLogo() }.buttonStyle(.w98)
                         if etat.design.logoMaison != nil {

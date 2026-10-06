@@ -68,7 +68,7 @@ enum Export {
         let data = NSMutableData()
         var boite = CGRect(x: 0, y: 0, width: 210 * u, height: 297 * u)
         guard let conso = CGDataConsumer(data: data as CFMutableData),
-              let ctx = CGContext(consumer: conso, mediaBox: &boite, [kCGPDFContextCreator: "LaFleurStudio"] as CFDictionary) else { return Data() }
+              let ctx = CGContext(consumer: conso, mediaBox: &boite, [kCGPDFContextCreator: "STUDIOLAFLEUR"] as CFDictionary) else { return Data() }
         for p in pages {
             var b = CGRect(x: 0, y: 0, width: p.papier.largeur * u, height: p.papier.hauteur * u)
             ctx.beginPage(mediaBox: &b)
@@ -162,7 +162,7 @@ struct PageVue: View {
                 }
             }
             VStack(alignment: .leading, spacing: 1) {
-                Text("LaFleurStudio · \(mise.projet.numeroCatalogue) · \(page.nom)")
+                Text("STUDIOLAFLEUR · \(mise.projet.numeroCatalogue) · \(page.nom)")
                 Text("Imprimer à 100 % (jamais « ajuster à la page ») · traits pleins : coupe · pointillés : pliage · usage personnel, non commercial")
             }
             .font(.system(size: 6.5)).foregroundStyle(Color.gray)
@@ -243,10 +243,10 @@ struct PageCalibrage: View {
         ZStack(alignment: .topLeading) {
             Rectangle().fill(Color.white)
             VStack(alignment: .leading, spacing: 5) {
-                Text("LaFleurStudio · règle de calibrage (\(papier.nom))").font(.system(size: 14, weight: .bold))
+                Text("STUDIOLAFLEUR · règle de calibrage (\(papier.nom))").font(.system(size: 14, weight: .bold))
                 Text("Imprime à 100 %, pas « Ajuster à la page ».").font(.system(size: 11, weight: .bold)).foregroundStyle(.red)
                 Text("Mesure la règle de 10 cm (ou celle de 4 pouces) avec une vraie règle, puis tape la valeur dans")
-                Text("LaFleurStudio → Réglages → Impression. C'est tout : l'app corrige toutes tes impressions.")
+                Text("STUDIOLAFLEUR → Réglages → Impression. C'est tout : l'app corrige toutes tes impressions.")
             }
             .font(.system(size: 10)).offset(x: 25 * u, y: 20 * u)
 

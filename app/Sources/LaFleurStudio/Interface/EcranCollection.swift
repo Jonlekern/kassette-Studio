@@ -1,7 +1,7 @@
 import LaFleurCore
 import SwiftUI
 
-/// Toutes les cassettes (LFS-001, LFS-002…) : ouvrir, dupliquer, supprimer.
+/// Toutes les cassettes (SLF-001, SLF-002…) : ouvrir, dupliquer, supprimer.
 struct EcranCollection: View {
     @EnvironmentObject var etat: EtatApp
     let ouvrir: (Projet) -> Void

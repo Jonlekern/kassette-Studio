@@ -1,4 +1,4 @@
-# LaFleurStudio — l'app Mac
+# STUDIOLAFLEUR — l'app Mac
 
 Mixtape, Jaquette (J-card, O-card, étiquettes, obi), Enregistrement et Collection.
 
@@ -6,12 +6,12 @@ Mixtape, Jaquette (J-card, O-card, étiquettes, obi), Enregistrement et Collecti
 
 ### Option A : télécharger l'app (le plus simple)
 
-1. Télécharge [LaFleurStudio.zip](https://github.com/Jonlekern/kassette-Studio/releases/latest/download/LaFleurStudio.zip)
+1. Télécharge [STUDIOLAFLEUR.zip](https://github.com/Jonlekern/kassette-Studio/releases/latest/download/STUDIOLAFLEUR.zip)
    (toujours la dernière version, publiée par GitHub à chaque envoi de code).
-2. Dézippe et glisse **LaFleurStudio.app** dans Applications.
+2. Dézippe et glisse **STUDIOLAFLEUR.app** dans Applications.
 3. Premier lancement : l'app n'est pas signée par Apple, donc macOS la bloque. Ouvre-la une fois, puis
    **Réglages Système → Confidentialité et sécurité → Ouvrir quand même**. Si ça ne suffit pas, dans le
-   Terminal : `xattr -dr com.apple.quarantine /Applications/LaFleurStudio.app`
+   Terminal : `xattr -dr com.apple.quarantine /Applications/STUDIOLAFLEUR.app`
 
 ### Option B : compiler sur ton Mac
 

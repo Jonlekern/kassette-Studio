@@ -150,6 +150,13 @@ struct Mise {
                                 "droits": "rabat-droits", "code": "rabat-codes", "tracklist": "volets-tracklist", "notes": "volets-notes",
                                 "credits": "volets-credits", "etiquette": "etiquette-titre", "obi": "obi-texte"]
 
+    /// La maison de disque est la nôtre : on dessine le logo STUDIOLAFLEUR (aussi pour les cassettes faites
+    /// avant le changement de nom, quand elle s'appelait LAFLEURSTUDIO).
+    static func estLaMaison(_ nom: String) -> Bool {
+        let n = nom.uppercased().replacingOccurrences(of: " ", with: "")
+        return n == "STUDIOLAFLEUR" || n == "LAFLEURSTUDIO"
+    }
+
     func couleurZone(_ zone: String, _ defaut: String? = nil) -> String {
         if let id = Self.elementDeZone[zone], let c = design.ajustements[id]?.couleur, !c.isEmpty { return c }
         return defaut ?? p.texte

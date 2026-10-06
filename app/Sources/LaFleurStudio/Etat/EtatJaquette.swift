@@ -260,7 +260,7 @@ extension EtatApp {
     /// Copie une image du web dans le dossier de l'app (l'impression marche ensuite hors ligne).
     func telecharger(_ url: URL) async -> URL? {
         var req = URLRequest(url: url)
-        req.setValue("LaFleurStudio/0.1 ( https://lafleurstudio.ch )", forHTTPHeaderField: "User-Agent")
+        req.setValue("STUDIOLAFLEUR/0.1 ( https://lafleurstudio.ch )", forHTTPHeaderField: "User-Agent")
         guard let reponse = try? await URLSession.shared.data(for: req),
               (reponse.1 as? HTTPURLResponse)?.statusCode == 200, NSImage(data: reponse.0) != nil else { return nil }
         let data = reponse.0
@@ -453,7 +453,7 @@ extension EtatApp {
     var papierCalibrage: Papier { prefs.papierCalibrage == "Letter" ? .letter : .a4 }
 
     func imprimerCalibrage() {
-        Export.imprimer(Export.calibrage(papier: papierCalibrage), titre: "LaFleurStudio - règle de calibrage", imprimante: prefs.imprimante)
+        Export.imprimer(Export.calibrage(papier: papierCalibrage), titre: "STUDIOLAFLEUR - règle de calibrage", imprimante: prefs.imprimante)
     }
 
     // MARK: Images et polices

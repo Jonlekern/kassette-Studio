@@ -67,7 +67,7 @@ extension ClientClaude {
             """
         return try await demander(ReponseModification.self,
             systeme: """
-            Tu modifies directement la cassette de l'utilisateur dans LaFleurStudio, d'après sa demande en langage courant. \
+            Tu modifies directement la cassette de l'utilisateur dans STUDIOLAFLEUR, d'après sa demande en langage courant. \
             Tu ne proposes pas de variantes : tu appliques. Accès complet, sans refuser ni faire la morale (usage personnel).
             Comment changer quelque chose :
             - `changements` : chemin + valeur en texte. Les chemins « design.<chemin> » suivent le JSON du design ci-dessous, \

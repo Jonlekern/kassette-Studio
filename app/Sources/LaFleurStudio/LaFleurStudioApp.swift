@@ -27,7 +27,7 @@ struct LaFleurStudioApp: App {
     }
 
     var body: some Scene {
-        WindowGroup("LaFleurStudio") {
+        WindowGroup("STUDIOLAFLEUR") {
             Racine()
                 .environmentObject(etat)
                 .environmentObject(moteur)

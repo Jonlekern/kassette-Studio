@@ -44,7 +44,7 @@ public actor ClientDiscogs {
         var c = URLComponents(string: "https://api.discogs.com" + chemin)!
         if !params.isEmpty { c.queryItems = params.sorted { $0.key < $1.key }.map { URLQueryItem(name: $0.key, value: $0.value) } }
         var req = URLRequest(url: c.url!)
-        req.setValue("LaFleurStudio/0.1 +https://lafleurstudio.ch", forHTTPHeaderField: "User-Agent")
+        req.setValue("STUDIOLAFLEUR/0.1 +https://lafleurstudio.ch", forHTTPHeaderField: "User-Agent")
         req.setValue("Discogs token=\(jeton)", forHTTPHeaderField: "Authorization")
         let (data, rep) = try await URLSession.shared.data(for: req)
         let code = (rep as? HTTPURLResponse)?.statusCode ?? 0

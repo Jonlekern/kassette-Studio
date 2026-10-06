@@ -31,7 +31,7 @@ final class Images: ObservableObject {
             img = NSImage(contentsOf: url)
         } else {
             var req = URLRequest(url: url)
-            req.setValue("LaFleurStudio/0.1 ( https://lafleurstudio.ch )", forHTTPHeaderField: "User-Agent")
+            req.setValue("STUDIOLAFLEUR/0.1 ( https://lafleurstudio.ch )", forHTTPHeaderField: "User-Agent")
             let data = try? await URLSession.shared.data(for: req).0
             img = data.flatMap(NSImage.init(data:))
         }

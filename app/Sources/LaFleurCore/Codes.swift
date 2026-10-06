@@ -59,12 +59,12 @@ public enum CodesBarres {
     }
 
     /// Numéro EAN par défaut : préfixe 2 (usage interne, aucun vrai produit), numéroté comme la collection.
-    /// LFS-001 → 2000126000012.
+    /// SLF-001 → 2000126000012.
     public static func eanParDefaut(_ numero: Int) -> String {
         completerEAN("20001260" + String(format: "%04d", max(0, numero) % 10000))!
     }
 
-    /// Chiffres du numéro de catalogue (LFS-007 → 7).
+    /// Chiffres du numéro de catalogue (SLF-007 → 7).
     public static func numeroDeCatalogue(_ catalogue: String) -> Int {
         Int(catalogue.reversed().prefix { $0.isNumber }.reversed().map(String.init).joined()) ?? 0
     }
@@ -110,7 +110,7 @@ public enum CodesBarres {
         "114131", "311141", "411131", "211412", "211214", "211232", "2331112",
     ]
 
-    /// Code 128, jeu B : lettres, chiffres et ponctuation ASCII (pratique pour « LFS-001 »).
+    /// Code 128, jeu B : lettres, chiffres et ponctuation ASCII (pratique pour « SLF-001 »).
     public static func code128(_ s: String) -> CodeBarres1D? {
         guard !s.isEmpty, s.unicodeScalars.allSatisfy({ (32...126).contains($0.value) }) else { return nil }
         let valeurs = s.unicodeScalars.map { Int($0.value) - 32 }

@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="docs/images/icone.png" width="96" alt="Icône LaFleurStudio">
+  <img src="docs/images/icone.png" width="96" alt="Icône STUDIOLAFLEUR">
 </p>
 
 <h1 align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo-clair.svg">
-    <img src="docs/images/logo-sombre.svg" width="520" alt="LaFleurStudio">
+    <img src="docs/images/logo-sombre.svg" width="520" alt="STUDIOLAFLEUR">
   </picture>
 </h1>
 
@@ -15,7 +15,7 @@
 </p>
 
 <h3 align="center">
-  <a href="https://github.com/Jonlekern/kassette-Studio/releases/latest/download/LaFleurStudio.zip">⬇️ Télécharger LaFleurStudio pour Mac</a>
+  <a href="https://github.com/Jonlekern/kassette-Studio/releases/latest/download/STUDIOLAFLEUR.zip">⬇️ Télécharger STUDIOLAFLEUR pour Mac</a>
 </h3>
 <p align="center"><a href="README.md">🇬🇧 English version</a></p>
 <p align="center">macOS 14 Sonoma ou plus récent · Mac Apple Silicon ou Intel · toujours la dernière version</p>
@@ -28,18 +28,18 @@
 
 ## Installer (2 minutes)
 
-1. **Télécharge** [LaFleurStudio.zip](https://github.com/Jonlekern/kassette-Studio/releases/latest/download/LaFleurStudio.zip).
-2. **Double-clique** sur le zip, puis glisse **LaFleurStudio.app** dans le dossier **Applications**.
+1. **Télécharge** [STUDIOLAFLEUR.zip](https://github.com/Jonlekern/kassette-Studio/releases/latest/download/STUDIOLAFLEUR.zip).
+2. **Double-clique** sur le zip, puis glisse **STUDIOLAFLEUR.app** dans le dossier **Applications**.
 3. **Premier lancement** : l'app n'est pas signée par Apple, donc macOS la bloque la première fois.
    - Ouvre l'app une fois. macOS affiche un message : clique **OK**.
    - Va dans **Réglages Système → Confidentialité et sécurité**, descends tout en bas et clique
      **Ouvrir quand même**.
    - Si ça ne marche toujours pas, colle ceci dans le Terminal :
      ```bash
-     xattr -dr com.apple.quarantine /Applications/LaFleurStudio.app
+     xattr -dr com.apple.quarantine /Applications/STUDIOLAFLEUR.app
      ```
 
-C'est tout. Les fois suivantes, elle s'ouvre normalement. Pour mettre à jour : retélécharge et remplace
+C'est tout. Les fois suivantes, elle s'ouvre normalement. Tu avais l'ancienne app **LaFleurStudio** ? Supprime-la des Applications : tes cassettes et tes réglages sont gardés. Pour mettre à jour : retélécharge et remplace
 l'app, tes cassettes et tes réglages sont gardés.
 
 ## Ce qu'il te faut
@@ -118,5 +118,5 @@ L'app parle français, anglais, russe et allemand (Réglages → Langue).
 ## Licence
 
 Code libre sous [licence MIT](LICENSE) : tu peux le réutiliser, le modifier et le partager, **à condition de
-créditer LaFleurStudio** (garder la mention de copyright). Le nom, le logo et l'icône LaFleurStudio ne sont
+créditer STUDIOLAFLEUR** (garder la mention de copyright). Le nom, le logo et l'icône STUDIOLAFLEUR ne sont
 pas libres. Les polices gardent leur propre licence.

@@ -29,15 +29,15 @@ jobs:
         run: |
           swift test 2>&1 | tee test.log
           exit ${PIPESTATUS[0]}
-      - name: Fabriquer LaFleurStudio.app
+      - name: Fabriquer STUDIOLAFLEUR.app
         run: |
           ./construire-app.sh
-          cd dist && ditto -c -k --keepParent LaFleurStudio.app LaFleurStudio.zip
+          cd dist && ditto -c -k --keepParent STUDIOLAFLEUR.app STUDIOLAFLEUR.zip
       - name: Mettre l'app en téléchargement
         uses: actions/upload-artifact@v4
         with:
-          name: LaFleurStudio
-          path: app/dist/LaFleurStudio.zip
+          name: STUDIOLAFLEUR
+          path: app/dist/STUDIOLAFLEUR.zip
           retention-days: 30
       - name: Publier la dernière version (page Releases, lien de téléchargement du README)
         # Seulement depuis main : deux publications en parallèle (main et etape-1) se marchaient dessus
@@ -49,15 +49,15 @@ jobs:
         run: |
           gh release delete derniere-version --yes --cleanup-tag || true
           cat > notes.md <<EOF
-          Télécharge **LaFleurStudio.zip** ci-dessous, dézippe, glisse l'app dans Applications.
+          Télécharge **STUDIOLAFLEUR.zip** ci-dessous, dézippe, glisse l'app dans Applications.
 
           Premier lancement : Réglages Système → Confidentialité et sécurité → **Ouvrir quand même**
           (l'app n'est pas signée par Apple). Mode d'emploi complet sur la page d'accueil du projet.
 
           Version du $(date -u +%d.%m.%Y), code ${GITHUB_SHA::7}.
           EOF
-          gh release create derniere-version dist/LaFleurStudio.zip --target "$GITHUB_SHA" --latest --draft=false \
-            --title "LaFleurStudio — dernière version" --notes-file notes.md
+          gh release create derniere-version dist/STUDIOLAFLEUR.zip --target "$GITHUB_SHA" --latest --draft=false \
+            --title "STUDIOLAFLEUR — dernière version" --notes-file notes.md
       - name: Extraire les textes à traduire
         continue-on-error: true
         run: |
@@ -69,10 +69,10 @@ jobs:
       - name: Captures des écrans et des jaquettes
         continue-on-error: true
         run: |
-          perl -e 'alarm 300; exec @ARGV' dist/LaFleurStudio.app/Contents/MacOS/LaFleurStudio --captures "$PWD/captures"
-          perl -e 'alarm 300; exec @ARGV' dist/LaFleurStudio.app/Contents/MacOS/LaFleurStudio -AppleLanguages "(en)" --captures "$PWD/captures/en" || true
-          perl -e 'alarm 300; exec @ARGV' dist/LaFleurStudio.app/Contents/MacOS/LaFleurStudio -AppleLanguages "(ru)" --captures "$PWD/captures/ru" || true
-          perl -e 'alarm 300; exec @ARGV' dist/LaFleurStudio.app/Contents/MacOS/LaFleurStudio -AppleLanguages "(de)" --captures "$PWD/captures/de" || true
+          perl -e 'alarm 300; exec @ARGV' dist/STUDIOLAFLEUR.app/Contents/MacOS/LaFleurStudio --captures "$PWD/captures"
+          perl -e 'alarm 300; exec @ARGV' dist/STUDIOLAFLEUR.app/Contents/MacOS/LaFleurStudio -AppleLanguages "(en)" --captures "$PWD/captures/en" || true
+          perl -e 'alarm 300; exec @ARGV' dist/STUDIOLAFLEUR.app/Contents/MacOS/LaFleurStudio -AppleLanguages "(ru)" --captures "$PWD/captures/ru" || true
+          perl -e 'alarm 300; exec @ARGV' dist/STUDIOLAFLEUR.app/Contents/MacOS/LaFleurStudio -AppleLanguages "(de)" --captures "$PWD/captures/de" || true
           ls -la captures
           cat captures/journal.txt || true
       - name: Mettre les captures en téléchargement

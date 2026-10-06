@@ -117,7 +117,7 @@ public enum Commons {
             URLQueryItem(name: "iiurlwidth", value: "1200"),
         ]
         var req = URLRequest(url: c.url!)
-        req.setValue("LaFleurStudio/0.1 ( https://lafleurstudio.ch )", forHTTPHeaderField: "User-Agent")
+        req.setValue("STUDIOLAFLEUR/0.1 ( https://lafleurstudio.ch )", forHTTPHeaderField: "User-Agent")
         let (data, _) = try await URLSession.shared.data(for: req)
         return decoder(data)
     }

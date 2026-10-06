@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="docs/images/icone.png" width="96" alt="LaFleurStudio icon">
+  <img src="docs/images/icone.png" width="96" alt="STUDIOLAFLEUR icon">
 </p>
 
 <h1 align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo-clair.svg">
-    <img src="docs/images/logo-sombre.svg" width="520" alt="LaFleurStudio">
+    <img src="docs/images/logo-sombre.svg" width="520" alt="STUDIOLAFLEUR">
   </picture>
 </h1>
 
@@ -15,7 +15,7 @@
 </p>
 
 <h3 align="center">
-  <a href="https://github.com/Jonlekern/kassette-Studio/releases/latest/download/LaFleurStudio.zip">⬇️ Download LaFleurStudio for Mac</a>
+  <a href="https://github.com/Jonlekern/kassette-Studio/releases/latest/download/STUDIOLAFLEUR.zip">⬇️ Download STUDIOLAFLEUR for Mac</a>
 </h3>
 <p align="center"><a href="README.fr.md">🇫🇷 Version française</a></p>
 <p align="center">macOS 14 Sonoma or later · Apple Silicon or Intel · always the latest version</p>
@@ -28,17 +28,17 @@
 
 ## Install (2 minutes)
 
-1. **Download** [LaFleurStudio.zip](https://github.com/Jonlekern/kassette-Studio/releases/latest/download/LaFleurStudio.zip).
-2. **Double-click** the zip, then drag **LaFleurStudio.app** into your **Applications** folder.
+1. **Download** [STUDIOLAFLEUR.zip](https://github.com/Jonlekern/kassette-Studio/releases/latest/download/STUDIOLAFLEUR.zip).
+2. **Double-click** the zip, then drag **STUDIOLAFLEUR.app** into your **Applications** folder.
 3. **First launch**: the app isn't signed by Apple, so macOS blocks it the first time.
    - Open the app once. macOS shows a warning: click **OK**.
    - Go to **System Settings → Privacy & Security**, scroll to the bottom and click **Open Anyway**.
    - If it still won't open, paste this into Terminal:
      ```bash
-     xattr -dr com.apple.quarantine /Applications/LaFleurStudio.app
+     xattr -dr com.apple.quarantine /Applications/STUDIOLAFLEUR.app
      ```
 
-That's it. After that it opens normally. To update, download it again and replace the app: your
+That's it. After that it opens normally. Coming from the old **LaFleurStudio** app? Delete it from Applications: your cassettes and settings are kept. To update, download it again and replace the app: your
 cassettes and settings are kept.
 
 The app speaks English, French, Russian and German (Settings → Language).
@@ -107,5 +107,5 @@ new version in [Releases](https://github.com/Jonlekern/kassette-Studio/releases/
 ## License
 
 Free and open source under the [MIT License](LICENSE): reuse, modify and share it, **as long as you credit
-LaFleurStudio** (keep the copyright notice). The LaFleurStudio name, logo and icon are not covered. Fonts
+STUDIOLAFLEUR** (keep the copyright notice). The STUDIOLAFLEUR name, logo and icon are not covered. Fonts
 keep their own licenses.

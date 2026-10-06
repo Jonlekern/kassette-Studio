@@ -250,13 +250,13 @@ struct ImagesPosees: View {
     }
 }
 
-/// Logo de la maison de disque : LAFLEURSTUDIO dessiné, un logo importé, ou le nom en texte.
+/// Logo de la maison de disque : STUDIOLAFLEUR dessiné, un logo importé, ou le nom en texte.
 struct LogoMaison: View {
     let mise: Mise
     let u: CGFloat
     var body: some View {
         let p = mise.design.variante.palette
-        if mise.projet.maisonDeDisque.uppercased() == "LAFLEURSTUDIO" {
+        if Mise.estLaMaison(mise.projet.maisonDeDisque) {
             LogoForme().fill(Color(hex: p.texte)).frame(width: 24 * u, height: 1.8 * u)
         } else if let logo = mise.design.logoMaison {
             ImageCache(url: logo, remplir: false)
@@ -281,7 +281,7 @@ struct TrancheVue: View {
         // Comme sur les vraies K7 : maison de disque en haut, artiste · titre, catalogue en bas.
         HStack(spacing: 0) {
             Group {
-                if mise.projet.maisonDeDisque.uppercased() == "LAFLEURSTUDIO" {
+                if Mise.estLaMaison(mise.projet.maisonDeDisque) {
                     LogoForme().fill(Color(hex: p.texte)).frame(width: 12 * u, height: 1.2 * u)
                 } else if let logo = mise.design.logoMaison {
                     ImageCache(url: logo, remplir: false).frame(width: 12 * u, height: 8 * u).rotationEffect(.degrees(-90))

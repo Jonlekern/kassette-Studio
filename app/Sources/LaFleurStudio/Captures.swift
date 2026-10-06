@@ -231,7 +231,7 @@ enum Captures {
     }
 
     static func demo(pochette: URL) -> Projet {
-        var p = Projet(numeroCatalogue: "LFS-001")
+        var p = Projet(numeroCatalogue: "SLF-001")
         p.titre = "An Afternoon at the Lake"
         p.artiste = "Jeremy Sadik"
         p.annee = "2024"
@@ -254,7 +254,7 @@ enum Captures {
         d.ocard = true; d.obi = true
         d.qr = true; d.codeSpotify = true
         d.notes = "Un après-midi au bord du lac, enregistré sur une TDK SA60. Face A pour la lumière, face B pour le retour."
-        d.credits = "Écrit, joué et produit par Jeremy Sadik.\nCassette LAFLEURSTUDIO LFS-001."
+        d.credits = "Écrit, joué et produit par Jeremy Sadik.\nCassette STUDIOLAFLEUR SLF-001."
         d.obiTexte = "AN AFTERNOON AT THE LAKE"
         p.design = d
         return p

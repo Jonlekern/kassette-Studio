@@ -11,7 +11,7 @@ struct PremierDemarrage: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 24) {
-            Fenetre(titre: "Bienvenue dans LaFleurStudio") {
+            Fenetre(titre: "Bienvenue dans STUDIOLAFLEUR") {
                 VStack(alignment: .leading, spacing: 12) {
                     Logo().frame(height: 26).foregroundStyle(.black)
                     Text("Quatre réglages et une validation, et tu peux faire ta première cassette. Tout est modifiable plus tard dans Réglages.")
@@ -75,7 +75,7 @@ struct PremierDemarrage: View {
 struct AideClaude: View {
     var fermer: () -> Void
     var body: some View {
-        Fenetre(titre: "Aide — Claude dans LaFleurStudio", fermer: fermer) {
+        Fenetre(titre: "Aide — Claude dans STUDIOLAFLEUR", fermer: fermer) {
             VStack(alignment: .leading, spacing: 12) {
                 Groupe(titre: "Pourquoi Claude ?") {
                     Text("Claude est l'assistant intégré à l'app. Il t'aide à préparer la cassette, mais c'est toi qui décides : tu acceptes, modifies ou refuses chacune de ses propositions.")
@@ -104,7 +104,7 @@ struct TexteConditions: View {
             Text("• Usage personnel et non commercial uniquement : les cassettes, jaquettes et étiquettes créées ne sont pas faites pour être vendues, louées ou distribuées.")
             Text("• Tu es seul responsable de ce que tu fais avec l'app et de ce que tu produis, y compris du respect des droits d'auteur et des marques.")
             Text("• Pochettes, logos, textes et infos venant de Spotify, MusicBrainz, Discogs ou d'ailleurs restent la propriété de leurs auteurs.")
-            Text("• L'app est fournie telle quelle, sans garantie. L'auteur de LaFleurStudio n'est pas responsable de l'usage fait de l'app ni des objets produits.")
+            Text("• L'app est fournie telle quelle, sans garantie. L'auteur de STUDIOLAFLEUR n'est pas responsable de l'usage fait de l'app ni des objets produits.")
             Text("• Les propositions de Claude peuvent contenir des erreurs : vérifie avant d'imprimer. Claude et Spotify ont leurs propres conditions d'utilisation.")
         }
         .fixedSize(horizontal: false, vertical: true)
@@ -161,10 +161,10 @@ struct ChoixSortie: View {
     }
 }
 
-/// Logo LAFLEURSTUDIO © : une seule version vectorielle, colorée par `foregroundStyle`.
+/// Logo STUDIOLAFLEUR © : une seule version vectorielle, colorée par `foregroundStyle`.
 struct Logo: View {
     var body: some View {
-        LogoForme().aspectRatio(LogoForme.largeur / LogoForme.hauteur, contentMode: .fit).accessibilityLabel("LAFLEURSTUDIO")
+        LogoForme().aspectRatio(LogoForme.largeur / LogoForme.hauteur, contentMode: .fit).accessibilityLabel("STUDIOLAFLEUR")
     }
 }
 
@@ -176,9 +176,9 @@ struct GuideCleClaude: View {
             Text("1. Va sur platform.claude.com et connecte-toi (ou crée un compte).")
             Link("   Ouvrir platform.claude.com", destination: URL(string: "https://platform.claude.com")!).foregroundStyle(W98.bleu)
             Text("2. Ajoute un peu de crédit : Settings → Billing (quelques francs suffisent pour beaucoup de cassettes).")
-            Text("3. Settings → API keys → Create key. Donne-lui un nom (« LaFleurStudio »), garde le workspace « Default ».")
+            Text("3. Settings → API keys → Create key. Donne-lui un nom (« STUDIOLAFLEUR »), garde le workspace « Default ».")
             Text("4. Copie la clé qui commence par sk-ant-. Elle ne s'affiche qu'une seule fois : si tu la perds, crée-en une autre.")
-            Text("5. Colle-la uniquement ici, dans LaFleurStudio, puis clique « Tester » : « OK » s'affiche.")
+            Text("5. Colle-la uniquement ici, dans STUDIOLAFLEUR, puis clique « Tester » : « OK » s'affiche.")
             Text("Ne colle jamais ta clé ailleurs (conversation, message, site) : n'importe qui pourrait l'utiliser à tes frais. Si ça arrive, supprime-la dans API keys et crée-en une nouvelle.")
                 .foregroundStyle(W98.rouge)
         }
@@ -197,16 +197,16 @@ struct GuideSpotify: View {
                 Text("1. Va sur developer.spotify.com et connecte-toi avec ton compte Spotify.")
                 Link("   Ouvrir developer.spotify.com/dashboard", destination: URL(string: "https://developer.spotify.com/dashboard")!).foregroundStyle(W98.bleu)
                 Text("2. Accepte les conditions des développeurs si Spotify te les montre.")
-                Text("3. Clique « Create app ». Nom : LaFleurStudio. Description : ce que tu veux.")
+                Text("3. Clique « Create app ». Nom : STUDIOLAFLEUR. Description : ce que tu veux.")
                 Text("4. Redirect URI : copie exactement l'adresse ci-dessous, puis clique « Add » :")
                 Text(ClientSpotify.redirection).font(.system(size: 12, design: .monospaced)).textSelection(.enabled).padding(4).creux()
                 Text("5. Dans « Which API/SDKs are you planning to use? », coche « Web API ». Accepte et clique « Save ».")
                 Text("6. Ouvre l'appli → Settings : copie le « Client ID ». Ne prends pas le « Client secret », l'app n'en a pas besoin.")
             }
-            Groupe(titre: "2. Se connecter depuis LaFleurStudio") {
-                Text("1. Colle le Client ID dans LaFleurStudio, puis clique « Se connecter… ».")
+            Groupe(titre: "2. Se connecter depuis STUDIOLAFLEUR") {
+                Text("1. Colle le Client ID dans STUDIOLAFLEUR, puis clique « Se connecter… ».")
                 Text("2. Ton navigateur ouvre une page Spotify qui demande l'accès à tes playlists : clique « Agree » (Accepter).")
-                Text("3. La page affiche « C'est bon, Spotify est connecté », et LaFleurStudio « Connecté ✓ ». Tu peux fermer l'onglet.")
+                Text("3. La page affiche « C'est bon, Spotify est connecté », et STUDIOLAFLEUR « Connecté ✓ ». Tu peux fermer l'onglet.")
                 Text("Si Spotify refuse l'accès, c'est en général qu'il faut Premium, ou que la Redirect URI ne correspond pas exactement.")
                     .foregroundStyle(W98.ombre)
             }

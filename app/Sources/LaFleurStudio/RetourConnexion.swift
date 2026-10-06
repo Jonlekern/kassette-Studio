@@ -55,10 +55,10 @@ final class RetourConnexion: @unchecked Sendable {
             var params: [String: String] = [:]
             for item in URLComponents(string: chemin)?.queryItems ?? [] { params[item.name] = item.value ?? "" }
             let page = """
-            <!doctype html><meta charset="utf-8"><title>LaFleurStudio</title>
+            <!doctype html><meta charset="utf-8"><title>STUDIOLAFLEUR</title>
             <body style="font:16px -apple-system;background:#c0c0c0;padding:40px">
             <h2>\(params["error"] == nil ? "C'est bon, Spotify est connecté ✿" : "Connexion refusée")</h2>
-            <p>Tu peux fermer cet onglet et retourner dans LaFleurStudio.</p>
+            <p>Tu peux fermer cet onglet et retourner dans STUDIOLAFLEUR.</p>
             """
             let corps = Data(page.utf8)
             let rep = "HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nContent-Length: \(corps.count)\r\nConnection: close\r\n\r\n"

@@ -119,7 +119,7 @@ public struct Preferences: Codable, Equatable, Sendable {
     public var rechercheWebClaude = true
     public var langue = "fr"
     public var prochainNumero = 1
-    public var prefixeCatalogue = "LFS"
+    public var prefixeCatalogue = "SLF"
     /// Calibrage de chaque imprimante (nom de l'imprimante → correction).
     public var calibrations: [String: CalibrationImprimante] = [:]
     /// Imprimante choisie pour imprimer les jaquettes (nil = celle par défaut du Mac).
@@ -135,9 +135,11 @@ public struct Preferences: Codable, Equatable, Sendable {
     public var derniereVersion = ""
     /// Mode IA expert : l'IA peut aussi agir sur la Mixtape, les réglages de la cassette et la Collection (désactivé par défaut).
     public var modeExpertIA = false
+    /// Passage au nom STUDIOLAFLEUR fait (préfixe des numéros LFS → SLF), une seule fois.
+    public var nouveauNomFait = false
     public var cleEnregistree = false
     enum CodingKeys: String, CodingKey {
-        case conditionsAcceptees, spotifyClientID, dossierAudio, sortieAudioUID, platine, egaliserVolume, rechercheWebClaude, langue, prochainNumero, prefixeCatalogue, calibrations, imprimante, papierCalibrage, uniteMesure, fournisseurIA, modelesIA, derniereVersion, cleEnregistree, modeExpertIA
+        case conditionsAcceptees, spotifyClientID, dossierAudio, sortieAudioUID, platine, egaliserVolume, rechercheWebClaude, langue, prochainNumero, prefixeCatalogue, calibrations, imprimante, papierCalibrage, uniteMesure, fournisseurIA, modelesIA, derniereVersion, cleEnregistree, modeExpertIA, nouveauNomFait
     }
 
     /// Décodage tolérant : un réglage absent (ancienne version) prend sa valeur par défaut.
@@ -164,6 +166,12 @@ public struct Preferences: Codable, Equatable, Sendable {
         derniereVersion = v(.derniereVersion, d.derniereVersion)
         cleEnregistree = v(.cleEnregistree, d.cleEnregistree)
         modeExpertIA = v(.modeExpertIA, d.modeExpertIA)
+        nouveauNomFait = v(.nouveauNomFait, d.nouveauNomFait)
+        // Nouveau nom : les cassettes suivantes sont numérotées SLF-0xx (les anciennes gardent LFS).
+        if !nouveauNomFait {
+            if prefixeCatalogue == "LFS" { prefixeCatalogue = "SLF" }
+            nouveauNomFait = true
+        }
     }
 
     public init() {}
@@ -171,7 +179,8 @@ public struct Preferences: Codable, Equatable, Sendable {
     public var premierDemarrageFini: Bool { conditionsAcceptees }
 }
 
-/// Sauvegarde sur le Mac : ~/Library/Application Support/LaFleurStudio.
+/// Sauvegarde sur le Mac : ~/Library/Application Support/LaFleurStudio. Le dossier garde l'ancien nom de l'app
+/// (avant STUDIOLAFLEUR) : les cassettes et réglages déjà enregistrés sont retrouvés tels quels.
 public struct Stockage: Sendable {
     public let racine: URL
 
@@ -213,7 +222,7 @@ public struct Stockage: Sendable {
         try? FileManager.default.removeItem(at: dossierProjets.appendingPathComponent("\(projet.id.uuidString).json"))
     }
 
-    /// Numéro de catalogue suivant (LFS-001, LFS-002…), et avance le compteur.
+    /// Numéro de catalogue suivant (SLF-001, SLF-002…), et avance le compteur.
     public static func numero(_ prefs: inout Preferences) -> String {
         defer { prefs.prochainNumero += 1 }
         return String(format: "%@-%03d", prefs.prefixeCatalogue, prefs.prochainNumero)

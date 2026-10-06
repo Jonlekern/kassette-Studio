@@ -46,7 +46,7 @@ struct FenetrePrincipale: View {
 
     var titre: String {
         let t = etat.projet.titre.isEmpty ? "Nouvelle cassette" : etat.projet.titre
-        return "LaFleurStudio — « \(t) » · \(etat.projet.numeroCatalogue) · \(etat.projet.cassette.longueur.nom)"
+        return "STUDIOLAFLEUR — « \(t) » · \(etat.projet.numeroCatalogue) · \(etat.projet.cassette.longueur.nom)"
     }
 
     var body: some View {
@@ -56,7 +56,7 @@ struct FenetrePrincipale: View {
                     Onglets(onglets: [(Ecran.mixtape, "1. Mixtape"), (.jaquette, "2. Jaquette"), (.enregistrer, "3. Enregistrer"),
                                       (.collection, "4. Collection")], selection: $ecran)
                     Spacer()
-                    // Les réglages étaient seulement dans le menu LaFleurStudio (⌘,) : introuvables pour beaucoup.
+                    // Les réglages étaient seulement dans le menu STUDIOLAFLEUR (⌘,) : introuvables pour beaucoup.
                     SettingsLink { Text("Réglages…") }.buttonStyle(.w98).help("Réglages (⌘,)")
                 }
                 .padding(.horizontal, 8).padding(.top, 8).zIndex(1)
@@ -115,7 +115,7 @@ struct AvisTrousseau: View {
     var body: some View {
         Fenetre(titre: "Nouvelle version installée") {
             VStack(alignment: .leading, spacing: 10) {
-                Text("macOS va te demander si LaFleurStudio peut utiliser tes clés (Claude, GPT, Gemini, Spotify, Discogs) rangées dans le trousseau du Mac.")
+                Text("macOS va te demander si STUDIOLAFLEUR peut utiliser tes clés (Claude, GPT, Gemini, Spotify, Discogs) rangées dans le trousseau du Mac.")
                     .fixedSize(horizontal: false, vertical: true)
                 Text("Tape le mot de passe de ta session Mac, puis clique « Toujours autoriser ».").bold()
                     .fixedSize(horizontal: false, vertical: true)
