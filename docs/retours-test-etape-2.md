@@ -169,3 +169,169 @@ demande est minuscule, et son texte d'exemple est coupé.
   ponctuelles passent par la nouvelle boîte.
 - Si possible, la boîte est disponible aussi dans Mixtape (par exemple « mets Glass en face B »), en mode
   expert.
+
+---
+
+# Test des demandes 1 à 8 (STUDIOLAFLEUR, release du 6 octobre, commit `db43923`)
+
+7 octobre 2026, Mac mini, macOS 27.0. App `STUDIOLAFLEUR.app` téléchargée depuis Releases et installée
+par-dessus l'ancienne `LaFleurStudio.app` (mise à la Corbeille). Données gardées : la cassette LFS-003
+et les réglages sont bien repris. Aucun plantage pendant tout le test. Plan suivi :
+`docs/test-demandes-1-a-8.md`, dans l'ordre. Rien n'a été corrigé dans le code.
+
+## Résumé
+
+| Point | Résultat |
+|---|---|
+| 0. Trousseau | ✅ Fenêtre tout de suite, avis « Nouvelle version installée » puis une question macOS, plus rien à la relance → `29` |
+| 1. Recadrer l'image du recto | ✅ Curseurs, zoom, glisser, gardé après relance. ⚠️ voir P1, P2 |
+| 2. Taille des codes en mm | ✅ Saisie, alerte 6 mm, « Auto ». ❌ **aucune limite haute** (P3). QR et Spotify non concluants |
+| 3. Taille et place de chaque élément | ✅ Tailles en pt et ↺, panneau Élément, Masquer, Annuler. ❌ **glisser faux en paysage et sur la tranche** (P4) |
+| 4. Étiquettes de K7 | ✅ Les 3 modes, voile, conseil de contraste, même étiquette dans Enregistrer |
+| 6. L'IA peut tout changer | ✅ Très bien dans l'ensemble, garde-fous OK. ⚠️ P6, P7 |
+| 7. Historique IA | ✅ Liste, coût, détail, boutons, Collection. ❌ **inaccessible quand le fil est long** (P5) |
+| 8. Boîte « Modifier avec l'IA » | ✅ Grand champ, ⌘↩, fil, « Effacer le fil », petit champ retiré. ❌ fait déborder les colonnes (P5) |
+| Rappels | ✅ VU-mètres au repos, Premium écrit, guides, calibrage à la règle. ⏳ Tonalité : FOX débranchée |
+
+## Problèmes
+
+### P1. Paysage : la « Position horizontale » ne fait rien tant que l'image n'est pas zoomée
+
+**Reproduire** : Jaquette → Recto → Paysage + Pleine hauteur, zoom de l'image au minimum, curseur
+« Position horizontale » de 60 % à 0 %. **Obtenu** : l'image ne bouge pas (le curseur, si). **Attendu** :
+soit l'image bouge, soit le curseur est grisé avec une explication (« l'image tient déjà en largeur :
+zoome pour pouvoir la déplacer »). Après un zoom, le curseur marche. → `captures/30-paysage-position-h-sans-effet.jpg`
+
+Détail : le curseur « Zoom de l'image » n'affiche pas de valeur (les deux autres affichent un %).
+
+### P2. Image du recto sélectionnée : pas de cadre bleu pointillé
+
+Après avoir glissé l'image du recto dans l'aperçu, le panneau Élément indique « Image du recto », mais
+**aucun cadre bleu pointillé** n'apparaît autour (il apparaît bien pour le titre). → `captures/31-image-glissee-sans-cadre.jpg`
+
+### P3. Code-barres : aucune limite haute, la vérification dit « rien ne déborde »
+
+**Reproduire** : Codes → Taille, hauteur **412** mm (tapée par erreur). **Obtenu** : accepté, le code-barres
+traverse toute la J-card (rabat, tranche, recto). Sous le code : « ✓ EAN-13 valide · scannable », et la
+vérification avant impression : « ✓ Textes lisibles, rien ne déborde, codes scannables ». **Attendu** :
+une taille maximale (la zone disponible) ou une alerte « déborde ». → `captures/32-code-barres-412mm-sans-alerte.jpg`
+
+L'alerte basse marche : 4 mm → « ⚠ Code-barres trop bas (4 mm) : 6 mm minimum pour être scanné. » → `33`
+
+Autres détails :
+- Le bouton **« Auto »** à côté de la taille a son texte coupé sur deux lignes (« Aut / o »).
+- Le bouton **« ↶ Annuler »** (en haut de l'aperçu) reste grisé après des changements faits dans la
+  colonne de gauche (orientation, taille du code) ; il ne s'active qu'après un glisser dans l'aperçu.
+- **QR** : non concluant. La cassette n'a pas de lien Spotify, donc l'alerte « pas de lien Spotify »
+  s'affiche ; avec 8 mm, aucune alerte de taille n'apparaît (masquée ?). Le menu « QR code » ne s'ouvre
+  pas en arrière-plan, donc « Texte » n'a pas pu être testé.
+- **Code Spotify** : non testé (cassette importée du dossier, pas de Spotify).
+- **Scan au téléphone** d'un code de 30 mm imprimé : à faire par Johnny.
+
+### P4. Glisser un élément tourné : il part dans la mauvaise direction (et peut disparaître)
+
+**Reproduire** : Jaquette en **Paysage**, cliquer le titre du recto (cadre bleu OK), le glisser **vers le
+haut**. **Obtenu** : le titre part **vers la droite** (le sens du texte tourné) ; avec un grand glisser
+(y = 16,5 mm), il **sort du recto et disparaît**, sans alerte « déborde ». **Attendu** : l'élément suit
+la souris à l'écran, quelle que soit sa rotation, et reste dans sa zone. → `captures/35-titre-disparu-apres-glisser.jpg`
+
+Même problème sur le **texte de tranche** : glissé vers le bas, il part vers la gauche (y = −3 mm), et
+aucun cadre pointillé ne s'affiche. Piste : convertir le déplacement de la souris dans le repère tourné
+de l'élément (rotation inverse) avant de l'appliquer à x / y.
+
+« ↶ Annuler » remet bien l'élément (« Modification annulée »).
+
+Détail : la **vérification** affiche « Le texte de la zone titre est trop haut : il sort de 0.5 mm » **en
+double** quand le titre passe à 20 pt. → `captures/34-titre-20pt-alerte-en-double.jpg`
+
+Détail : deux libellés coupés dans le groupe Tailles : « Numéro de catalogue (tr… », « Mentions
+techniques (ba… ».
+
+### P5. Colonnes qui débordent : sections et boutons inaccessibles
+
+Les colonnes de la Jaquette et de Mixtape **ne défilent pas** quand leur contenu grandit :
+- **Jaquette, colonne de droite** : quand le panneau **Élément** est ouvert, ou quand le fil de la boîte IA
+  est long, « Historique IA », « Vérification avant impression » et **« Exporter »** sont poussés hors de
+  l'écran (fenêtre 1180 × 792). Les boutons « Revenir à cette version » / « Refaire cette demande » de
+  l'historique sont introuvables tant que le fil n'est pas effacé. → `captures/42-colonne-droite-coupee.jpg`
+- **Mixtape en mode expert** : la boîte IA pousse « **Dossier audio** » hors de l'écran (plus de
+  Choisir… / Relire / « Cassette depuis le dossier ») et écrase « Composer la sélection » (3 px de
+  haut). → `captures/38-mixtape-expert-colonne-debordee.jpg`
+
+**Attendu** : chaque colonne défile, ou la boîte IA a une hauteur maximale avec son propre défilement.
+
+### P6. IA : « remets comme avant » n'annule que la dernière étape
+
+Après « titre plus gros » (1 → 1.3) puis « encore plus gros » (1.3 → 1.6), « remets comme avant » donne
+1.6 → 1.3 (« il reste 30 % plus gros »). Défendable, mais ambigu : on attend plutôt la taille d'origine.
+Proposition : « comme avant » = avant la série de demandes sur le même sujet, ou demander « juste la
+dernière étape, ou la taille d'origine ? ».
+
+Détail : dans le résumé, l'ancienne valeur s'affiche « — » au lieu de « 1 » (`echelles.titre : — → 1.3`).
+
+### P7. IA : message de refus inexact pour « joue la face A »
+
+Le refus est bien là (« Impossible : … »), mais l'explication dit que « l'application ne contient pas
+l'audio et ne peut pas lire la face A » : faux, l'onglet Enregistrer joue les faces. Mieux : « Je ne lance
+pas la lecture moi-même : va dans Enregistrer et clique ● ».
+
+### P8. Petits défauts
+
+- **Sortie audio absente** : FOX est débranchée ; Réglages → Audio montre un menu **vide** au lieu de
+  « FOX (débranchée) » ou d'un retour sur la sortie par défaut.
+- **Imprimante** : Réglages → Impression → menu « Imprimante » vide (aucune imprimante installée sur ce
+  Mac ?). Un message « Aucune imprimante » serait plus clair. → `40`
+- **IA, image introuvable** : pour « ambiance pluie », la recherche d'image n'a rien trouvé ; la jaquette
+  garde un carré gris vide (le message le dit bien).
+- **Étiquettes, pochette en fond** : à 34 % de voile, les petits textes du bas (« JEREMY SADIK ·
+  LAFLEURSTUDIO · LFS-003 ») restent difficiles à lire ; le conseil de contraste n'apparaît que dans la
+  Vérification, pas sous le curseur Voile. → `41`
+- **Historique IA** : 7 demandes listées pour LFS-003 alors que 8 ont été faites sur cette cassette
+  (à vérifier ; les 2 demandes faites sur SLF-004, annulée, ne sont plus visibles, ce qui est normal).
+
+## Ce qui marche très bien
+
+- **Trousseau** : avis clair, une seule question, plus rien à la relance. Bug bloquant réglé.
+- **Mode expert** : badge rouge, « passe en C90 et mets Glass en face B » fait les deux avec résumé ;
+  « Annuler » remet tout (C60, Glass en face A). Création d'une cassette complète (« Pluie », SLF-004 :
+  palette sombre, polices, étiquette sans pochette) en une phrase ; **« Annuler » la supprime bien** et le
+  compteur revient à SLF-004. « supprime la cassette SLF-004 » → **confirmation obligatoire** (Annuler /
+  Supprimer). Rien lancé tout seul (enregistrement, impression), aucune clé touchée.
+- **Mode normal** : « passe la cassette en C90 » → refus clair qui renvoie au mode expert.
+- **Boîte IA** : « titre plus gros », « encore plus gros », « remets la pochette en fond sur l'étiquette,
+  et mets le titre à sa taille normale » (2 changements en une phrase) : précis, résumé avant → après,
+  Annuler par réponse, ⌘↩.
+- **Historique IA** : « 7 demandes · environ 0,24 $ », date, moteur, modèle, détail, « Revenir à cette
+  version », « Refaire cette demande », « Effacer l'historique », bouton « Historique IA (7) » dans la
+  Collection. → `39`
+- **Étiquettes** : les 3 modes, la même étiquette sur la K7 d'Enregistrer, coque fumée claire.
+- **Collection** : vignette avec le vrai recto, « 1 cassette » au singulier.
+- **Réglages** : guides pas à pas Claude et Spotify (« Premium obligatoire »), calibrage à la règle
+  (10 cm / 4 pouces, cm ou pouces). → `40`
+
+## Pas testé
+
+- Tonalité 1 kHz sur la bonne sortie (la carte son FOX était débranchée) : à refaire avec Johnny.
+- Export PDF (3.6) : la fenêtre d'enregistrement de macOS ne se pilote pas en arrière-plan.
+- GPT et Gemini (6.5) : pas de clés.
+- « Revenir à cette version » / « Refaire cette demande » : boutons vus mais pas cliqués (cela aurait
+  remis la cassette en C90).
+
+## Captures
+
+| Fichier | Contenu |
+|---|---|
+| `captures/29-avis-nouvelle-version.jpg` | Avis « Nouvelle version installée » |
+| `captures/30-paysage-position-h-sans-effet.jpg` | Position horizontale sans effet en paysage |
+| `captures/31-image-glissee-sans-cadre.jpg` | Image du recto glissée, pas de cadre pointillé |
+| `captures/32-code-barres-412mm-sans-alerte.jpg` | Code-barres de 412 mm accepté, « rien ne déborde » |
+| `captures/33-code-barres-4mm-alerte.jpg` | Alerte « 6 mm minimum » |
+| `captures/34-titre-20pt-alerte-en-double.jpg` | Alerte de titre affichée deux fois |
+| `captures/35-titre-disparu-apres-glisser.jpg` | Titre disparu après un glisser en paysage |
+| `captures/36-ia-expert-confirmation-suppression.jpg` | Confirmation avant suppression par l'IA |
+| `captures/37-ia-expert-nouvelle-cassette-pluie.jpg` | Cassette « Pluie » créée par l'IA |
+| `captures/38-mixtape-expert-colonne-debordee.jpg` | Mixtape en mode expert : Dossier audio disparu |
+| `captures/39-historique-ia.jpg` | Historique IA ouvert |
+| `captures/40-reglages-impression-calibrage.jpg` | Réglages → Impression, calibrage à la règle |
+| `captures/41-etiquettes-voile-7pc.jpg` | Étiquettes avec la pochette en fond, voile à 7 % |
+| `captures/42-colonne-droite-coupee.jpg` | Colonne de droite coupée, conseil de voile dans la Vérification |
