@@ -6,7 +6,10 @@ enum FormatApercu: Hashable { case jcard, verso, ocard, etiquettes, obi }
 enum ActionExport: String, Identifiable {
     case pdf, png, imprimer
     var id: String { rawValue }
-    var nom: String { tr(switch self { case .pdf: "Exporter le PDF"; case .png: "Exporter les PNG"; case .imprimer: "Imprimer" }) }
+    var nom: String {
+        let cle = switch self { case .pdf: "Exporter le PDF"; case .png: "Exporter les PNG"; case .imprimer: "Imprimer" }
+        return tr(cle)
+    }
 }
 
 /// Écran 2 : jaquette (J-card, O-card, étiquettes, obi), codes, direction artistique de Claude, export.
