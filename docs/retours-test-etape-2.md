@@ -335,3 +335,170 @@ pas la lecture moi-même : va dans Enregistrer et clique ● ».
 | `captures/40-reglages-impression-calibrage.jpg` | Réglages → Impression, calibrage à la règle |
 | `captures/41-etiquettes-voile-7pc.jpg` | Étiquettes avec la pochette en fond, voile à 7 % |
 | `captures/42-colonne-droite-coupee.jpg` | Colonne de droite coupée, conseil de voile dans la Vérification |
+
+---
+
+# Test complet de l'app (STUDIOLAFLEUR, release du 6 octobre, commit `db43923`)
+
+19 octobre 2026, Mac mini, macOS 27.0, écran 1920 × 1080, fenêtre de l'app agrandie à tout l'écran.
+Pas de nouvelle version depuis le test précédent : ce passage couvre ce qui n'avait pas encore été
+testé (MusicBrainz, Spotify sans Premium, composer avec l'IA, Équilibrer, C90/Custom, bande, Dolby,
+Vider, réordonner, autres formats de jaquette, Proposer, Vérifier, aperçu 3D, export PDF, tonalité et
+VU-mètres, langue anglaise, Collection, Réglages). Tests faits sur des **cassettes de test** (SLF-004
+« Kind of Blue », SLF-005 copie de LFS-003) ; LFS-003 n'a pas été modifiée. Aucun plantage. Les
+problèmes déjà signalés plus haut (glisser d'un élément tourné, code-barres sans limite haute…) ne sont
+pas répétés.
+
+## Résumé
+
+| Partie | Résultat |
+|---|---|
+| MusicBrainz | ✅ Recherche, 15 éditions, import, vraie pochette en vignette. ❌ fenêtre « fichier manquant » bloquante (T1). ⚠️ T5 |
+| Spotify sans Premium | ✅ Message clair « son API demande un compte Premium » (barre d'état seulement) |
+| Composer avec l'IA (mixtape) | ❌ **propose des morceaux absents du dossier audio, tous « introuvable »** (T2) |
+| Équilibrer avec Claude | ✅ Marche. ⚠️ explication technique (T6) |
+| C60 / C90 / Custom, Bande, Dolby, Coque | ✅ |
+| Vider les faces | ⚠️ sans confirmation ni annulation |
+| Réordonner | ✅ clic droit (Monter, Descendre, Passer en face B, Retirer). ❌ **le glisser ne marche pas, même à la vraie souris** (T4) |
+| Jaquette : verso, O-card, obi | ✅ Rendus corrects. ❌ tracklist coupée en mode Mixtape (T3) |
+| Proposer (3 variantes) | ✅ Très réussi (A, B, C, Régénérer, Versions) |
+| Vérifier avec Claude | ✅ 5 corrections proposées |
+| **Exporter / Vérifier inaccessibles** | ❌ **colonne de droite coupée, même en plein écran** (T7) |
+| Export PDF | ✅ 5 pages A4, traits de coupe et de pliure, polices intégrées. ⚠️ T8 |
+| Aperçu 3D | ✅ Vrai boîtier, rotation. ⚠️ dos noir uni |
+| Tonalité 1 kHz | ✅ VU à 0 VU, retour au repos à l'arrêt (bug +3 corrigé) |
+| VU-mètres pendant la musique | ❌ probablement immobiles (T9) |
+| Langue anglaise | ✅ Interface, Réglages, J-card traduits. ⚠️ textes restés en français (T10) |
+| Collection | ✅ Recherche, Dupliquer (historique copié), vignettes réelles. ⚠️ compteur |
+| Réglages Platine, Sources, Impression, IA, Spotify | ✅ |
+
+## T1. MusicBrainz : la fenêtre « aucun fichier trouvé » bloque tout
+
+**Reproduire** : Nouvelle cassette → MusicBrainz « Miles Davis - Kind of Blue » → Entrée → cliquer
+une édition. **Obtenu** : import OK (5 titres, A 24:19 / B 21:06, « ⚠ fichier » en rouge), puis une
+fenêtre par morceau : « So What (9:05) : aucun fichier trouvé » avec **seulement** « Retirer de la
+cassette » et « Choisir un fichier… ». **Échap ne ferme pas**, on ne peut rien faire d'autre. Pour
+avancer, il a fallu retirer les 5 morceaux : la cassette est vide. → `captures/43-musicbrainz-fenetre-fichier-bloquante.jpg`
+
+**Attendu** : pouvoir garder l'album sans fichiers (« Plus tard » / « Garder sans fichier »), par exemple
+pour dessiner la jaquette avant d'avoir la musique, et fermer la fenêtre avec Échap. Le bouton
+« Remettre « … » » ne remet que le dernier morceau retiré.
+
+Autres détails MusicBrainz :
+- **Pas de bouton « Chercher »** : seule la touche Entrée lance la recherche.
+- Les **éditions cassette** ne sont pas mises en avant (CD et vinyles d'abord). → `44`
+- **503** de MusicBrainz au premier clic (limite d'une requête par seconde) : message clair
+  (« Réessaie dans un instant »), mais l'app pourrait réessayer seule après une seconde.
+- « Rien trouvé sur MusicBrainz (les petits artistes n'y sont pas toujours) » pour Jeremy Sadik :
+  correct, l'album n'y est pas.
+- La liste des 15 éditions repousse « Composer » et « Dossier audio » hors de la colonne (voir T7).
+
+## T2. « Composer avec Claude » ignore le dossier audio
+
+**Reproduire** : Mixtape → Composer avec Claude, ambiance « après-midi doux au bord d'un lac, ça monte
+doucement » → Composer la sélection. **Obtenu** : ~20 morceaux connus (Nick Drake, Bon Iver, Big Thief,
+Fleet Foxes, Sufjan Stevens…), **tous marqués « introuvable »**, « 0 titres trouvés ». Le dossier audio
+contient 12 morceaux (Jeremy Sadik) que Claude n'utilise pas. Sans Spotify Premium, la fonction est
+inutilisable. → `captures/45-composer-ia-tout-introuvable.jpg`
+
+**Attendu** : composer d'abord avec les fichiers du dossier audio (titres, durées, éventuellement genre
+ou tempo), et ne proposer des morceaux extérieurs qu'en option, en les signalant comme « à trouver ».
+
+## T3. Tracklist coupée en mode Mixtape (verso, O-card)
+
+En mode **Mixtape**, chaque ligne devient « Titre — Jeremy Sadik », même quand tout l'album est du même
+artiste. Résultat au verso de la J-card et sur l'O-card : la **durée de A2 et A3 est remplacée par
+« … »**, et **B2 « Parked In The Front Of The Mall — Jeremy Sadik » déborde** sur le pli de la tranche,
+sans durée. La moitié basse du verso est vide. → `captures/46-verso-tracklist-coupee.jpg`, PDF : `50`
+
+Pistes : ne pas répéter l'artiste s'il est le même partout ; passer sur deux lignes plutôt que couper ;
+**ne jamais masquer la durée**. L'alerte « dépasse de la zone tracklist » apparaît, mais **en double**
+(un seul « Ignorer » masque les deux).
+
+## T4. Réordonner : le glisser ne marche pas
+
+Avec la **vraie souris** (contrôle au premier plan), glisser « The Muse » par sa poignée ⋮⋮ au-dessus de
+« Sun Cream At The Lake » ne change rien. Le **clic droit** marche très bien (Monter, Descendre, Passer
+au début de la face B, Retirer de la cassette). L'aide sous les listes promet « Glisse ou clic droit » :
+le glisser est à réparer, ou à retirer du texte.
+
+## T5. Petits défauts Mixtape
+
+- **Vider les faces** : vide les 12 morceaux d'un coup, sans confirmation ni annulation.
+- **« Remettre « Flamenco Sket… » »** reste affiché quand on passe à une **autre cassette** (SLF-005),
+  alors que ce morceau appartenait à SLF-004.
+- Spotify : le message « Premium » n'est que dans la barre d'état, à côté de « Spotify : connecté ».
+
+## T6. Équilibrer avec Claude : explication trop technique
+
+Réponse : « La face A (morceaux **0 à 5**) dure **1495 s** de musique plus 5 blancs de 2 s, soit 1505 s… la
+limite de **1765 s** ». Les morceaux sont numérotés **à partir de 0** (l'écran affiche 1 à 6) et les durées
+sont en secondes. Attendu : « morceaux 1 à 6 », durées en min:s (25:05, 29:25).
+
+## T7. Colonne de droite de la Jaquette : Exporter et Vérifier inaccessibles (bloquant)
+
+Même avec la fenêtre en **plein écran 1920 × 1080**, dès que la direction artistique affiche ses **3
+variantes**, que la vérification a des alertes, ou que **« Vérifier avec Claude » répond**, la section
+**Exporter (PDF, PNG, Imprimer…) passe sous le bord de la fenêtre**. La colonne ne défile ni à la
+molette ni autrement, et il n'y a **pas de menu Fichier → Exporter / Imprimer** ni de ⌘P. Impossible
+alors d'exporter ou d'imprimer. → `captures/49-exporter-inaccessible.jpg`
+
+Contournements trouvés : « Ignorer » une alerte libère un peu de place ; relancer l'app efface la réponse
+de Claude. **Attendu** : colonne qui défile (ScrollView), réponses de l'IA repliables, et un menu
+Fichier → Exporter PDF / PNG, Imprimer (⌘P).
+
+## T8. Export PDF
+
+✅ 5 pages A4 (J-card extérieur, J-card verso, O-card, étiquettes A/B, obi), traits de coupe pleins,
+pliures en pointillés, polices intégrées (Caveat, Special Elite…), rappel « Print at 100 % » en pied de
+page, aucun cadre de sélection. → `52` (J-card), `50` (verso), `51` (étiquettes)
+
+- **Dossier proposé par défaut : « musique »** (le dossier audio). Mieux : Documents, ou le dernier
+  dossier d'export.
+- **Étiquettes « pochette en fond »** : une fois imprimées, les petits textes du bas (« JEREMY SADIK ·
+  LAFLEURSTUDIO · SLF-005 », « TYPE I · NORMAL ») sont presque illisibles sur l'image. → `51`
+- **Verso** : la ligne B2 n'a toujours pas de durée.
+
+## T9. VU-mètres : ils ne suivent probablement pas la musique
+
+Avec la **tonalité 1 kHz**, les aiguilles se placent bien sur **0 VU** et retombent au repos à l'arrêt (le
+bug « collées à +3 » est corrigé). Mais pendant la lecture de « The Muse » (0:05–0:06), elles restent
+**au repos (−20)**. Mesure du fichier à cet endroit : **−24 dBFS en moyenne, crêtes à −4,5 dBFS** ; avec
+0 VU = −12 dBFS (tonalité), les aiguilles devraient être vers −12 VU, bien visibles. À vérifier à l'œil
+sur un passage plus fort : il est probable que le niveau ne soit lu que pour la tonalité.
+
+## T10. Langue anglaise : quelques textes restés en français
+
+Interface, Réglages et J-card sont bien traduits après « Restart the app now ». Restent en français :
+- la **fenêtre de rappel avant export** (« Exporter le PDF — Rappel : usage personnel… »), avec des
+  boutons en anglais (Cancel / Continue) → `53` ;
+- le **pied de page du PDF** : « J-card · extérieur », « verso (imprimer au dos, retourner sur le grand
+  côté) », « Étiquettes de K7 · faces A et B » ;
+- les libellés de bande dans les menus (« Type I · Normal ») : acceptable.
+
+## T11. Autres détails
+
+- **Aperçu 3D** : vrai boîtier, rotation à la souris ✅ ; le **dos** du boîtier est un rectangle noir uni
+  (on devrait voir le rabat / le verso à travers le plastique).
+- **Collection** : la recherche filtre bien (« Miles »), mais le bas de l'écran affiche toujours
+  « 3 cassettes ». Dupliquer copie aussi l'historique IA (8 demandes) : à confirmer si c'est voulu.
+- **Proposer** : très réussi. La variante C (papier crème, photo scotchée, typo machine à écrire) est
+  superbe. → `47`, `48`
+- **Sortie audio** : la carte FOX (Beyerdynamic, USB) a été rebranchée pendant le test ; Réglages →
+  Audio l'affiche bien. La tonalité est partie dans la sortie FOX ; pas d'écoute possible de mon côté.
+
+## Captures
+
+| Fichier | Contenu |
+|---|---|
+| `captures/43-musicbrainz-fenetre-fichier-bloquante.jpg` | Fenêtre « aucun fichier trouvé » sans sortie |
+| `captures/44-musicbrainz-15-editions.jpg` | 15 éditions de Kind of Blue |
+| `captures/45-composer-ia-tout-introuvable.jpg` | Composer avec Claude : tout « introuvable » |
+| `captures/46-verso-tracklist-coupee.jpg` | Verso : durées masquées, B2 qui déborde |
+| `captures/47-variante-c-proposer.jpg` | Variante C de « Proposer » |
+| `captures/48-proposer-3-variantes.jpg` | Les 3 variantes A/B/C |
+| `captures/49-exporter-inaccessible.jpg` | Exporter sous le bord de la fenêtre |
+| `captures/50-pdf-verso.png` | PDF, page verso |
+| `captures/51-pdf-etiquettes-peu-lisibles.png` | PDF, étiquettes pochette en fond |
+| `captures/52-pdf-jcard.png` | PDF, J-card extérieur |
+| `captures/53-anglais-rappel-en-francais.jpg` | Rappel d'export en français dans l'app en anglais |
