@@ -46,6 +46,7 @@ T = {
 "Voir les %lld messages précédents": ("See the %lld earlier messages", "Показать предыдущие сообщения (%lld)", "Die %lld früheren Nachrichten ansehen"),
 "Vérifier avec %@": ("Check with %@", "Проверить с %@", "Mit %@ prüfen"),
 "Русский": ("Русский", "Русский", "Русский"),
+"Chercher": ("Search", "Искать", "Suchen"),
 # Textes lus à l'exécution (tr) : PDF, rappel avant export, noms des exports.
 "Exporter le PDF": ("Export PDF", "Экспорт в PDF", "PDF exportieren"),
 "Exporter les PNG": ("Export PNGs", "Экспорт PNG", "PNGs exportieren"),
