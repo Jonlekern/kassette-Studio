@@ -64,6 +64,8 @@ final class EtatApp: ObservableObject {
     @Published var elementSelectionne: String?
     /// Designs précédents, pour « Annuler » (⌘Z) : retouches à la main et changements de l'IA.
     @Published var annulations: [Design] = []
+    /// Heure de la dernière retouche au curseur ou au clavier (pour regrouper les annulations).
+    var derniereRetouche = Date.distantPast
     /// Fil de la boîte « Modifier avec l'IA » (cassette courante).
     @Published var filModif: [MessageModif] = []
     /// État d'avant chaque échange de la boîte, pour son bouton « Annuler » (en mémoire seulement).

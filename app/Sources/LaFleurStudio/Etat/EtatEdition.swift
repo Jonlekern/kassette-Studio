@@ -4,12 +4,16 @@ import SwiftUI
 /// Retouches à la main dans l'aperçu (sélection, glisser, taille, recadrage) et annulation.
 extension EtatApp {
     /// Change le design en gardant l'ancien pour « Annuler ».
-    func modifierDesign(_ changement: (inout Design) -> Void) {
+    /// `regrouper` : curseurs et champs de texte. Les changements rapprochés (moins d'une seconde) ne font qu'une
+    /// seule étape d'annulation, sinon il faudrait cliquer « Annuler » pour chaque cran du curseur.
+    func modifierDesign(regrouper: Bool = false, _ changement: (inout Design) -> Void) {
         var d = design
         let avant = d
         changement(&d)
         guard d != avant else { return }
-        memoriser(avant)
+        let maintenant = Date()
+        if !(regrouper && maintenant.timeIntervalSince(derniereRetouche) < 1 && !annulations.isEmpty) { memoriser(avant) }
+        derniereRetouche = regrouper ? maintenant : .distantPast
         design = d
     }
 
@@ -24,8 +28,8 @@ extension EtatApp {
         statut = String(localized: "Modification annulée")
     }
 
-    func ajuster(_ id: String, _ changement: (inout Ajustement) -> Void) {
-        modifierDesign { d in
+    func ajuster(_ id: String, regrouper: Bool = false, _ changement: (inout Ajustement) -> Void) {
+        modifierDesign(regrouper: regrouper) { d in
             var a = d.ajustement(id)
             changement(&a)
             d.ajustements[id] = a.estNeutre ? nil : a

@@ -364,7 +364,9 @@ struct Mise {
             a.append(Alerte(id: "spotify-petit", zone: "code", gravite: .bloquante,
                             message: String(localized: "Code Spotify trop petit (\(String(format: "%.0f", design.largeurSpotifyMM)) mm) : 20 mm de large minimum.")))
         }
-        return a.filter { !design.alertesForcees.contains($0.id) }
+        // Même zone sur la J-card et l'O-card (titre, tracklist) : une seule alerte, et « Ignorer » ne cache qu'elle.
+        var vues = Set<String>()
+        return a.filter { !design.alertesForcees.contains($0.id) && vues.insert($0.id).inserted }
     }
 
     /// Largeur d'un module du code-barres tel qu'il est dessiné (mm).
@@ -376,13 +378,37 @@ struct Mise {
         case .interieur: place = 40
         case .libre: place = 25
         }
-        // Largeur choisie en mm (demande 2) : elle prime sur le curseur de taille.
-        if design.largeurCodeMM > 0 { return CGFloat(design.largeurCodeMM) / CGFloat(c.modules.count + 2 * CodeBarresVue.marge) }
+        // Largeur choisie en mm (demande 2) : elle prime sur le curseur de taille, sans dépasser la place disponible.
+        if design.largeurCodeMM > 0 {
+            let l = min(CGFloat(design.largeurCodeMM), tailleMaxCode()?.largeur ?? .infinity)
+            return l / CGFloat(c.modules.count + 2 * CodeBarresVue.marge)
+        }
         return min(0.33, place / CGFloat(c.modules.count + 20)) * CGFloat(design.echelleCode)
     }
 
     /// Hauteur des barres (mm) : celle choisie, sinon `defaut`.
-    func hauteurBarres(_ defaut: CGFloat) -> CGFloat { design.hauteurCodeMM > 0 ? CGFloat(design.hauteurCodeMM) : defaut }
+    func hauteurBarres(_ defaut: CGFloat) -> CGFloat {
+        design.hauteurCodeMM > 0 ? min(CGFloat(design.hauteurCodeMM), tailleMaxCode()?.hauteur ?? .infinity) : defaut
+    }
+
+    /// Plus grand code-barres qui tient à sa place (mm, largeur × hauteur des barres) : au-delà, il sortirait de sa zone.
+    /// nil sur la tranche, où sa taille suit l'épaisseur de la tranche.
+    func tailleMaxCode() -> (largeur: CGFloat, hauteur: CGFloat)? {
+        let g = gabaritJ
+        switch design.placeCode {
+        case .rabat:
+            // Couché dans la longueur : la largeur du code suit la hauteur de la J-card, ses barres la largeur du rabat.
+            let rabat = CGFloat(g.panneaux.first { $0.genre == .rabat }?.largeur ?? 27)
+            return (CGFloat(g.hauteur) - 30, max(6, rabat - 2 - 5))
+        case .tranche:
+            return nil
+        case .interieur:
+            let volet = g.panneaux.compactMap { if case .interieur = $0.genre { return CGFloat($0.largeur) } else { return nil } }.min() ?? 60
+            return (volet - 8, 25)
+        case .libre:
+            return (60, 40)
+        }
+    }
     func coteQR(_ defaut: CGFloat) -> CGFloat { design.coteQRMM > 0 ? CGFloat(design.coteQRMM) : defaut }
     func largeurSpotify(_ defaut: CGFloat) -> CGFloat { design.largeurSpotifyMM > 0 ? CGFloat(design.largeurSpotifyMM) : defaut }
 

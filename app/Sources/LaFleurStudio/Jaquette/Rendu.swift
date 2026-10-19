@@ -462,6 +462,7 @@ struct JCardVue: View {
                             }
                         }
                         .frame(width: pan.largeur * u, height: g.hauteur * u, alignment: .topLeading)
+                        .zoneJaquette()
                         .offset(x: pan.x * u)
                     }
                 } else {
@@ -470,6 +471,7 @@ struct JCardVue: View {
                         if let b = rep.verso[pan.genre] {
                             let w = mise.largeurVerso(pan.genre)
                             BlocVue(mise: mise, bloc: b, largeur: w, hauteur: g.hauteur, u: u)
+                                .zoneJaquette()
                                 .offset(x: (g.largeur - pan.x - w) * u)
                         }
                     }
@@ -527,6 +529,7 @@ struct OCardVue: View {
                         }
                     }
                     .frame(width: pan.largeur * u, height: g.hauteur * u, alignment: .topLeading)
+                    .zoneJaquette()
                     .offset(x: pan.x * u)
                 }
                 if guides { Plis(plis: g.plis, hauteur: g.hauteur, u: u) }
@@ -582,7 +585,8 @@ struct EtiquetteVue: View {
             }
             ZStack(alignment: .topLeading) {
                 Rectangle().fill(Color(hex: p.accent)).frame(width: 89 * u, height: 2 * u).offset(y: 13.5 * u)
-                TexteMM(spec: mise.etiquetteTitre(), u: u, alignement: .leading).element("etiquette-titre", mise, u)
+                TexteMM(spec: mise.etiquetteTitre(), u: u, alignement: .leading).fondLisible(d.etiquettePochette == .fond, p.fond, u)
+                    .element("etiquette-titre", mise, u)
                     .placer(4, 4, 67, 8, u, .leading)
                 Text(face.rawValue).font(Typo.font(mise.design.variante.policeTitre, 9 * u, gras: true))
                     .foregroundStyle(Color(hex: p.texte)).element("etiquette-face", mise, u).placer(74, 1.5, 12, 11, u, .center)
@@ -609,9 +613,12 @@ struct EtiquetteVue: View {
                     Text(mise.projet.cassette.bande.badge).lineLimit(1)
                 }
                 .font(petit).foregroundStyle(Color(hex: p.texte))
+                .fondLisible(d.etiquettePochette == .fond, p.fond, u)
                 .element("etiquette-bas", mise, u)
                 .placer(4, 32.5, 81, 6, u, .leading)
             }
+            .frame(width: 89 * u, height: 42 * u, alignment: .topLeading)
+            .zoneJaquette()
             .offset(x: perdu * u, y: perdu * u)
         }
         .frame(width: (89 + 2 * perdu) * u, height: (42 + 2 * perdu) * u, alignment: .topLeading)
@@ -623,6 +630,18 @@ struct EtiquetteVue: View {
             } else {
                 TrouFenetre(u: u).fill(style: FillStyle(eoFill: true))
             }
+        }
+    }
+}
+
+extension View {
+    /// Pochette en fond : petit bandeau couleur de fond derrière le texte, pour qu'il reste lisible une fois imprimé.
+    @ViewBuilder func fondLisible(_ actif: Bool, _ couleur: String, _ u: CGFloat) -> some View {
+        if actif {
+            padding(.horizontal, 1 * u).padding(.vertical, 0.3 * u)
+                .background(RoundedRectangle(cornerRadius: 0.8 * u).fill(Color(hex: couleur).opacity(0.8)))
+        } else {
+            self
         }
     }
 }
@@ -664,6 +683,8 @@ struct ObiVue: View {
                 vertical(mise.projet.artiste.uppercased() + " · CASSETTE", 6, 22).offset(x: 40 * u)
                 if guides { Plis(plis: g.plis, hauteur: g.hauteur, u: u) }
             }
+            .frame(width: g.largeur * u, height: g.hauteur * u, alignment: .topLeading)
+            .zoneJaquette()
             .offset(x: perdu * u, y: perdu * u)
         }
         .frame(width: (g.largeur + 2 * perdu) * u, height: (g.hauteur + 2 * perdu) * u, alignment: .topLeading)

@@ -30,30 +30,69 @@ extension View {
     }
 }
 
+/// Zone (panneau) qui contient les éléments : un élément glissé n'en sort pas.
+enum ZoneJaquette {
+    static let nom = "zone-jaquette"
+}
+
+extension View {
+    /// Pose sur chaque panneau (recto, tranche, rabat, volet, étiquette, obi) : les éléments y restent quand on les glisse.
+    func zoneJaquette() -> some View { coordinateSpace(.named(ZoneJaquette.nom)) }
+}
+
+/// Place de l'élément dans sa zone, vue à l'écran (sans rotation).
+private struct PlaceDansZone: Equatable {
+    var centre: CGPoint = .zero
+    var zone: CGSize = .zero
+}
+
+/// Déplacement vu à l'écran → déplacement dans le repère (tourné de `angle` degrés) de l'élément.
+func versRepereTourne(_ t: CGSize, angle: Double) -> CGSize {
+    let r = angle * .pi / 180
+    return CGSize(width: t.width * cos(r) + t.height * sin(r), height: -t.width * sin(r) + t.height * cos(r))
+}
+
 private struct ElementAjustable: ViewModifier {
     let id: String
     let a: Ajustement
     let u: CGFloat
     let angle: Double
     @Environment(\.editionJaquette) private var edition
-
-    /// Déplacement vu à l'écran → déplacement dans le repère (tourné) de l'élément.
-    private func local(_ t: CGSize) -> CGSize {
-        let r = angle * .pi / 180
-        return CGSize(width: t.width * cos(r) + t.height * sin(r), height: -t.width * sin(r) + t.height * cos(r))
-    }
     @State private var glisse: CGSize = .zero
+    @State private var place = PlaceDansZone()
+    /// Centre de l'élément au début du glisser.
+    @State private var depart: CGPoint?
+
+    /// Le glisser est mesuré à l'écran (repère global, sans rotation) : on le limite pour que le centre de l'élément
+    /// reste dans sa zone, puis on le tourne dans le repère de l'élément (tranche, recto paysage).
+    private func deplacement(_ t: CGSize) -> CGSize {
+        var t = t
+        if let c = depart, place.zone.width > 0, place.zone.height > 0 {
+            let marge = min(2 * u, place.zone.width / 2, place.zone.height / 2)
+            t.width = min(max(c.x + t.width, marge), place.zone.width - marge) - c.x
+            t.height = min(max(c.y + t.height, marge), place.zone.height - marge) - c.y
+        }
+        return versRepereTourne(t, angle: angle)
+    }
 
     func body(content: Content) -> some View {
         let choisi = edition?.selection == id
+        let tourne = abs(angle.truncatingRemainder(dividingBy: 180)) == 90
         let cadre = content
+            .onGeometryChange(for: PlaceDansZone.self) { g in
+                let f = g.frame(in: .named(ZoneJaquette.nom))
+                guard let b = g.bounds(of: .named(ZoneJaquette.nom)) else { return PlaceDansZone() }
+                return PlaceDansZone(centre: CGPoint(x: f.midX, y: f.midY),
+                                     zone: tourne ? CGSize(width: b.height, height: b.width) : b.size)
+            } action: { place = $0 }
             .scaleEffect(a.echelle)
             .rotationEffect(.degrees(a.rotation))
             // Masqué : invisible à l'impression, en transparence dans l'aperçu pour pouvoir le retrouver.
             .opacity(a.masque ? (edition == nil ? 0 : 0.2) : a.opacite)
             .overlay {
                 if choisi {
-                    Rectangle().stroke(Color(red: 0.1, green: 0.45, blue: 1), style: StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
+                    // À l'intérieur de l'élément : sur la tranche, un cadre posé sur le bord était caché par les plis.
+                    Rectangle().strokeBorder(Color(red: 0.1, green: 0.45, blue: 1), style: StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
                         .scaleEffect(a.echelle).rotationEffect(.degrees(a.rotation))
                 }
             }
@@ -62,14 +101,16 @@ private struct ElementAjustable: ViewModifier {
             cadre
                 .contentShape(Rectangle())
                 .onTapGesture { edition.choisir(id) }
-                .gesture(DragGesture(minimumDistance: 3)
+                .gesture(DragGesture(minimumDistance: 3, coordinateSpace: .global)
                     .onChanged { v in
                         if edition.selection != id { edition.choisir(id) }
-                        glisse = local(v.translation)
+                        if depart == nil { depart = place.centre }
+                        glisse = deplacement(v.translation)
                     }
                     .onEnded { v in
+                        let l = deplacement(v.translation)
                         glisse = .zero
-                        let l = local(v.translation)
+                        depart = nil
                         edition.deplacer(id, l.width / u, l.height / u)
                     })
         } else {
@@ -100,21 +141,22 @@ private struct ImageRecadrable: ViewModifier {
         let vue = content.opacity(masque ? (edition == nil ? 0 : 0.2) : 1)
         if let edition {
             vue
+                // Cadre dessiné à l'intérieur de l'image : sur les bords, il était caché par la coupe et les plis.
                 .overlay {
                     if edition.selection == id {
-                        Rectangle().stroke(Color(red: 0.1, green: 0.45, blue: 1), style: StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
+                        Rectangle().strokeBorder(Color(red: 0.1, green: 0.45, blue: 1), style: StrokeStyle(lineWidth: 2, dash: [5, 3]))
+                            .padding(1.5)
                     }
                 }
                 .contentShape(Rectangle())
                 .onTapGesture { edition.choisir(id) }
-                .gesture(DragGesture(minimumDistance: 3).onEnded { v in
-                    let r = angle * .pi / 180
-                    let tx = v.translation.width * cos(r) + v.translation.height * sin(r)
-                    let ty = -v.translation.width * sin(r) + v.translation.height * cos(r)
-                    if edition.selection != id { edition.choisir(id) }
-                    // Glisser vers la droite montre la partie gauche de l'image : le cadrage diminue.
-                    edition.recadrer(id, -tx / u / largeur, -ty / u / hauteur)
-                })
+                .gesture(DragGesture(minimumDistance: 3, coordinateSpace: .global)
+                    .onChanged { _ in if edition.selection != id { edition.choisir(id) } }
+                    .onEnded { v in
+                        let t = versRepereTourne(v.translation, angle: angle)
+                        // Glisser vers la droite montre la partie gauche de l'image : le cadrage diminue.
+                        edition.recadrer(id, -t.width / u / largeur, -t.height / u / hauteur)
+                    })
         } else {
             vue
         }

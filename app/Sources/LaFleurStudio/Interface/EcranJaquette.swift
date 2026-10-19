@@ -23,11 +23,11 @@ struct EcranJaquette: View {
     @State private var avisReplie = false
 
     private func lien<T>(_ kp: WritableKeyPath<Design, T>) -> Binding<T> {
-        Binding(get: { etat.design[keyPath: kp] }, set: { v in var d = etat.design; d[keyPath: kp] = v; etat.design = d })
+        Binding(get: { etat.design[keyPath: kp] }, set: { v in etat.modifierDesign(regrouper: true) { d in d[keyPath: kp] = v } })
     }
     private func couleur(_ kp: WritableKeyPath<Design, String>) -> Binding<Color> {
         Binding(get: { Color(hex: etat.design[keyPath: kp]) },
-                set: { c in var d = etat.design; d[keyPath: kp] = NSColor(c).hex; etat.design = d })
+                set: { c in etat.modifierDesign(regrouper: true) { d in d[keyPath: kp] = NSColor(c).hex } })
     }
 
     var body: some View {
@@ -69,6 +69,21 @@ struct EcranJaquette: View {
             if etat.projet.pochetteURL == nil { Task { await etat.chercherVraiePochette() } }
         }
         .sheet(isPresented: $montrer3D) { Apercu3D(mise: etat.mise) { montrer3D = false } }
+    }
+
+    /// L'image du recto dépasse-t-elle de son cadre (en largeur, en hauteur) ? Sinon, la déplacer ne change rien.
+    private var jeuImage: (x: Bool, y: Bool) {
+        let d = etat.design, p = etat.projet
+        let couverture = p.pochetteURL ?? p.toutes.compactMap(\.morceau.pochetteURL).first
+        let url = d.variante.style == .imagePerso ? (d.imagePerso ?? couverture) : couverture
+        guard d.variante.style == .pochette || d.variante.style == .imagePerso,
+              let img = Images.partage.image(url), img.size.width > 0, img.size.height > 0 else { return (true, true) }
+        let l = Gabarits.recto, h = Gabarits.hauteurJ, b = Double(etat.mise.bandeauRecto)
+        // Cadre de l'image, dans le sens où elle est composée (en paysage, le recto est tourné d'un quart de tour).
+        let (fw, fh): (Double, Double) = d.cadrage == .pleineHauteur ? (d.orientation == .paysage ? (h, l - b) : (l, h - b)) : (l, l)
+        let iw = Double(img.size.width), ih = Double(img.size.height)
+        let k = max(fw / iw, fh / ih) * max(1, d.ajustement("recto-image").echelle)
+        return (iw * k - fw > 0.5, ih * k - fh > 0.5)
     }
 
     // MARK: Aperçu
@@ -118,7 +133,7 @@ struct EcranJaquette: View {
         let m = etat.mise
         switch apercu {
         case .jcard: JCardVue(mise: m, guides: true, deplacerCode: { x, y in
-            var d = etat.design; d.codeX = x; d.codeY = y; etat.design = d
+            etat.modifierDesign { d in d.codeX = x; d.codeY = y }
         }, u: u)
         case .verso: JCardVue(mise: m, cote: .verso, guides: true, u: u)
         case .ocard: OCardVue(mise: m, guides: true, u: u)
@@ -190,19 +205,30 @@ struct EcranJaquette: View {
                 }
                 // Recadrage de l'image (demande 1) : utile quand elle est rognée (pleine hauteur ou paysage).
                 if etat.design.cadrage == .pleineHauteur || etat.design.orientation == .paysage {
-                    curseur("Position horizontale", etat.design.cadrageX) { v in etat.modifierDesign { $0.cadrageX = v } }
-                    curseur("Position verticale", etat.design.cadrageY) { v in etat.modifierDesign { $0.cadrageY = v } }
+                    let jeu = jeuImage
+                    curseur("Position horizontale", etat.design.cadrageX) { v in etat.modifierDesign(regrouper: true) { $0.cadrageX = v } }
+                        .disabled(!jeu.x)
+                    curseur("Position verticale", etat.design.cadrageY) { v in etat.modifierDesign(regrouper: true) { $0.cadrageY = v } }
+                        .disabled(!jeu.y)
+                    // L'image tient déjà dans ce sens : rien à déplacer tant qu'elle n'est pas agrandie.
+                    if !jeu.x || !jeu.y {
+                        Text(!jeu.x && !jeu.y ? "L'image tient déjà en entier dans son cadre : agrandis-la (Zoom de l'image) pour pouvoir la déplacer."
+                             : !jeu.x ? "L'image tient déjà en largeur : agrandis-la (Zoom de l'image) pour la déplacer à gauche ou à droite."
+                                      : "L'image tient déjà en hauteur : agrandis-la (Zoom de l'image) pour la déplacer en haut ou en bas.")
+                            .foregroundStyle(W98.ombre).fixedSize(horizontal: false, vertical: true)
+                    }
                 }
                 HStack {
                     Text("Zoom de l'image")
                     Slider(value: Binding(get: { etat.design.ajustement("recto-image").echelle },
-                                          set: { v in etat.ajuster("recto-image") { $0.echelle = (v * 20).rounded() / 20 } }), in: 1...3)
+                                          set: { v in etat.ajuster("recto-image", regrouper: true) { $0.echelle = (v * 20).rounded() / 20 } }), in: 1...3)
+                    Text("\(Int((etat.design.ajustement("recto-image").echelle * 100).rounded())) %").frame(width: 42, alignment: .trailing)
                 }
                 Picker("Style", selection: lien(\.variante.style)) { ForEach(StyleRecto.allCases, id: \.self) { Text(tr($0.nom)).tag($0) } }
                 HStack {
                     Button("Choisir une image…") { etat.choisirImagePerso() }.buttonStyle(.w98)
                     if etat.design.imagePerso != nil {
-                        Button("×") { var d = etat.design; d.imagePerso = nil; etat.design = d }.buttonStyle(.w98).help("Retirer l'image")
+                        Button("×") { etat.modifierDesign { d in d.imagePerso = nil } }.buttonStyle(.w98).help("Retirer l'image")
                     }
                 }
                 HStack { Text("Opacité"); Slider(value: lien(\.variante.opaciteImage), in: 0.1...1) }
@@ -211,7 +237,7 @@ struct EcranJaquette: View {
                         ImageCache(url: img.url, remplir: false).frame(width: 24, height: 24)
                         Text(img.source).lineLimit(1).truncationMode(.middle).help(img.source)
                         Spacer(minLength: 0)
-                        Button("×") { var d = etat.design; d.imagesPosees.removeAll { $0.id == img.id }; etat.design = d }
+                        Button("×") { etat.modifierDesign { d in d.imagesPosees.removeAll { $0.id == img.id } } }
                             .buttonStyle(.w98).help("Retirer cette image")
                     }
                 }
@@ -236,12 +262,12 @@ struct EcranJaquette: View {
                 HStack {
                     Text("Tranche")
                     Spacer()
-                    Button("Auto") { var d = etat.design; d.texteTranche = nil; etat.design = d }.buttonStyle(.w98)
+                    Button("Auto") { etat.modifierDesign { d in d.texteTranche = nil } }.buttonStyle(.w98)
                 }
                 // Sur deux lignes si besoin : le texte de tranche entier reste visible (42 caractères).
                 TextField(etat.projet.trancheAuto, text: Binding(
                     get: { etat.design.texteTranche ?? "" },
-                    set: { t in var d = etat.design; d.texteTranche = t.isEmpty ? nil : t; etat.design = d }), axis: .vertical)
+                    set: { t in etat.modifierDesign(regrouper: true) { d in d.texteTranche = t.isEmpty ? nil : t } }), axis: .vertical)
                     .lineLimit(1...2).textFieldStyle(.plain).font(W98.police)
                     .padding(.horizontal, 5).padding(.vertical, 4).creux()
                 Text("Notes (volet intérieur)")
@@ -259,7 +285,7 @@ struct EcranJaquette: View {
                     HStack {
                         Button("Importer un logo…") { etat.importerLogo() }.buttonStyle(.w98)
                         if etat.design.logoMaison != nil {
-                            Button("×") { var d = etat.design; d.logoMaison = nil; etat.design = d }.buttonStyle(.w98).help("Retirer le logo")
+                            Button("×") { etat.modifierDesign { d in d.logoMaison = nil } }.buttonStyle(.w98).help("Retirer le logo")
                         }
                     }
                     Text("Sans logo importé, le nom est écrit en texte.").foregroundStyle(W98.ombre)
@@ -290,10 +316,10 @@ struct EcranJaquette: View {
                             Link("Source : \(e.source)", destination: e.page).foregroundStyle(W98.bleu)
                             if !e.credits.isEmpty || !e.notes.isEmpty {
                                 Button("Reprendre crédits et notes") {
-                                    var d = etat.design
-                                    if !e.credits.isEmpty { d.credits = e.credits }
-                                    if !e.notes.isEmpty && d.notes.isEmpty { d.notes = e.notes }
-                                    etat.design = d
+                                    etat.modifierDesign { d in
+                                        if !e.credits.isEmpty { d.credits = e.credits }
+                                        if !e.notes.isEmpty && d.notes.isEmpty { d.notes = e.notes }
+                                    }
                                 }
                                 .buttonStyle(.w98)
                             }
@@ -334,20 +360,30 @@ struct EcranJaquette: View {
                 Text("Texte au-dessus")
                 Champ(invite: etat.projet.texteCodeAuto, texte: Binding(
                     get: { d.texteCode ?? "" },
-                    set: { t in var n = etat.design; n.texteCode = t.isEmpty ? nil : t; etat.design = n }))
+                    set: { t in etat.modifierDesign(regrouper: true) { n in n.texteCode = t.isEmpty ? nil : t } }))
                 Picker("Place", selection: lien(\.placeCode)) { ForEach(PlaceCode.allCases, id: \.self) { Text(tr($0.nom)).tag($0) } }
                 Toggle("Chiffres sous les barres", isOn: lien(\.chiffresCode)).toggleStyle(.checkbox)
                 // Taille réelle en mm (demande 2) ; vide = automatique.
                 let t = m.tailleCodeBarres()
+                let maxi = m.tailleMaxCode()
+                // Une taille tapée plus grande que la place disponible est ramenée au maximum (ex. 412 mm tapé par erreur).
+                let borne = { (kp: WritableKeyPath<Design, Double>, limite: CGFloat?) in
+                    Binding<Double>(get: { etat.design[keyPath: kp] },
+                                    set: { v in etat.modifierDesign(regrouper: true) { $0[keyPath: kp] = limite.map { min(v, Double($0)) } ?? v } })
+                }
                 HStack(spacing: 4) {
                     Text("Taille")
-                    ChampNombre(invite: t.map { ChampNombre.format(($0.largeur * 10).rounded() / 10) } ?? "auto", valeur: lien(\.largeurCodeMM))
+                    ChampNombre(invite: t.map { ChampNombre.format(($0.largeur * 10).rounded() / 10) } ?? "auto", valeur: borne(\.largeurCodeMM, maxi?.largeur))
                     Text("×")
-                    ChampNombre(invite: t.map { ChampNombre.format(($0.hauteur * 10).rounded() / 10) } ?? "auto", valeur: lien(\.hauteurCodeMM))
+                    ChampNombre(invite: t.map { ChampNombre.format(($0.hauteur * 10).rounded() / 10) } ?? "auto", valeur: borne(\.hauteurCodeMM, maxi?.hauteur))
                     Text("mm")
                     if d.largeurCodeMM > 0 || d.hauteurCodeMM > 0 {
-                        Button("Auto") { etat.modifierDesign { $0.largeurCodeMM = 0; $0.hauteurCodeMM = 0 } }.buttonStyle(.w98)
+                        Button("Auto") { etat.modifierDesign { $0.largeurCodeMM = 0; $0.hauteurCodeMM = 0 } }.buttonStyle(.w98).fixedSize()
                     }
+                }
+                if let maxi {
+                    Text("Maximum à cette place : \(ChampNombre.format(Double((maxi.largeur * 10).rounded() / 10))) × \(ChampNombre.format(Double((maxi.hauteur * 10).rounded() / 10))) mm")
+                        .foregroundStyle(W98.ombre)
                 }
                 if d.largeurCodeMM == 0 { HStack { Text("Échelle"); Slider(value: lien(\.echelleCode), in: 0.6...1.4) } }
             }
@@ -384,7 +420,7 @@ struct EcranJaquette: View {
                 Text("Couleurs")
                 HStack(spacing: 4) {
                     ForEach(CouleursCode.allCases, id: \.self) { c in
-                        Button(tr(c.nom)) { var n = etat.design; n.couleursCode = c; etat.design = n }
+                        Button(tr(c.nom)) { etat.modifierDesign { n in n.couleursCode = c } }
                             .buttonStyle(d.couleursCode == c ? .w98Gras : .w98)
                     }
                 }
@@ -508,7 +544,7 @@ struct EcranJaquette: View {
                 }
                 if !d.alertesForcees.isEmpty {
                     Button("Réafficher les alertes ignorées (\(d.alertesForcees.count))") {
-                        var n = etat.design; n.alertesForcees = []; etat.design = n
+                        etat.modifierDesign { n in n.alertesForcees = [] }
                     }
                     .buttonStyle(.w98)
                 }

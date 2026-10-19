@@ -49,19 +49,19 @@ struct PanneauElement: View {
                 } else {
                     HStack {
                         Text("Rotation")
-                        Slider(value: Binding(get: { a.rotation }, set: { v in etat.ajuster(id) { $0.rotation = (v / 5).rounded() * 5 } }), in: -180...180)
+                        Slider(value: Binding(get: { a.rotation }, set: { v in etat.ajuster(id, regrouper: true) { $0.rotation = (v / 5).rounded() * 5 } }), in: -180...180)
                         Text("\(Int(a.rotation))°").frame(width: 34, alignment: .trailing)
                     }
                     HStack {
                         Text("Opacité")
-                        Slider(value: Binding(get: { a.opacite }, set: { v in etat.ajuster(id) { $0.opacite = v } }), in: 0.1...1)
+                        Slider(value: Binding(get: { a.opacite }, set: { v in etat.ajuster(id, regrouper: true) { $0.opacite = v } }), in: 0.1...1)
                     }
                 }
                 if e.zoneTexte != nil {
                     HStack {
                         ColorPicker("Couleur", selection: Binding(
                             get: { Color(hex: a.couleur.isEmpty ? etat.design.variante.palette.texte : a.couleur) },
-                            set: { c in etat.ajuster(id) { $0.couleur = NSColor(c).hex } }), supportsOpacity: false)
+                            set: { c in etat.ajuster(id, regrouper: true) { $0.couleur = NSColor(c).hex } }), supportsOpacity: false)
                         if !a.couleur.isEmpty {
                             Button("Couleur du design") { etat.ajuster(id) { $0.couleur = "" } }.buttonStyle(.w98)
                         }
@@ -89,7 +89,7 @@ struct PanneauElement: View {
         } else if let mm = e.tailleMM {
             HStack {
                 Text("Taille")
-                Slider(value: Binding(get: { a.echelle }, set: { v in etat.ajuster(e.id) { $0.echelle = (v * 20).rounded() / 20 } }),
+                Slider(value: Binding(get: { a.echelle }, set: { v in etat.ajuster(e.id, regrouper: true) { $0.echelle = (v * 20).rounded() / 20 } }),
                        in: e.id == "recto-image" || e.id == "etiquette-pochette" ? 1...3 : 0.3...3)
                 Text("\(ChampNombre.format((mm[0] * a.echelle * 10).rounded() / 10)) × \(ChampNombre.format((mm[1] * a.echelle * 10).rounded() / 10)) mm")
                     .fixedSize()
@@ -97,7 +97,7 @@ struct PanneauElement: View {
         } else {
             HStack {
                 Text("Taille")
-                Slider(value: Binding(get: { a.echelle }, set: { v in etat.ajuster(e.id) { $0.echelle = (v * 20).rounded() / 20 } }), in: 0.3...3)
+                Slider(value: Binding(get: { a.echelle }, set: { v in etat.ajuster(e.id, regrouper: true) { $0.echelle = (v * 20).rounded() / 20 } }), in: 0.3...3)
                 Text("\(Int((a.echelle * 100).rounded())) %").frame(width: 42, alignment: .trailing)
             }
         }
@@ -113,7 +113,8 @@ struct GroupeTailles: View {
                 let zone = e.zoneTexte!, pt = e.taillePt ?? 5
                 let ech = etat.design.echelle(zone)
                 HStack(spacing: 4) {
-                    Text(tr(e.nom)).lineLimit(1).truncationMode(.tail).help(tr(e.nom))
+                    // Sur deux lignes si besoin : « Numéro de catalogue (tranche) » n'est plus coupé.
+                    Text(tr(e.nom)).lineLimit(2).fixedSize(horizontal: false, vertical: true).help(tr(e.nom))
                     Spacer(minLength: 2)
                     Stepper("\(String(format: "%.1f", pt * ech)) pt",
                             value: Binding(get: { pt * ech }, set: { v in etat.modifierDesign { $0.echelles[zone] = max(0.3, min(4, v / pt)) } }),
@@ -142,11 +143,16 @@ struct GroupeEtiquettes: View {
             if d.etiquettePochette == .fond {
                 HStack {
                     Text("Voile")
-                    Slider(value: Binding(get: { d.voileEtiquette }, set: { v in etat.modifierDesign { $0.voileEtiquette = v } }), in: 0...0.9)
+                    Slider(value: Binding(get: { d.voileEtiquette }, set: { v in etat.modifierDesign(regrouper: true) { $0.voileEtiquette = v } }), in: 0...0.9)
                     Text("\(Int(d.voileEtiquette * 100)) %").frame(width: 36, alignment: .trailing)
                 }
-                curseur("Position horizontale", d.cadrageEtiquetteX) { v in etat.modifierDesign { $0.cadrageEtiquetteX = v } }
-                curseur("Position verticale", d.cadrageEtiquetteY) { v in etat.modifierDesign { $0.cadrageEtiquetteY = v } }
+                // Le conseil était seulement dans la Vérification : il est aussi ici, sous le curseur.
+                if d.voileEtiquette < 0.3 {
+                    Text("Voile faible : les petits textes risquent d'être difficiles à lire sur l'image.").foregroundStyle(W98.orange)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                curseur("Position horizontale", d.cadrageEtiquetteX) { v in etat.modifierDesign(regrouper: true) { $0.cadrageEtiquetteX = v } }
+                curseur("Position verticale", d.cadrageEtiquetteY) { v in etat.modifierDesign(regrouper: true) { $0.cadrageEtiquetteY = v } }
                 Text("Ou glisse l'image dans l'aperçu des étiquettes.").foregroundStyle(W98.ombre)
             }
         }
