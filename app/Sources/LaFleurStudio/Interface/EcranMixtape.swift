@@ -7,14 +7,19 @@ struct EcranMixtape: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
-            VStack(spacing: 10) {
-                Sources()
-                // Mode expert : la boîte IA marche aussi ici (« mets Glass en face B »).
-                if etat.modeExpert {
-                    BoiteModifierIA(exemple: "Ex. « mets Glass en face B », « passe en C90 », « bande Type I sans Dolby »")
+            // Toute la colonne défile : la boîte IA du mode expert ne pousse plus « Dossier audio » hors de l'écran.
+            ScrollView {
+                VStack(spacing: 14) {
+                    Sources()
+                    // Mode expert : la boîte IA marche aussi ici (« mets Glass en face B »).
+                    if etat.modeExpert {
+                        BoiteModifierIA(exemple: "Ex. « mets Glass en face B », « passe en C90 », « bande Type I sans Dolby »")
+                    }
                 }
+                .padding(.top, 4).padding(.trailing, 15)
             }
-            .frame(width: 290)
+            .scrollIndicators(.visible)
+            .frame(width: 305)
             VStack(alignment: .leading, spacing: 10) {
                 // Hauteur naturelle : sinon l'encadré se partage la hauteur avec les listes et s'étire en blancs.
                 ReglagesCassette().fixedSize(horizontal: false, vertical: true)
@@ -38,8 +43,7 @@ private struct Sources: View {
     @State private var rechercheMB = ""
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 14) {
                 Groupe(titre: "Spotify") {
                     Text("Album, playlist ou lien").bold()
                     Champ(invite: "Chercher un album ou coller un lien…", texte: $recherche).onSubmit { etat.chercherAlbums(recherche) }
@@ -124,8 +128,6 @@ private struct Sources: View {
                     }
                     Button("Cassette depuis le dossier (sans Spotify)") { etat.importerDossierSeul() }.buttonStyle(.w98)
                 }
-            }
-            .padding(.top, 4)
         }
     }
 }

@@ -6,7 +6,7 @@ enum FormatApercu: Hashable { case jcard, verso, ocard, etiquettes, obi }
 enum ActionExport: String, Identifiable {
     case pdf, png, imprimer
     var id: String { rawValue }
-    var nom: String { switch self { case .pdf: "Exporter le PDF"; case .png: "Exporter les PNG"; case .imprimer: "Imprimer" } }
+    var nom: String { tr(switch self { case .pdf: "Exporter le PDF"; case .png: "Exporter les PNG"; case .imprimer: "Imprimer" }) }
 }
 
 /// Écran 2 : jaquette (J-card, O-card, étiquettes, obi), codes, direction artistique de Claude, export.
@@ -18,7 +18,9 @@ struct EcranJaquette: View {
     @State private var ajuster = true
     @State private var montrer3D = false
     @State private var historiqueOuvert = false
-    @State private var action: ActionExport?
+    /// Longues conversations et avis de l'IA : repliés par défaut, pour garder la colonne courte.
+    @State private var conversationEntiere = false
+    @State private var avisReplie = false
 
     private func lien<T>(_ kp: WritableKeyPath<Design, T>) -> Binding<T> {
         Binding(get: { etat.design[keyPath: kp] }, set: { v in var d = etat.design; d[keyPath: kp] = v; etat.design = d })
@@ -31,7 +33,8 @@ struct EcranJaquette: View {
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
             // Marge à droite = largeur de la barre de défilement de macOS, pour qu'elle ne passe pas sur les menus.
-            ScrollView { colonneReglages.padding(.trailing, 15).frame(width: 280, alignment: .leading) }.frame(width: 280)
+            ScrollView { colonneReglages.padding(.trailing, 15).frame(width: 280, alignment: .leading) }
+                .scrollIndicators(.visible).frame(width: 280)
             VStack(alignment: .leading, spacing: 6) {
                 barreApercu
                 GeometryReader { g in
@@ -51,7 +54,13 @@ struct EcranJaquette: View {
                 .background(W98.grisFonce).creux(W98.grisFonce)
                 Text(dimensions).lineLimit(2).fixedSize(horizontal: false, vertical: true)
             }
-            ScrollView { colonneClaude.padding(.trailing, 15).frame(width: 310, alignment: .leading) }.frame(width: 310)
+            // Exporter reste toujours visible en bas : le reste de la colonne défile au-dessus (même avec de longues réponses de l'IA).
+            VStack(spacing: 8) {
+                ScrollView { colonneClaude.padding(.trailing, 15).frame(width: 310, alignment: .leading) }
+                    .scrollIndicators(.visible).frame(maxHeight: .infinity)
+                groupeExporter.padding(.trailing, 15)
+            }
+            .frame(width: 310)
         }
         .onAppear {
             if etat.projet.design == nil { etat.design = etat.designParDefaut }
@@ -60,36 +69,6 @@ struct EcranJaquette: View {
             if etat.projet.pochetteURL == nil { Task { await etat.chercherVraiePochette() } }
         }
         .sheet(isPresented: $montrer3D) { Apercu3D(mise: etat.mise) { montrer3D = false } }
-        .alert(action?.nom ?? "", isPresented: Binding(get: { action != nil }, set: { if !$0 { action = nil } }), presenting: action) { a in
-            if !etat.alertesBloquantes.isEmpty {
-                Button("Tout corriger") { etat.toutCorriger() }
-            }
-            if a == .imprimer && etat.calibration == nil {
-                Button("Imprimer la règle d'abord") { etat.imprimerCalibrage() }
-            }
-            Button(etat.alertesBloquantes.isEmpty ? "Continuer" : (a == .imprimer ? "Imprimer quand même" : "Exporter quand même")) { lancer(a) }
-            Button("Annuler", role: .cancel) {}
-        } message: { _ in
-            Text(messageExport)
-        }
-    }
-
-    private var messageExport: String {
-        let b = etat.alertesBloquantes
-        let rappel = "Rappel : usage personnel et non commercial. Tu es seul responsable de ce que tu imprimes (droits d'auteur, marques). Imprime toujours à 100 %."
-        let regle = action == .imprimer && etat.calibration == nil
-            ? "Ton imprimante (\(etat.imprimanteCourante)) n'est pas encore calibrée : imprime d'abord la règle pour vérifier que la jaquette sort à la bonne taille (Réglages → Impression).\n\n" : ""
-        if b.isEmpty { return regle + rappel }
-        let liste = b.prefix(4).map { "• " + $0.message }.joined(separator: "\n")
-        return "\(b.count) alerte\(b.count > 1 ? "s" : "") ouverte\(b.count > 1 ? "s" : "") :\n\(liste)\n\n\(regle)\(rappel)"
-    }
-
-    private func lancer(_ a: ActionExport) {
-        switch a {
-        case .pdf: etat.exporterPDF()
-        case .png: etat.exporterPNG()
-        case .imprimer: etat.imprimer()
-        }
     }
 
     // MARK: Aperçu
@@ -438,7 +417,14 @@ struct EcranJaquette: View {
                                 ? "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Clique sur « Proposer » pour 3 variantes ; pour une retouche précise, écris-la dans « Modifier avec l'IA »."
                                 : "Pour ta mixtape je propose d'abord un collage des covers, puis ta propre image, le style K7 maison, ou un design dessiné. Dis-moi l'ambiance.")
                 }
-                ForEach(etat.conversation) { m in
+                let cachees = conversationEntiere ? 0 : max(0, etat.conversation.count - 2)
+                if etat.conversation.count > 2 {
+                    Button(conversationEntiere ? "Replier la conversation" : "Voir les \(cachees) messages précédents") {
+                        conversationEntiere.toggle()
+                    }
+                    .buttonStyle(.w98)
+                }
+                ForEach(etat.conversation.dropFirst(cachees)) { m in
                     if m.deClaude {
                         BulleClaude(texte: m.texte)
                     } else {
@@ -506,14 +492,19 @@ struct EcranJaquette: View {
                     .padding(4).creux(al.gravite == .bloquante ? Color(red: 1, green: 0.92, blue: 0.92) : W98.bulle)
                 }
                 if let avis = etat.avisClaude {
-                    BulleClaude(texte: avis.message + (avis.corrections.isEmpty ? "" : "\n" + avis.corrections.map { "• \($0.zone) : \($0.explication)" }.joined(separator: "\n")))
-                    if !avis.corrections.isEmpty {
-                        Button("Appliquer les corrections de Claude") { etat.appliquer(avis.corrections) }.buttonStyle(.w98)
+                    if !avisReplie {
+                        BulleClaude(texte: avis.message + (avis.corrections.isEmpty ? "" : "\n" + avis.corrections.map { "• \($0.zone) : \($0.explication)" }.joined(separator: "\n")))
+                    }
+                    HStack(spacing: 4) {
+                        if !avis.corrections.isEmpty {
+                            Button("Appliquer les corrections de \(etat.fournisseurIA.nom)") { etat.appliquer(avis.corrections) }.buttonStyle(.w98)
+                        }
+                        Button(avisReplie ? "Afficher l'avis" : "Replier") { avisReplie.toggle() }.buttonStyle(.w98)
                     }
                 }
                 HStack(spacing: 4) {
                     Button("Tout corriger") { etat.toutCorriger() }.buttonStyle(.w98).disabled(a.isEmpty && etat.avisClaude == nil)
-                    Button("Vérifier avec Claude") { etat.verifierAvecClaude() }.buttonStyle(.w98).disabled(etat.occupe)
+                    Button("Vérifier avec \(etat.fournisseurIA.nom)") { avisReplie = false; etat.verifierAvecClaude() }.buttonStyle(.w98).disabled(etat.occupe)
                 }
                 if !d.alertesForcees.isEmpty {
                     Button("Réafficher les alertes ignorées (\(d.alertesForcees.count))") {
@@ -523,17 +514,20 @@ struct EcranJaquette: View {
                 }
             }
 
-            Groupe(titre: "Exporter") {
-                HStack(spacing: 4) {
-                    Button("PDF") { action = .pdf }.buttonStyle(.w98)
-                    Button("PNG 600 DPI") { action = .png }.buttonStyle(.w98)
-                    Button("Imprimer…") { action = .imprimer }.buttonStyle(.w98Gras)
-                }
-                let n = formatsCoches.filter { $0.0 != .verso }.count
-                Text(n > 1 ? "\(n) formats cochés · papier 170 à 250 g/m² · étiquettes sur papier autocollant"
-                           : "\(n) format coché · papier 170 à 250 g/m² · étiquettes sur papier autocollant")
-                    .foregroundStyle(W98.ombre).fixedSize(horizontal: false, vertical: true)
+        }
+    }
+
+    private var groupeExporter: some View {
+        Groupe(titre: "Exporter") {
+            HStack(spacing: 4) {
+                Button("PDF") { etat.demandeExport = .pdf }.buttonStyle(.w98).help("Fichier → Exporter le PDF… (⇧⌘E)")
+                Button("PNG 600 DPI") { etat.demandeExport = .png }.buttonStyle(.w98)
+                Button("Imprimer…") { etat.demandeExport = .imprimer }.buttonStyle(.w98Gras).help("Fichier → Imprimer… (⌘P)")
             }
+            let n = formatsCoches.filter { $0.0 != .verso }.count
+            Text(n > 1 ? "\(n) formats cochés · papier 170 à 250 g/m² · étiquettes sur papier autocollant"
+                       : "\(n) format coché · papier 170 à 250 g/m² · étiquettes sur papier autocollant")
+                .foregroundStyle(W98.ombre).fixedSize(horizontal: false, vertical: true)
         }
     }
 

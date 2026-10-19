@@ -172,6 +172,21 @@ enum Captures {
             }
             dl.imagesPosees = []; etat.design = dl
         }
+        // Colonnes longues (réponses de l'IA, fil, panneau Élément) : elles doivent défiler à la molette, et Exporter rester visible.
+        let long = "Je pars de ta pochette : bleu nuit, papier crème, titre en Cormorant italique. La tranche reprend l'accent et le badge Type II reste discret en haut du rabat."
+        etat.conversation = (0..<6).map { MessageDesign(deClaude: $0 % 2 == 1, texte: long) }
+        etat.filModif = (0..<10).map { MessageModif(deIA: $0 % 2 == 1, texte: long, changements: $0 % 2 == 1 ? ["echelles.titre : 1 → 1.3"] : []) }
+        etat.elementSelectionne = "recto-titre"
+        journal += await testerDefilement(FenetrePrincipale(ecranInitial: .jaquette).padding(16).background(W98.bureau).w98()
+                                            .environmentObject(etat).environmentObject(moteur).preferredColorScheme(.light),
+                                          CGSize(width: 1180, height: 760), dossier, "defilement-jaquette")
+        etat.prefs.modeExpertIA = true
+        journal += await testerDefilement(FenetrePrincipale(ecranInitial: .mixtape).padding(16).background(W98.bureau).w98()
+                                            .environmentObject(etat).environmentObject(moteur).preferredColorScheme(.light),
+                                          CGSize(width: 1180, height: 760), dossier, "defilement-mixtape")
+        etat.prefs.modeExpertIA = false
+        etat.conversation = []; etat.filModif = []; etat.elementSelectionne = nil
+
         journal.append("Plan de la cassette envoyé à Claude :\n" + etat.mise.anatomie())
         journal.append("Polices disponibles : " + Typo.disponibles.joined(separator: ", "))
         try? journal.joined(separator: "\n").write(to: dossier.appendingPathComponent("journal.txt"), atomically: true, encoding: .utf8)
@@ -199,6 +214,42 @@ enum Captures {
             try? rep.representation(using: .png, properties: [:])?.write(to: url)
         }
         w.orderOut(nil)
+    }
+
+    /// Affiche la vue, fait tourner la molette (comme un vrai utilisateur) sur chaque zone qui défile,
+    /// et capture avant / après. Renvoie ce qui a bougé, pour le journal.
+    static func testerDefilement(_ vue: some View, _ taille: CGSize, _ dossier: URL, _ nom: String) async -> [String] {
+        let h = NSHostingView(rootView: vue.frame(width: taille.width, height: taille.height))
+        h.frame = CGRect(origin: .zero, size: taille)
+        let w = NSWindow(contentRect: h.frame, styleMask: [.borderless], backing: .buffered, defer: false)
+        w.contentView = h
+        w.orderFrontRegardless()
+        try? await Task.sleep(for: .milliseconds(1200))
+        h.layoutSubtreeIfNeeded()
+        func photo(_ suffixe: String) {
+            if let rep = h.bitmapImageRepForCachingDisplay(in: h.bounds) {
+                h.cacheDisplay(in: h.bounds, to: rep)
+                try? rep.representation(using: .png, properties: [:])?.write(to: dossier.appendingPathComponent("\(nom)-\(suffixe).png"))
+            }
+        }
+        photo("avant")
+        func defilantes(_ v: NSView) -> [NSScrollView] { ((v as? NSScrollView).map { [$0] } ?? []) + v.subviews.flatMap(defilantes) }
+        var lignes = ["Défilement \(nom) :"]
+        for sv in defilantes(h) {
+            let doc = sv.documentView?.frame.height ?? 0, vu = sv.contentView.bounds.height
+            guard doc > vu + 1 else { continue }
+            let avant = sv.contentView.bounds.origin.y
+            if let cg = CGEvent(scrollWheelEvent2Source: nil, units: .pixel, wheelCount: 1, wheel1: -3000, wheel2: 0, wheel3: 0),
+               let e = NSEvent(cgEvent: cg) { sv.scrollWheel(with: e) }
+            try? await Task.sleep(for: .milliseconds(600))
+            let apres = sv.contentView.bounds.origin.y
+            let x = Int(sv.convert(sv.bounds, to: h).minX)
+            lignes.append("- zone x=\(x) : contenu \(Int(doc)) pt, visible \(Int(vu)) pt, molette \(Int(avant)) → \(Int(apres)) \(apres != avant ? "OK" : "BLOQUÉ")")
+        }
+        h.layoutSubtreeIfNeeded()
+        photo("apres")
+        w.orderOut(nil)
+        return lignes
     }
 
     /// Pochette de démonstration : un lac au coucher du soleil, dessiné (pas d'accès réseau nécessaire).

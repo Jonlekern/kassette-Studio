@@ -58,6 +58,8 @@ final class EtatApp: ObservableObject {
     /// Autres images trouvées pour chaque demande de Claude (pour en choisir une autre).
     @Published var imagesTrouvees: [String: [URL]] = [:]
     @Published var avisClaude: AvisRendu?
+    /// Export ou impression demandés (bouton de la Jaquette ou menu Fichier) : le rappel s'affiche d'abord.
+    @Published var demandeExport: ActionExport?
     /// Élément de la jaquette sélectionné dans l'aperçu (panneau « Élément »).
     @Published var elementSelectionne: String?
     /// Designs précédents, pour « Annuler » (⌘Z) : retouches à la main et changements de l'IA.

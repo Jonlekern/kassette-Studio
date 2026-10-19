@@ -399,13 +399,44 @@ extension EtatApp {
         return "\(projet.numeroCatalogue) \(t)".replacingOccurrences(of: "/", with: "-").replacingOccurrences(of: ":", with: "-")
     }
 
+    /// Texte du rappel affiché avant un export ou une impression.
+    func messageExport(_ action: ActionExport) -> String {
+        let b = alertesBloquantes
+        let rappel = tr("Rappel : usage personnel et non commercial. Tu es seul responsable de ce que tu imprimes (droits d'auteur, marques). Imprime toujours à 100 %.")
+        let regle = action == .imprimer && calibration == nil
+            ? String(localized: "Ton imprimante (\(imprimanteCourante)) n'est pas encore calibrée : imprime d'abord la règle pour vérifier que la jaquette sort à la bonne taille (Réglages → Impression).") + "\n\n" : ""
+        if b.isEmpty { return regle + rappel }
+        let liste = b.prefix(4).map { "• " + $0.message }.joined(separator: "\n")
+        let entete = b.count > 1 ? String(localized: "\(b.count) alertes ouvertes :") : String(localized: "1 alerte ouverte :")
+        return "\(entete)\n\(liste)\n\n\(regle)\(rappel)"
+    }
+
+    func lancer(_ action: ActionExport) {
+        switch action {
+        case .pdf: exporterPDF()
+        case .png: exporterPNG()
+        case .imprimer: imprimer()
+        }
+    }
+
+    /// Dossier proposé pour les exports : le dernier utilisé, sinon Documents (pas le dossier audio).
+    private var dossierExport: URL {
+        if let p = UserDefaults.standard.string(forKey: "dossierExport"), FileManager.default.fileExists(atPath: p) {
+            return URL(fileURLWithPath: p, isDirectory: true)
+        }
+        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    }
+    private func retenirDossierExport(_ dossier: URL) { UserDefaults.standard.set(dossier.path(percentEncoded: false), forKey: "dossierExport") }
+
     func exporterPDF() {
         Task { @MainActor in
             await prechargerImages()
             let panneau = NSSavePanel()
             panneau.allowedContentTypes = [.pdf]
             panneau.nameFieldStringValue = nomFichier + ".pdf"
+            panneau.directoryURL = dossierExport
             guard panneau.runModal() == .OK, let url = panneau.url else { return }
+            retenirDossierExport(url.deletingLastPathComponent())
             // PDF pour une boutique : sans le décalage propre à ton imprimante.
             let data = Export.pdf(Export.pages(mise), mise: mise, decalageX: 0, decalageY: 0)
             do {
@@ -421,8 +452,10 @@ extension EtatApp {
             await prechargerImages()
             let panneau = NSOpenPanel()
             panneau.canChooseDirectories = true; panneau.canChooseFiles = false; panneau.canCreateDirectories = true
-            panneau.prompt = "Enregistrer ici"
+            panneau.prompt = String(localized: "Enregistrer ici")
+            panneau.directoryURL = dossierExport
             guard panneau.runModal() == .OK, let dossier = panneau.url else { return }
+            retenirDossierExport(dossier)
             var n = 0
             for p in Export.pages(mise) {
                 guard let data = Export.png(p.vue, dpi: 600) else { continue }

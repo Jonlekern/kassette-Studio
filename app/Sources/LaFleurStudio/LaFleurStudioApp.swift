@@ -37,6 +37,14 @@ struct LaFleurStudioApp: App {
             CommandGroup(replacing: .newItem) {
                 Button("Nouvelle cassette") { etat.nouvelleCassette() }.keyboardShortcut("n")
             }
+            // La jaquette s'exporte aussi depuis le menu, quel que soit l'écran affiché.
+            CommandGroup(replacing: .importExport) {
+                Button("Exporter le PDF…") { etat.demandeExport = .pdf }.keyboardShortcut("e", modifiers: [.command, .shift])
+                Button("Exporter les PNG 600 DPI…") { etat.demandeExport = .png }
+            }
+            CommandGroup(replacing: .printItem) {
+                Button("Imprimer la jaquette…") { etat.demandeExport = .imprimer }.keyboardShortcut("p")
+            }
         }
         Settings {
             Reglages().environmentObject(etat).environmentObject(moteur)

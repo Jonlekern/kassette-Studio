@@ -83,6 +83,20 @@ struct FenetrePrincipale: View {
         .sheet(item: Binding(get: { etat.questions.first }, set: { _ in })) { q in
             QuestionAssociation(question: q).environmentObject(etat)
         }
+        // Rappel avant export ou impression (boutons de la Jaquette ou menu Fichier, ⌘P).
+        .alert(etat.demandeExport?.nom ?? "", isPresented: Binding(get: { etat.demandeExport != nil }, set: { if !$0 { etat.demandeExport = nil } }),
+               presenting: etat.demandeExport) { a in
+            if !etat.alertesBloquantes.isEmpty {
+                Button("Tout corriger") { etat.toutCorriger() }
+            }
+            if a == .imprimer && etat.calibration == nil {
+                Button("Imprimer la règle d'abord") { etat.imprimerCalibrage() }
+            }
+            Button(etat.alertesBloquantes.isEmpty ? "Continuer" : (a == .imprimer ? "Imprimer quand même" : "Exporter quand même")) { etat.lancer(a) }
+            Button("Annuler", role: .cancel) {}
+        } message: { a in
+            Text(verbatim: etat.messageExport(a))
+        }
     }
 }
 
