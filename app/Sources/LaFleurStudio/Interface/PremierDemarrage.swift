@@ -139,6 +139,7 @@ struct ChoixSortie: View {
     @EnvironmentObject var etat: EtatApp
     @EnvironmentObject var moteur: MoteurEnregistrement
     @State private var sorties: [SortieAudio] = []
+    @State private var sortiesLues = false
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
@@ -147,16 +148,20 @@ struct ChoixSortie: View {
                     ForEach(sorties) { s in
                         Text(s.nom + (s.deconseillee ? " (déconseillé : retard, compression)" : "")).tag(String?.some(s.uid))
                     }
+                    // Carte son débranchée : on la garde dans la liste (le menu était vide), le Mac joue sur sa sortie par défaut.
+                    if sortiesLues, let uid = etat.prefs.sortieAudioUID, !sorties.contains(where: { $0.uid == uid }) {
+                        Text("Carte son choisie, débranchée (sortie par défaut du Mac en attendant)").tag(String?.some(uid))
+                    }
                 }
                 .labelsHidden()
-                Button("Actualiser") { sorties = SortiesAudio.lister() }.buttonStyle(.w98)
+                Button("Actualiser") { sorties = SortiesAudio.lister(); sortiesLues = true }.buttonStyle(.w98)
                 Button(moteur.tonaliteActive ? "Couper la tonalité" : "Tonalité 1 kHz") { moteur.basculerTonalite(sortie: etat.prefs.sortieAudioUID) }.buttonStyle(.w98)
             }
             Text("L'app joue seulement sur cette sortie ; le reste du Mac ne change pas.").foregroundStyle(W98.ombre)
         }
         .onAppear { moteur.sortieCourante = etat.prefs.sortieAudioUID }
         // Lecture des sorties audio (CoreAudio) hors du fil principal : l'écran s'affiche tout de suite.
-        .task { if sorties.isEmpty { sorties = await Task.detached { SortiesAudio.lister() }.value } }
+        .task { if sorties.isEmpty { sorties = await Task.detached { SortiesAudio.lister() }.value; sortiesLues = true } }
         .onChange(of: etat.prefs.sortieAudioUID) { moteur.changerSortie(etat.prefs.sortieAudioUID) }
     }
 }

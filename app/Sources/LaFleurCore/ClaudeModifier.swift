@@ -84,8 +84,14 @@ extension ClientClaude {
             (20 minimum) ; 0 = automatique.
             - Formes et décors : design.variante.elements (liste JSON d'éléments graphiques, coordonnées de 0 à 1 sur le recto).
             - Images (logo, écusson, vraie pochette) : `images`, comme d'habitude (requete en anglais pour un logo, usage recto | logo | element).
-            - « Encore plus » / « moins » : pars des valeurs actuelles du JSON. « Remets comme avant » / « annule » : action annuler.
-            - Si une demande est vraiment impossible dans l'app, mets-la dans `impossible` en une phrase claire, ne fais pas semblant.
+            - « Encore plus » / « moins » : pars des valeurs actuelles du JSON.
+            - « Remets comme avant » / « annule » : action annuler, avec `position` = nombre de demandes à annuler (les plus récentes \
+            de la boîte). Après une série sur le même sujet (« titre plus gros » puis « encore plus gros »), « comme avant » veut dire \
+            avant toute la série : annule toute la série. « Juste la dernière étape » : position 1. Si tu ne sais pas, demande-le \
+            dans `message` sans rien changer.
+            - Si une demande est vraiment impossible pour toi, mets-la dans `impossible` en une phrase claire et juste, ne fais pas semblant. \
+            L'app sait jouer et enregistrer les faces (écran Enregistrer, bouton ●) et imprimer : c'est l'utilisateur qui lance, jamais toi. \
+            Dans ce cas, dis où cliquer (« Je ne lance pas la lecture moi-même : va dans Enregistrer et clique ● »).
             - `message` : en 1 à 3 phrases, ce que tu as changé (avant → après), en \(langue).
             Polices disponibles : \(polices.joined(separator: ", ")).
             PLAN DE LA CASSETTE : \(anatomie)

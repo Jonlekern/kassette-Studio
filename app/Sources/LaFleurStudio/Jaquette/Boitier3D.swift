@@ -21,27 +21,43 @@ enum Boitier3D {
         boitier.eulerAngles = SCNVector3(0.12, 0.5, 0)  // tourné pour montrer la tranche, côté charnière
         scene.rootNode.addChildNode(boitier)
 
-        // La J-card pliée : un pavé dont la face avant est le recto et le côté gauche la tranche.
-        let carte = SCNBox(width: papier.l, height: papier.h, length: papier.e, chamferRadius: 0)
-        carte.materials = [
+        // La J-card pliée, comme dans un vrai boîtier : le recto devant, la tranche côté charnière, le rabat au dos.
+        let gauche = -b.largeur / 2 + 1.2, avant = b.epaisseur / 2 - 0.9, mince: CGFloat = 0.3
+        let rabat = CGFloat(mise.gabaritJ.panneaux.first { $0.genre == .rabat }?.largeur ?? 15)
+        func panneau(_ l: CGFloat, _ h: CGFloat, _ e: CGFloat, _ x: CGFloat, _ z: CGFloat, faces: [SCNMaterial]) {
+            let n = SCNNode(geometry: { let g = SCNBox(width: l, height: h, length: e, chamferRadius: 0); g.materials = faces; return g }())
+            n.position = SCNVector3(x, 0, z)
+            boitier.addChildNode(n)
+        }
+        // Ordre des faces d'un SCNBox : avant, droite, arrière, gauche, haut, bas.
+        panneau(papier.l, papier.h, mince, gauche + papier.l / 2, avant - mince / 2, faces: [
             matiere(texture(RectoVue(mise: mise, largeur: Gabarits.recto, hauteur: Gabarits.hauteurJ, u: Typo.ptParMM)), fond),
-            matiere(fond),
-            matiere(fond.blended(withFraction: 0.35, of: .black), fond),
+            matiere(fond), matiere(fond), matiere(fond), matiere(fond), matiere(fond)])
+        panneau(mince, papier.h, papier.e, gauche, avant - papier.e / 2, faces: [
+            matiere(fond), matiere(fond), matiere(fond),
             matiere(texture(TrancheVue(mise: mise, longueur: Gabarits.hauteurJ, epaisseur: Gabarits.tranche, u: Typo.ptParMM)
                 .background(Color(hex: mise.design.variante.palette.fond))), fond),
-            matiere(fond),
-            matiere(fond),
-        ]
-        let noeudCarte = SCNNode(geometry: carte)
-        // Calée contre l'avant et la charnière (côté gauche) du boîtier.
-        noeudCarte.position = SCNVector3(-b.largeur / 2 + 1.2 + papier.l / 2, 0, b.epaisseur / 2 - 0.9 - papier.e / 2)
-        boitier.addChildNode(noeudCarte)
+            matiere(fond), matiere(fond)])
+        // Le rabat se voit par le dos du boîtier (avant, le dos était un bloc noir).
+        panneau(rabat, papier.h, mince, gauche + rabat / 2, avant - papier.e + mince / 2, faces: [
+            matiere(fond), matiere(fond),
+            matiere(texture(RabatVue(mise: mise, largeur: rabat, hauteur: Gabarits.hauteurJ, u: Typo.ptParMM)
+                .background(Color(hex: mise.design.variante.palette.fond))), fond),
+            matiere(fond), matiere(fond), matiere(fond)])
 
-        // La cassette derrière la jaquette, à peine visible à travers le plastique.
-        let k7 = SCNBox(width: 63, height: 100, length: 3, chamferRadius: 1)
-        k7.materials = [matiere(NSColor(white: 0.18, alpha: 1))]
+        // La cassette entre le recto et le rabat, debout, avec ses étiquettes (face A devant, face B derrière).
+        let k: CGFloat = 4
+        let dessin = { (f: Face) in
+            texture(CassetteDessin(projet: mise.projet, face: f, tourne: false, progression: 0.3, u: k)
+                .frame(width: 100.4 * k, height: 63.8 * k)
+                .rotationEffect(.degrees(-90)).frame(width: 63.8 * k, height: 100.4 * k))
+        }
+        let plastiqueK7 = NSColor(white: mise.projet.cassette.coque == .noire ? 0.1 : mise.projet.cassette.coque == .blanche ? 0.92 : 0.4, alpha: 1)
+        let k7 = SCNBox(width: 63.8, height: 100.4, length: 11, chamferRadius: 1)
+        k7.materials = [matiere(dessin(.a), plastiqueK7), matiere(plastiqueK7), matiere(dessin(.b), plastiqueK7),
+                        matiere(plastiqueK7), matiere(plastiqueK7), matiere(plastiqueK7)]
         let noeudK7 = SCNNode(geometry: k7)
-        noeudK7.position = SCNVector3(0, 0, -b.epaisseur / 2 + 2)
+        noeudK7.position = SCNVector3(gauche + 0.6 + 63.8 / 2, 0, avant - papier.e / 2)
         boitier.addChildNode(noeudK7)
 
         // La coque : plastique clair, reflets sur les arêtes.

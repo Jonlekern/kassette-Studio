@@ -27,7 +27,7 @@ struct Reglages: View {
             }
             .padding(12).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading).relief()
         }
-        .task { if imprimantes.isEmpty { imprimantes = await Task.detached { NSPrinter.printerNames }.value } }
+        .task { if imprimantes.isEmpty { imprimantes = await Task.detached { NSPrinter.printerNames }.value; imprimantesLues = true } }
         .padding(14).frame(width: 760, height: 560).background(W98.gris).w98().preferredColorScheme(.light)
     }
 
@@ -76,6 +76,7 @@ struct Reglages: View {
 
     /// Liste des imprimantes : lente à obtenir (CUPS), lue une seule fois en arrière-plan.
     @State private var imprimantes: [String] = []
+    @State private var imprimantesLues = false
     @State private var regleH = ""
     @State private var regleV = ""
     @State private var bordGauche = ""
@@ -93,9 +94,15 @@ struct Reglages: View {
         let c = etat.calibration
         return VStack(alignment: .leading, spacing: 12) {
             Groupe(titre: "Imprimante et papier") {
-                Picker("Imprimante", selection: Binding(get: { etat.imprimanteCourante },
-                                                         set: { etat.prefs.imprimante = $0 })) {
-                    ForEach(Array(Set(imprimantes + [etat.imprimanteCourante])).sorted(), id: \.self) { Text($0).tag($0) }
+                if imprimantesLues && imprimantes.isEmpty {
+                    // Le menu était vide, sans explication.
+                    Text("Aucune imprimante installée sur ce Mac : ajoute-la dans Réglages Système → Imprimantes et scanners, puis rouvre les Réglages.")
+                        .foregroundStyle(W98.orange).fixedSize(horizontal: false, vertical: true)
+                } else {
+                    Picker("Imprimante", selection: Binding(get: { etat.imprimanteCourante },
+                                                             set: { etat.prefs.imprimante = $0 })) {
+                        ForEach(Array(Set(imprimantes + [etat.imprimanteCourante])).filter { !$0.isEmpty }.sorted(), id: \.self) { Text($0).tag($0) }
+                    }
                 }
                 Picker("Papier", selection: $etat.prefs.papierCalibrage) { Text("A4").tag("A4"); Text("US Letter").tag("Letter") }
                     .pickerStyle(.radioGroup).horizontalRadioGroupLayout()

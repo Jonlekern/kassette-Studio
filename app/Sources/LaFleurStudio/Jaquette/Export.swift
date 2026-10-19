@@ -36,9 +36,9 @@ enum Export {
         }
         if d.jcard {
             let g = mise.gabaritJ
-            page("J-card · extérieur", g.largeur, g.hauteur, g.plis, JCardVue(mise: mise, perdu: b, u: u))
+            page(tr("J-card · extérieur"), g.largeur, g.hauteur, g.plis, JCardVue(mise: mise, perdu: b, u: u))
             if mise.aUnVerso {
-                page("J-card · verso (imprimer au dos, retourner sur le grand côté)", g.largeur, g.hauteur,
+                page(tr("J-card · verso (imprimer au dos, retourner sur le grand côté)"), g.largeur, g.hauteur,
                      g.plis.map { g.largeur - $0 }, verso: true, JCardVue(mise: mise, cote: .verso, perdu: b, u: u))
             }
         }
@@ -48,7 +48,7 @@ enum Export {
         }
         if d.etiquettes {
             let ecart: CGFloat = 42 + 2 * b + 14
-            page("Étiquettes de K7 · faces A et B", 89, 42, [], copies: [0, ecart],
+            page(tr("Étiquettes de K7 · faces A et B"), 89, 42, [], copies: [0, ecart],
                  VStack(spacing: 14 * u) {
                      EtiquetteVue(mise: mise, face: .a, perdu: b, u: u)
                      EtiquetteVue(mise: mise, face: .b, perdu: b, u: u)

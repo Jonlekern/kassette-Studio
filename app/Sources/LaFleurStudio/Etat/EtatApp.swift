@@ -51,6 +51,8 @@ final class EtatApp: ObservableObject {
     let musicBrainz = ClientMusicBrainz()
     @Published var playlists: [ClientSpotify.Playlist] = []
     @Published var questions: [QuestionFichier] = []
+    /// Spotify a refusé l'accès parce que le compte n'est pas Premium.
+    @Published var spotifySansPremium = false
     @Published var retires: [(piste: Piste, face: Face, index: Int)] = []
     @Published var avantVidage: (a: [Piste], b: [Piste])?
     @Published private(set) var fichiers: [InfosFichier] = []
@@ -142,7 +144,11 @@ final class EtatApp: ObservableObject {
         guard !occupe else { return }
         occupe = true; statut = message
         Task {
-            do { try await action() } catch { statut = "⚠︎ " + error.localizedDescription }
+            do { try await action() } catch {
+                statut = "⚠︎ " + error.localizedDescription
+                // Visible aussi dans la barre d'état, à côté de « Spotify : connecté » (sinon c'était contradictoire).
+                if case ClientSpotify.Erreur.premiumRequis = error { spotifySansPremium = true }
+            }
             occupe = false
         }
     }

@@ -36,7 +36,7 @@ struct EcranCollection: View {
                                 Text(p.enregistree.count == 2 || (p.enregistree.contains(.a) && p.faceB.isEmpty) ? "Enregistrée" : "Brouillon")
                                     .foregroundStyle(p.enregistree.isEmpty ? W98.grisFonce : W98.vert).bold()
                             }
-                            Text(p.titre.isEmpty ? "Sans titre" : p.titre).bold().lineLimit(1)
+                            (p.titre.isEmpty ? Text("Sans titre") : Text(verbatim: p.titre)).bold().lineLimit(1)
                             Text("\(p.artiste) · \(tr(p.mode == .album ? "album" : "mixtape")) · \(p.cassette.longueur.nom)").foregroundStyle(W98.ombre).lineLimit(1)
                             HStack(spacing: 4) {
                                 Button("Ouvrir") { ouvrir(p) }.buttonStyle(.w98Gras)
@@ -55,8 +55,13 @@ struct EcranCollection: View {
             }
             .background(W98.grisFonce).creux(W98.grisFonce)
             let prochain = String(format: "%@-%03d", etat.prefs.prefixeCatalogue, etat.prefs.prochainNumero)
-            Text(etat.collection.count > 1 ? "\(etat.collection.count) cassettes · prochain numéro : \(prochain)"
-                                           : "\(etat.collection.count) cassette · prochain numéro : \(prochain)")
+            // Pendant une recherche : combien de cassettes sont affichées sur le total.
+            if !recherche.isEmpty {
+                Text("\(liste.count) sur \(etat.collection.count) cassettes · prochain numéro : \(prochain)")
+            } else {
+                Text(etat.collection.count > 1 ? "\(etat.collection.count) cassettes · prochain numéro : \(prochain)"
+                                               : "\(etat.collection.count) cassette · prochain numéro : \(prochain)")
+            }
         }
         .onAppear { etat.rafraichirCollection() }
         .sheet(item: $historique) { p in

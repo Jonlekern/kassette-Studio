@@ -70,9 +70,14 @@ extension EtatApp {
             let r = try await c.modifier(projet: projet, design: design, reglages: prefs, demande: texte, fil: fil, expert: modeExpert,
                                          polices: Typo.disponibles, images: images, anatomie: mise.anatomie(),
                                          fichiers: fichiers.map(nomFichier), collection: collection.map { "\($0.numeroCatalogue) \($0.titre)" })
-            // « Remets comme avant » : on annule le dernier échange de la boîte.
-            if r.actions.contains(where: { $0.type == "annuler" }) {
-                let msg = annulerDernierEchange() ? r.message : String(localized: "Il n'y a rien à annuler.")
+            // « Remets comme avant » : on annule les derniers échanges de la boîte (toute la série sur le même sujet,
+            // ou seulement la dernière étape, selon ce que l'IA a compris). L'annulation compte dans l'historique.
+            if let a = r.actions.first(where: { $0.type == "annuler" }) {
+                let n = max(1, Int(a.position))
+                var faits = 0
+                while faits < n && annulerDernierEchange() { faits += 1 }
+                let msg = faits > 0 ? r.message : String(localized: "Il n'y a rien à annuler.")
+                _ = noterEchange(texte, msg, faits > 0 ? [String(localized: "\(faits) demande(s) annulée(s)")] : [], client: c, refaisable: false)
                 filModif.append(MessageModif(deIA: true, texte: msg))
                 return
             }
@@ -144,11 +149,19 @@ extension EtatApp {
     private func nomFichier(_ f: InfosFichier) -> String { f.titre ?? f.url.deletingPathExtension().lastPathComponent }
 
     /// Applique un changement « chemin = valeur » et renvoie « chemin : avant → après ».
+    /// Valeur d'un réglage du design qui n'a jamais été changé (« echelles.titre » → 1), pour le résumé avant → après.
+    static func valeurParDefaut(_ sous: String) -> String? {
+        let m = sous.split(separator: ".").map(String.init)
+        if m.count == 2 && m[0] == "echelles" { return "1" }
+        if m.count == 3 && m[0] == "ajustements" { return Chemins.lire(m[2], dans: Ajustement()) }
+        return nil
+    }
+
     func appliquerChemin(_ chemin: String, _ valeur: String, _ p: inout Projet, _ d: inout Design, _ reglages: inout Preferences) throws -> String {
         let c = chemin.trimmingCharacters(in: .whitespaces)
         if c.hasPrefix("design.") {
             let sous = String(c.dropFirst(7))
-            let avant = Chemins.lire(sous, dans: d) ?? "—"
+            let avant = Chemins.lire(sous, dans: d) ?? Self.valeurParDefaut(sous) ?? "—"
             try Chemins.ecrire(sous, valeur, dans: &d)
             return "\(sous) : \(avant) → \(Chemins.lire(sous, dans: d) ?? valeur)"
         }

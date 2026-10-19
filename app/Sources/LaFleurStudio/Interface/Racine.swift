@@ -73,7 +73,10 @@ struct FenetrePrincipale: View {
                 HStack(spacing: 2) {
                     if etat.occupe { ProgressView().controlSize(.small).padding(.leading, 4) }
                     Text(etat.statut).lineLimit(1).padding(.horizontal, 6).frame(maxWidth: .infinity, alignment: .leading).frame(height: 20).creux(W98.gris)
-                    Text(etat.spotifyConnecte ? "Spotify : connecté" : "Spotify : non connecté").padding(.horizontal, 6).frame(height: 20).creux(W98.gris)
+                    Text(!etat.spotifyConnecte ? "Spotify : non connecté" : etat.spotifySansPremium ? "Spotify : connecté, sans Premium" : "Spotify : connecté")
+                        .foregroundStyle(etat.spotifyConnecte && etat.spotifySansPremium ? W98.rouge : .black)
+                        .help(etat.spotifySansPremium ? "L'API de Spotify demande un compte Premium. Sans Premium, utilise « Cassette depuis le dossier »." : "")
+                        .padding(.horizontal, 6).frame(height: 20).creux(W98.gris)
                     if etat.modeExpert { BadgeExpert() }
                     Text(etat.cle(etat.fournisseurIA).isEmpty ? "\(etat.fournisseurIA.nom) : pas de clé" : "\(etat.fournisseurIA.nom) : prêt").padding(.horizontal, 6).frame(height: 20).creux(W98.gris)
                 }
