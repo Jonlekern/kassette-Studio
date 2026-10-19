@@ -502,3 +502,100 @@ Interface, Réglages et J-card sont bien traduits après « Restart the app now 
 | `captures/51-pdf-etiquettes-peu-lisibles.png` | PDF, étiquettes pochette en fond |
 | `captures/52-pdf-jcard.png` | PDF, J-card extérieur |
 | `captures/53-anglais-rappel-en-francais.jpg` | Rappel d'export en français dans l'app en anglais |
+
+---
+
+# Test des corrections du 19 octobre (release `cf69282`)
+
+20 octobre 2026, Mac mini, macOS 27.0, fenêtre en plein écran. Plan suivi : `docs/test-retours-19-octobre.md`.
+Tests faits sur des cassettes de test (SLF-004 « Kind of Blue », SLF-005 copie, SLF-006 « Rive Lente » créée
+par Composer) ; **LFS-003 n'a pas été touchée**. Aucun plantage. Avis « Nouvelle version installée » puis
+une seule question du trousseau ✅.
+
+## Résumé
+
+| Point | Résultat |
+|---|---|
+| 1.1 Colonne de droite | ⚠️ **« Exporter » reste visible en bas** ✅, mais la colonne **ne défile pas à la molette** : avec le panneau Élément ouvert, « Vérification avant impression » est cachée sous « Historique IA » (C1) |
+| 1.2 Fil replié, « Replier l'avis » | ⏭️ pas vérifié |
+| 1.3 Menu Fichier → Exporter / Imprimer | ✅ Depuis l'onglet Mixtape, rappel avant export |
+| 1.4 Dossier d'export = Documents | ✅ |
+| 1.5 Colonne de gauche Mixtape | ⚠️ Défile par sa barre ; la **molette** au-dessus de la liste ne la fait pas défiler (C2) |
+| 2.1 Glisser un élément tourné | ✅ Le titre en paysage monte, et s'arrête au bord du recto |
+| 2.2 Cadre bleu image / tranche | ⏭️ pas vérifié |
+| 2.3 Position grisée + phrase | ✅ En style « Pochette de l'album » (pas en « K7 maison »), zoom affiché en % |
+| 2.4 Code-barres 412 mm | ✅ Ramené à 20 mm, « Maximum à cette place : 71.6 × 20 mm », « Auto » entier |
+| 2.5 ↶ Annuler après la colonne de gauche | ✅ Taille du code, voile (un glisser = une annulation) |
+| 2.6 Alertes en double | ✅ Plus vues |
+| 2.7 Libellés des tailles | ✅ « Numéro de catalogue (tranche) », « Mentions techniques (bande, Dolby) » |
+| 2.8 Voile + bandeaux | ✅ Conseil orange sous le curseur ; bandeaux lisibles à l'écran et dans le PDF |
+| 2.9 Aperçu 3D, dos | ✅ Rabat et cassette avec étiquette B |
+| 3.1 MusicBrainz | ✅ Bouton Chercher, « Garder sans fichier » (Échap), « Garder les n sans fichier ». ❌ **cassettes pas en haut** (C3) |
+| 3.2 Composer depuis le dossier | ✅ 12 morceaux du dossier cochés avec durées, idées « à trouver » en orange décochées. ⚠️ C4 |
+| 3.3 Réordonner par glisser | ✅ Dans une même face. ❌ **vers l'autre face : rien** (C5) |
+| 3.4 Vider + Remettre | ✅ Confirmation, « Remettre les morceaux (12) » |
+| 3.5 Remettre un par un | ✅ 3 clics pour 3 morceaux |
+| 3.6 Tracklist Mixtape | ✅ Artiste non répété, toutes les durées (verso du PDF) |
+| 3.7 Équilibrer | ✅ « morceaux 1 à 3 (So What…), 24:14 sur 29:25 » |
+| 3.8 Spotify sans Premium en rouge | ⏭️ pas reproduit (aucune recherche Spotify faite) |
+| 4.1 « remets comme avant » | ✅ Toute la série annulée (1.6 → 1), résumé « 1 → 1.3 » |
+| 4.3 « joue la face A » | ✅ « va dans l'écran Enregistrer et clique ● » |
+| 5.1 VU-mètres pendant la musique | ✅ Les aiguilles bougent (≈ −7, −3, −10 VU sur Glass) |
+| 5.2 FOX débranchée | ⏭️ FOX était branchée |
+| 5.3 Aucune imprimante | ✅ Phrase orange claire |
+| 5.4 Anglais | ✅ Rappel avant export en anglais ; pied de page du PDF en français quand l'app est en français |
+| 5.5 Collection pendant une recherche | ✅ « 2 sur 4 cassettes » |
+
+## C1. Colonne de droite : la molette ne la fait pas défiler
+
+« Exporter » est désormais fixé en bas : le blocage du 19 octobre est réglé. Mais avec le panneau **Élément**
+ouvert (titre sélectionné), la colonne déborde : « **Vérification avant impression** » disparaît sous
+« Historique IA », et ni la molette ni la barre ne la font apparaître (pas de barre visible). → `captures/56-colonne-droite-ne-defile-pas.jpg`
+
+## C2. Colonnes de gauche : la molette ne défile pas au-dessus des curseurs et des listes
+
+Jaquette et Mixtape : la colonne de gauche défile bien par sa **barre de défilement**, mais la **molette**
+placée au-dessus d'un curseur, d'un champ ou de la liste de « Composer » ne fait rien (ou fait défiler la
+liste interne). On croit la colonne bloquée : « Ajouter la sélection » semble hors de la fenêtre.
+→ `captures/55-composer-ajouter-invisible.jpg`
+
+## C3. MusicBrainz : les éditions cassette ne sont pas en haut
+
+« Miles Davis - Kind of Blue » → 15 résultats, **tous CD ou vinyle**. Pourtant MusicBrainz a **7 éditions
+cassette** de cet album (1981, 1982, 1987…, vérifié par l'API avec `format:Cassette`). L'app ne trie
+sans doute que les 15 premiers résultats ; il faudrait demander aussi les cassettes (`AND format:Cassette`)
+et les mettre en tête. → `captures/57-musicbrainz-pas-de-cassette-en-haut.jpg`
+
+Détails : le premier clic sur **Chercher** juste après avoir tapé ne lance rien (il faut cliquer deux fois).
+Après l'import « Garder sans fichier », la **vignette de SLF-004 dans la Collection a perdu la pochette**
+(carré foncé), alors qu'elle s'affichait au premier import.
+
+## C4. Composer : « 0 morceaux de ton dossier » sur une cassette déjà remplie
+
+Sur SLF-005 (les 12 morceaux du dossier déjà sur la cassette) : « 0 morceaux de ton dossier · 13 à trouver
+ailleurs ». Normal si l'app exclut ce qui est déjà sur la cassette, mais il faudrait le dire (« tous les
+morceaux du dossier sont déjà sur la cassette »). Sur une cassette vide, parfait : 12 du dossier + 12 idées.
+
+Détail : le champ **Ambiance** n'est pas vidé quand on crée une nouvelle cassette (le texte précédent reste
+et se colle au nouveau).
+
+## C5. Glisser un morceau vers l'autre face : ne marche pas
+
+Dans une même face : ✅ (« Glass » glissé sur « The Muse » passe en 1re position). Vers la **face B**
+(sur un morceau ou sous le dernier) : **rien ne change**. Pendant le glisser, l'aperçu montre **le mauvais
+morceau** (« Unknown Number », celui sous la souris, au lieu de « Glass ») avec le trait bleu.
+→ `captures/54-glisser-vers-face-b-mauvais-morceau.jpg`
+
+## Pas testé
+
+1.2 (repli du fil et de l'avis), 2.2 (cadre bleu sur l'image et la tranche), 3.8 (Spotify sans Premium),
+4.2 (compte de l'historique), 5.2 (FOX débranchée), scan du code-barres au téléphone.
+
+## Captures
+
+| Fichier | Contenu |
+|---|---|
+| `captures/54-glisser-vers-face-b-mauvais-morceau.jpg` | Glisser vers la face B : mauvais morceau en aperçu |
+| `captures/55-composer-ajouter-invisible.jpg` | Composer : liste longue, « Ajouter » hors de vue |
+| `captures/56-colonne-droite-ne-defile-pas.jpg` | Colonne de droite : Vérification cachée |
+| `captures/57-musicbrainz-pas-de-cassette-en-haut.jpg` | MusicBrainz : 15 éditions, aucune cassette |
