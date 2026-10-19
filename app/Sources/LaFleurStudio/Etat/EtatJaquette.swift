@@ -271,7 +271,7 @@ extension EtatApp {
         return (try? data.write(to: dest)) != nil ? dest : nil
     }
 
-    func choisirVariante(_ v: Variante) { var d = design; d.choisir(v); design = d }
+    func choisirVariante(_ v: Variante) { modifierDesign { $0.choisir(v) } }
 
     // MARK: Infos d'édition (recherche web de Claude)
 
@@ -302,6 +302,8 @@ extension EtatApp {
     /// Corrige tout seul ce qui dépasse : réduit la taille juste ce qu'il faut (jamais sous 5 pt),
     /// puis raccourcit le texte de tranche s'il ne tient toujours pas. Codes illisibles → noir sur blanc.
     func toutCorriger() {
+        // « ↶ Annuler » remet la jaquette d'avant les corrections.
+        if !alertes.isEmpty { memoriser(design) }
         var d = design
         func deborde(_ z: ZoneTexte) -> Bool { z.largeurTexte > z.largeurZone + 0.05 || z.hauteurTexte > z.hauteurZone + 0.05 }
         for _ in 0..<8 {
@@ -357,6 +359,7 @@ extension EtatApp {
     }
 
     func appliquer(_ corrections: [AvisRendu.Correction]) {
+        if !corrections.isEmpty { memoriser(design) }
         var d = design
         for c in corrections {
             switch c.action {
@@ -378,7 +381,7 @@ extension EtatApp {
         avisClaude = nil
     }
 
-    func ignorer(_ a: Alerte) { var d = design; d.alertesForcees.insert(a.id); design = d }
+    func ignorer(_ a: Alerte) { modifierDesign { $0.alertesForcees.insert(a.id) } }
 
     func verifierAvecClaude() {
         lancer(String(localized: "Claude regarde la jaquette…")) { [self] in

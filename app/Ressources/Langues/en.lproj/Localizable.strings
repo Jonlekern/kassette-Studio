@@ -10,6 +10,7 @@
 "%@ : prêt" = "%@: ready";
 "%@ DE MUSIQUE" = "%@ OF MUSIC";
 "%@ LIBRES" = "%@ FREE";
+"%@ compose la sélection…" = "%@ is putting the selection together…";
 "%@ modifie la cassette…" = "%@ is editing the cassette…";
 "%@ n'a rien changé" = "%@ changed nothing";
 "%@ pt" = "%@ pt";
@@ -19,9 +20,11 @@
 "%lld / %lld morceaux associés à un fichier" = "%lld / %lld tracks linked to a file";
 "%lld / %lld morceaux associés à un fichier · %lld à confirmer" = "%lld / %lld tracks linked to a file · %lld to confirm";
 "%lld TITRES" = "%lld TRACKS";
+"%lld alertes ouvertes :" = "%lld open warnings:";
 "%lld cassette · prochain numéro : %@" = "%lld tape · next number: %@";
 "%lld cassettes · prochain numéro : %@" = "%lld tapes · next number: %@";
 "%lld changement(s) appliqué(s) ✓" = "%lld change(s) applied ✓";
+"%lld demande(s) annulée(s)" = "%lld request(s) undone";
 "%lld demandes" = "%lld requests";
 "%lld demandes · environ %@ $" = "%lld requests · about $%@";
 "%lld fichiers chargés dans l'ordre des pistes" = "%lld files loaded in track order";
@@ -30,8 +33,12 @@
 "%lld image PNG 600 DPI enregistrée" = "%lld PNG 600 DPI image saved";
 "%lld images PNG 600 DPI enregistrées" = "%lld PNG 600 DPI images saved";
 "%lld min/face" = "%lld min/side";
+"%lld morceaux de ton dossier · %lld à trouver ailleurs : coche ceux que tu gardes" = "%lld tracks from your folder · %lld to find elsewhere: tick the ones you keep";
+"%lld morceaux retirés : clique plusieurs fois pour les remettre un par un" = "%lld tracks removed: click several times to put them back one by one";
+"%lld sur %lld cassettes · prochain numéro : %@" = "%lld of %lld tapes · next number: %@";
 "%lld titres trouvés : coche ceux que tu gardes" = "%lld tracks found: tick the ones you keep";
 "(une règle de 10 cm et une de 4 pouces)" = "(a 10 cm ruler and a 4-inch ruler)";
+"1 alerte ouverte :" = "1 open warning:";
 "1. Clé API Claude" = "1. Claude API key";
 "1. Colle le Client ID dans STUDIOLAFLEUR, puis clique « Se connecter… »." = "1. Paste the Client ID into STUDIOLAFLEUR, then click “Connect…”.";
 "1. Compte à rebours %lld s : relâche la pause" = "1. %lld s countdown: release pause";
@@ -71,6 +78,7 @@
 "Accent" = "Accent";
 "Actions" = "Actions";
 "Actualiser" = "Refresh";
+"Afficher l'avis" = "Show the review";
 "Afficher les demandes faites à l'IA" = "Show the requests made to the AI";
 "Aide sur la clé API Claude" = "Help with the Claude API key";
 "Aide — Claude dans STUDIOLAFLEUR" = "Help — Claude in STUDIOLAFLEUR";
@@ -89,6 +97,7 @@
 "Aperçu 3D" = "3D preview";
 "Appliquer" = "Apply";
 "Appliquer (⌘↩)" = "Apply (⌘↩)";
+"Appliquer les corrections de %@" = "Apply %@'s fixes";
 "Appliquer les corrections de Claude" = "Apply Claude's fixes";
 "Artiste" = "Artist";
 "Associer les fichiers audio" = "Link audio files";
@@ -100,6 +109,7 @@
 "Aucun fichier audio dans le dossier" = "No audio file in the folder";
 "Aucune demande à l'IA pour cette cassette." = "No AI requests for this cassette yet.";
 "Aucune image trouvée pour « %@ ». Importe-la toi-même ou reformule." = "No image found for “%@”. Import it yourself or rephrase.";
+"Aucune imprimante installée sur ce Mac : ajoute-la dans Réglages Système → Imprimantes et scanners, puis rouvre les Réglages." = "No printer installed on this Mac: add it in System Settings → Printers & Scanners, then reopen Settings.";
 "Aucune police lisible dans ces fichiers" = "No readable font in these files";
 "Aucune édition cassette trouvée : Claude partira de la pochette." = "No cassette edition found: Claude will start from the cover.";
 "Audio" = "Audio";
@@ -110,6 +120,7 @@
 "Avant de commencer" = "Before you start";
 "Avant de lancer" = "Before starting";
 "Avec %lld volets, une partie va au verso : impression recto verso. Ajoute des volets pour tout imprimer d'un côté." = "With %lld panels, part goes on the back: double-sided printing. Add panels to print everything on one side.";
+"Avec la musique de ton dossier audio d'abord, puis quelques idées à trouver ailleurs." = "Using the music in your audio folder first, then a few ideas to find elsewhere.";
 "BLANC DE DÉBUT DE BANDE" = "LEADER SILENCE";
 "BLANC ENTRE LES MORCEAUX" = "SILENCE BETWEEN TRACKS";
 "BOUT DE BANDE DANS %@" = "END OF TAPE IN %@";
@@ -132,6 +143,7 @@
 "C60 · 30 min/face" = "C60 · 30 min/side";
 "C90 · 45 min/face" = "C90 · 45 min/side";
 "Cadrage" = "Framing";
+"Carte son choisie, débranchée (sortie par défaut du Mac en attendant)" = "Chosen sound card, unplugged (Mac's default output meanwhile)";
 "Cassette" = "Tape";
 "Cassette %@ ouverte" = "Cassette %@ opened";
 "Cassette : %@ → %@" = "Cassette: %@ → %@";
@@ -191,6 +203,7 @@
 "Commencer" = "Start";
 "Composer : %@" = "Compose: %@";
 "Composer avec Claude (mixtape)" = "Compose with Claude (mixtape)";
+"Composer avec l'IA (mixtape)" = "Compose with AI (mixtape)";
 "Composer la sélection" = "Compose the selection";
 "Compte Spotify" = "Spotify account";
 "Compte à rebours : %lld s" = "Countdown: %lld s";
@@ -216,6 +229,7 @@
 "Custom " = "Custom ";
 "Côté du QR" = "QR size";
 "DROITE" = "RIGHT";
+"Dans ton dossier audio" = "In your audio folder";
 "Demande à Claude…" = "Ask Claude…";
 "Demande à Claude… (« plus sombre », « plus 90s »)" = "Ask Claude… (“darker”, “more 90s”)";
 "Descendre" = "Move down";
@@ -245,12 +259,17 @@
 "En option, les mêmes règles à la verticale (si ton imprimante n'a pas la même erreur dans les deux sens) :" = "Optional: the same rulers vertically (if your printer errs differently in each direction):";
 "En plus de la jaquette, l'IA peut changer la Mixtape (ordre, faces, morceaux, C60/C90, bande, Dolby, coque, titre), les réglages de la cassette et la Collection (créer, dupliquer, renommer). Tout s'annule en un clic. Elle demande toujours avant de supprimer une cassette, ne touche jamais aux clés, aux comptes ni aux fichiers audio, et ne lance ni l'enregistrement ni l'impression." = "Besides the J-card, the AI can change the Mixtape (order, sides, tracks, C60/C90, tape, Dolby, shell, title), the cassette settings and the Collection (create, duplicate, rename). Everything can be undone in one click. It always asks before deleting a cassette, never touches keys, accounts or audio files, and never starts recording or printing.";
 "English" = "English";
+"Enregistrer ici" = "Save here";
 "Enregistrée" = "Recorded";
 "Envoyer" = "Send";
 "Ex. « mets Glass en face B », « passe en C90 », « bande Type I sans Dolby »" = "E.g. “put Glass on side B”, “switch to C90”, “Type I tape without Dolby”";
 "Ex. « plus sombre », « plus 90s », « mets la vraie pochette », « mets le logo Sony »" = "E.g. “darker”, “more 90s”, “use the real cover”, “add the Sony logo”";
 "Ex. « titre plus gros », « retire la pochette de l'étiquette », « code-barres de 30 mm », « décale l'image vers la gauche »" = "E.g. “bigger title”, “remove the cover from the label”, “30 mm barcode”, “move the image to the left”";
 "Exporter" = "Export";
+"Exporter le PDF" = "Export PDF";
+"Exporter le PDF…" = "Export PDF…";
+"Exporter les PNG" = "Export PNGs";
+"Exporter les PNG 600 DPI…" = "Export 600 DPI PNGs…";
 "Exporter quand même" = "Export anyway";
 "FACE %@ TERMINÉE" = "SIDE %@ DONE";
 "FACE %@ · %@" = "SIDE %@ · %@";
@@ -262,16 +281,22 @@
 "Face B" = "Side B";
 "Face B terminée. C'est dans la boîte ✿ Arrête la platine." = "Side B done. It's in the can ✿ Stop the deck.";
 "Faces réparties par Claude ✓" = "Sides split by Claude ✓";
+"Faces vidées · « Remettre les morceaux » pour annuler" = "Sides cleared · \"Put the tracks back\" to undo";
 "Fait" = "Done";
 "Fenêtre" = "Window";
 "Fermer" = "Close";
 "Fichier introuvable dans le dossier audio : %@" = "File not found in the audio folder: %@";
+"Fichier → Exporter le PDF… (⇧⌘E)" = "File → Export PDF… (⇧⌘E)";
+"Fichier → Imprimer… (⌘P)" = "File → Print… (⌘P)";
 "Fond" = "Background";
 "Format" = "Format";
 "Français" = "Français";
 "Fumée" = "Smoked";
 "GAUCHE" = "LEFT";
 "Garder l'ordre (auto)" = "Keep the order (auto)";
+"Garder les %lld sans fichier" = "Keep all %lld without a file";
+"Garder sans fichier" = "Keep without a file";
+"Glisse (même vers l'autre face) ou clic droit pour réordonner · ⇄ change de face · × retire" = "Drag (even to the other side) or right-click to reorder · ⇄ switches side · × removes";
 "Glisse l'image dans l'aperçu pour choisir la partie visible." = "Drag the image in the preview to choose the visible part.";
 "Glisse les codes dans l'aperçu de la J-card." = "Drag the codes in the J-card preview.";
 "Glisse les codes où tu veux" = "Drag the codes wherever you like";
@@ -305,6 +330,8 @@
 "Imprimante" = "Printer";
 "Imprimante et papier" = "Printer and paper";
 "Imprime à 100 %, pas « Ajuster à la page »." = "Print at 100 %, not “Fit to page”.";
+"Imprimer" = "Print";
+"Imprimer la jaquette…" = "Print the J-card…";
 "Imprimer la règle" = "Print the ruler";
 "Imprimer la règle d'abord" = "Print the ruler first";
 "Imprimer quand même" = "Print anyway";
@@ -317,6 +344,8 @@
 "J'ai lu et j'accepte ces conditions" = "I have read and accept these terms";
 "J-card" = "J-card";
 "J-card verso" = "J-card back";
+"J-card · extérieur" = "J-card · outside";
+"J-card · verso (imprimer au dos, retourner sur le grand côté)" = "J-card · back (print on the reverse, flip on the long edge)";
 "J-card, O-card, obi : papier mat ou satiné de 170 à 250 g/m², A4." = "J-card, O-card, obi: matte or satin paper, 170–250 g/m², A4.";
 "Jamais les paroles complètes (droits d'auteur) : seulement où les trouver." = "Never the full lyrics (copyright): only where to find them.";
 "Jamais sorti en cassette : Claude part du dos de l'édition CD ou vinyle." = "Never released on cassette: Claude starts from the back of the CD or vinyl edition.";
@@ -325,12 +354,16 @@
 "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Dis-moi l'ambiance, ou clique sur « Proposer »." = "I start from real cassette editions if I find any, otherwise from your cover. Tell me the mood, or click “Propose”.";
 "Jeton Discogs" = "Discogs token";
 "Jeton Discogs refusé : vérifie-le dans Réglages → Sources." = "Discogs token rejected: check it in Settings → Sources.";
+"L'API de Spotify demande un compte Premium. Sans Premium, utilise « Cassette depuis le dossier »." = "Spotify's API requires a Premium account. Without Premium, use \"Tape from folder\".";
 "L'IA a refusé la demande (%@)." = "The AI declined the request (%@).";
 "L'IA a répondu %lld : %@" = "The AI replied %lld: %@";
 "L'IA demande de supprimer cette cassette de la Collection. Tes fichiers audio ne sont pas touchés." = "The AI asks to delete this cassette from the Collection. Your audio files are not touched.";
 "L'IA ne touche pas à « %@ » (clés, comptes, fichiers et sorties restent à toi)." = "The AI doesn't touch “%@” (keys, accounts, files and outputs stay yours).";
 "L'IA peut chercher sur des sites choisis (sources citées)" = "The AI can search chosen websites (sources cited)";
 "L'app joue seulement sur cette sortie ; le reste du Mac ne change pas." = "The app plays only on this output; the rest of the Mac is unchanged.";
+"L'image tient déjà en entier dans son cadre : agrandis-la (Zoom de l'image) pour pouvoir la déplacer." = "The image already fits entirely in its frame: enlarge it (Image zoom) to be able to move it.";
+"L'image tient déjà en hauteur : agrandis-la (Zoom de l'image) pour la déplacer en haut ou en bas." = "The image already fits in height: enlarge it (Image zoom) to move it up or down.";
+"L'image tient déjà en largeur : agrandis-la (Zoom de l'image) pour la déplacer à gauche ou à droite." = "The image already fits in width: enlarge it (Image zoom) to move it left or right.";
 "La cassette est retirée de la collection. Tes fichiers audio ne sont pas touchés." = "The tape is removed from the collection. Your audio files are not touched.";
 "La platine repart : clique ici" = "The deck restarts: click here";
 "La recherche web de Claude est désactivée (Réglages → Claude)." = "Claude's web search is turned off (Settings → Claude).";
@@ -343,6 +376,7 @@
 "Lecture" = "Playback";
 "Lecture du dossier audio…" = "Reading the audio folder…";
 "Lecture du dossier…" = "Reading the folder…";
+"Les %lld morceaux sont retirés de la cassette. Tes fichiers audio ne sont pas touchés, et « Remettre les morceaux » les rend." = "All %lld tracks are removed from the tape. Your audio files are not touched, and \"Put the tracks back\" brings them back.";
 "Les logos des maisons de disque sont des marques. Importe seulement un fichier que tu as déjà ; l'app ne télécharge ni ne partage jamais de logos." = "Record label logos are trademarks. Only import a file you already have; the app never downloads or shares logos.";
 "Les réglages de la cassette demandent le mode expert (Réglages → IA)." = "Cassette settings need expert mode (Settings → AI).";
 "Lettre de face (étiquette)" = "Side letter (label)";
@@ -362,6 +396,7 @@
 "Maison de disque" = "Record label";
 "Marque / modèle" = "Brand / model";
 "Masquer" = "Hide";
+"Maximum à cette place : %@ × %@ mm" = "Maximum in this spot: %@ × %@ mm";
 "Mentions techniques (bande, Dolby)" = "Technical info (tape, Dolby)";
 "Mes playlists…" = "My playlists…";
 "Mesure la règle de 10 cm (ou celle de 4 pouces) avec une vraie règle, puis tape la valeur dans" = "Measure the 10 cm ruler (or the 4-inch one) with a real ruler, then type the value in";
@@ -378,6 +413,8 @@
 "Modèle" = "Model";
 "Monter" = "Move up";
 "Morceau introuvable : %@" = "Track not found: %@";
+"Morceaux gardés sans fichier · ils seront associés quand tu ajouteras la musique (Relire)" = "Tracks kept without a file · they'll be matched when you add the music (Reload)";
+"Morceaux remis sur les faces" = "Tracks put back on the sides";
 "Moteur" = "Engine";
 "Moteur d'IA" = "AI engine";
 "MusicBrainz (dos CD/vinyle)" = "MusicBrainz (CD/vinyl back)";
@@ -420,6 +457,7 @@
 "Papier conseillé" = "Recommended paper";
 "Paroles : genius.com" = "Lyrics: genius.com";
 "Pas connecté à Spotify (Réglages → Spotify)." = "Not connected to Spotify (Settings → Spotify).";
+"Pas dans ton dossier audio : à te procurer avant l'enregistrement" = "Not in your audio folder: get it before recording";
 "Pas de fichier audio pour « %@ ». Associe-le dans l'écran Mixtape." = "No audio file for “%@”. Link it in the Mixtape screen.";
 "Passer au début de la face B" = "Skip to the start of side B";
 "Passer à la fin de la face A" = "Skip to the end of side A";
@@ -457,6 +495,7 @@
 "Rabat" = "Flap";
 "Rabat, en bas" = "Flap, bottom";
 "Rangée dans le trousseau du Mac." = "Stored in the Mac keychain.";
+"Rappel : usage personnel et non commercial. Tu es seul responsable de ce que tu imprimes (droits d'auteur, marques). Imprime toujours à 100 %." = "Reminder: personal, non-commercial use. You alone are responsible for what you print (copyright, trademarks). Always print at 100 %.";
 "Recherche des titres sur Spotify…" = "Looking up the tracks on Spotify…";
 "Recherche des vraies éditions cassette de « %@ »…" = "Looking for real cassette editions of “%@”…";
 "Recherche des vraies éditions cassette…" = "Looking for real cassette editions…";
@@ -469,7 +508,10 @@
 "Relancer l'app maintenant" = "Restart the app now";
 "Relire" = "Rescan";
 "Relâche la pause de la platine… %lld" = "Release the deck's pause… %lld";
+"Remettre les morceaux (%lld)" = "Put the tracks back (%lld)";
 "Remettre « %@ »" = "Put back “%@”";
+"Replier" = "Collapse";
+"Replier la conversation" = "Collapse the conversation";
 "Reprendre crédits et notes" = "Use these credits and notes";
 "Retirer ce morceau" = "Remove this track";
 "Retirer cette image" = "Remove this image";
@@ -505,6 +547,7 @@
 "STUDIOLAFLEUR → Réglages → Impression. C'est tout : l'app corrige toutes tes impressions." = "STUDIOLAFLEUR → Settings → Printing. That's it: the app corrects all your prints.";
 "Sans logo importé, le nom est écrit en texte." = "Without an imported logo, the name is written as text.";
 "Sans pochette" = "No cover";
+"Sans titre" = "Untitled";
 "Se connecter…" = "Connect…";
 "Si Spotify refuse l'accès, c'est en général qu'il faut Premium, ou que la Redirect URI ne correspond pas exactement." = "If Spotify refuses access, it usually means Premium is needed, or the Redirect URI doesn't match exactly.";
 "Simple, sans auto-reverse : l'app dit de retourner la cassette" = "Simple, no auto-reverse: the app tells you to flip the tape";
@@ -517,6 +560,7 @@
 "Sous 5 pt, l'app prévient : c'est trop petit pour être lu une fois imprimé." = "Below 5 pt the app warns you: too small to read once printed.";
 "Spotify" = "Spotify";
 "Spotify : connecté" = "Spotify: connected";
+"Spotify : connecté, sans Premium" = "Spotify: connected, no Premium";
 "Spotify : non connecté" = "Spotify: not connected";
 "Spotify a répondu %lld : %@" = "Spotify replied %lld: %@";
 "Spotify connecté ✓" = "Spotify connected ✓";
@@ -551,6 +595,7 @@
 "Titre de la cassette" = "Tape title";
 "Titre en italique" = "Italic title";
 "Titres, durées, maison de disque et pochette, sans Spotify." = "Tracks, durations, label and cover, without Spotify.";
+"Ton imprimante (%@) n'est pas encore calibrée : imprime d'abord la règle pour vérifier que la jaquette sort à la bonne taille (Réglages → Impression)." = "Your printer (%@) isn't calibrated yet: print the ruler first to check the J-card comes out at the right size (Settings → Printing).";
 "Tonalité 1 kHz" = "1 kHz tone";
 "Total" = "Total";
 "Tout corriger" = "Fix everything";
@@ -560,6 +605,7 @@
 "Tranche" = "Spine";
 "Transparente" = "Clear";
 "Tu paies à l'usage : préparer une cassette coûte en général quelques centimes. La clé reste dans le trousseau de ton Mac. Claude reçoit les titres, les durées et les infos d'album, jamais tes fichiers audio." = "You pay per use: preparing a tape usually costs a few cents. The key stays in your Mac's keychain. Claude receives titles, durations and album info, never your audio files.";
+"Tu peux le garder sans fichier (pour faire la jaquette avant d'avoir la musique) : il sera associé quand tu ajouteras le fichier au dossier, avec « Relire »." = "You can keep it without a file (to make the J-card before you have the music): it will be matched when you add the file to the folder, with \"Reload\".";
 "Tu préfères GPT ou Gemini ? Choisis-le plus tard dans Réglages → IA." = "Prefer GPT or Gemini? Pick it later in Settings → AI.";
 "Type" = "Type";
 "Type I · Normal" = "Type I · Normal";
@@ -574,14 +620,19 @@
 "Versions (%lld)" = "Versions (%lld)";
 "Vertical" = "Portrait";
 "Vide = modèle conseillé (%@)." = "Empty = recommended model (%@).";
+"Vider" = "Clear";
+"Vider les deux faces ?" = "Clear both sides?";
 "Vider les faces" = "Clear the sides";
 "Voile" = "Veil";
+"Voile faible : les petits textes risquent d'être difficiles à lire sur l'image." = "Light veil: small text may be hard to read over the image.";
+"Voir les %lld messages précédents" = "See the %lld earlier messages";
 "Volet intérieur" = "Inner panel";
 "Volets" = "Panels";
 "Vraie pochette trouvée (Cover Art Archive)" = "Real cover found (Cover Art Archive)";
 "Vraies éditions cassette" = "Real cassette editions";
 "Vérification avant impression" = "Pre-print check";
 "Vérification de Claude : tout est bon ✓" = "Claude's check: all good ✓";
+"Vérifier avec %@" = "Check with %@";
 "Vérifier avec Claude" = "Check with Claude";
 "Vérifier avec l'IA" = "Check with AI";
 "Zoom" = "Zoom";
@@ -630,7 +681,9 @@
 "Étiquettes" = "Labels";
 "Étiquettes de K7" = "Cassette labels";
 "Étiquettes de K7 : papier autocollant A4 pleine page, mat. L'app imprime les traits de coupe." = "Cassette labels: full-page A4 matte adhesive paper. The app prints the cut marks.";
+"Étiquettes de K7 · faces A et B" = "Cassette labels · sides A and B";
 "étiquette" = "label";
+"Русский" = "Русский";
 "• Design : propose couleurs, polices et variantes à partir de ta pochette." = "• Design: suggests colours, fonts and variants from your cover.";
 "• Enregistrement : conseils selon ton type de bande et ta platine." = "• Recording: tips for your tape type and deck.";
 "• L'app est fournie telle quelle, sans garantie. L'auteur de STUDIOLAFLEUR n'est pas responsable de l'usage fait de l'app ni des objets produits." = "• The app is provided as is, without warranty. The author of STUDIOLAFLEUR is not responsible for how the app is used or for the items produced.";

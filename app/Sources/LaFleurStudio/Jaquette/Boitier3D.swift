@@ -11,14 +11,14 @@ enum Boitier3D {
     static let boite: (largeur: CGFloat, hauteur: CGFloat, epaisseur: CGFloat) = (69.6, 109.2, 17)
 
     /// Construit la scène et renvoie aussi la caméra (pour les captures).
-    static func scene(_ mise: Mise) -> (SCNScene, SCNNode) {
+    static func scene(_ mise: Mise, dos: Bool = false) -> (SCNScene, SCNNode) {
         let scene = SCNScene()
         let fond = NSColor(Color(hex: mise.design.variante.palette.fond))
         let b = boite
         let papier = (l: CGFloat(Gabarits.recto), h: CGFloat(Gabarits.hauteurJ), e: CGFloat(Gabarits.tranche))
 
         let boitier = SCNNode()
-        boitier.eulerAngles = SCNVector3(0.12, 0.5, 0)  // tourné pour montrer la tranche, côté charnière
+        boitier.eulerAngles = SCNVector3(0.12, dos ? 0.5 + .pi : 0.5, 0)  // tourné pour montrer la tranche, côté charnière
         scene.rootNode.addChildNode(boitier)
 
         // La J-card pliée, comme dans un vrai boîtier : le recto devant, la tranche côté charnière, le rabat au dos.
@@ -99,8 +99,8 @@ enum Boitier3D {
     }
 
     /// Image fixe de la scène (captures automatiques), sans fenêtre.
-    static func image(_ mise: Mise, taille: CGSize) -> NSImage? {
-        let (scene, camera) = scene(mise)
+    static func image(_ mise: Mise, taille: CGSize, dos: Bool = false) -> NSImage? {
+        let (scene, camera) = scene(mise, dos: dos)
         scene.background.contents = NSColor(W98.gris)
         let r = SCNRenderer(device: MTLCreateSystemDefaultDevice(), options: nil)
         r.scene = scene

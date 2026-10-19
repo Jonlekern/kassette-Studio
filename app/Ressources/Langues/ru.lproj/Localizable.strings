@@ -10,6 +10,7 @@
 "%@ : prêt" = "%@: готов";
 "%@ DE MUSIQUE" = "%@ МУЗЫКИ";
 "%@ LIBRES" = "%@ СВОБОДНО";
+"%@ compose la sélection…" = "%@ подбирает треки…";
 "%@ modifie la cassette…" = "%@ меняет кассету…";
 "%@ n'a rien changé" = "%@ ничего не изменил";
 "%@ pt" = "%@ pt";
@@ -19,9 +20,11 @@
 "%lld / %lld morceaux associés à un fichier" = "%lld / %lld треков привязаны к файлу";
 "%lld / %lld morceaux associés à un fichier · %lld à confirmer" = "%lld / %lld треков привязаны к файлу · подтвердить: %lld";
 "%lld TITRES" = "ТРЕКОВ: %lld";
+"%lld alertes ouvertes :" = "Открытых предупреждений: %lld";
 "%lld cassette · prochain numéro : %@" = "Кассет: %lld · следующий номер: %@";
 "%lld cassettes · prochain numéro : %@" = "Кассет: %lld · следующий номер: %@";
 "%lld changement(s) appliqué(s) ✓" = "Изменений применено: %lld ✓";
+"%lld demande(s) annulée(s)" = "Отменено запросов: %lld";
 "%lld demandes" = "Запросов: %lld";
 "%lld demandes · environ %@ $" = "Запросов: %lld · около %@ $";
 "%lld fichiers chargés dans l'ordre des pistes" = "Загружено файлов по порядку треков: %lld";
@@ -30,8 +33,12 @@
 "%lld image PNG 600 DPI enregistrée" = "Сохранено изображений PNG 600 DPI: %lld";
 "%lld images PNG 600 DPI enregistrées" = "Сохранено изображений PNG 600 DPI: %lld";
 "%lld min/face" = "%lld мин/сторона";
+"%lld morceaux de ton dossier · %lld à trouver ailleurs : coche ceux que tu gardes" = "Из твоей папки: %lld · найти в другом месте: %lld — отметь, что оставить";
+"%lld morceaux retirés : clique plusieurs fois pour les remettre un par un" = "Убрано треков: %lld — нажми несколько раз, чтобы вернуть их по одному";
+"%lld sur %lld cassettes · prochain numéro : %@" = "%lld из %lld кассет · следующий номер: %@";
 "%lld titres trouvés : coche ceux que tu gardes" = "Найдено треков: %lld — отметь, что оставить";
 "(une règle de 10 cm et une de 4 pouces)" = "(линейка 10 см и линейка 4 дюйма)";
+"1 alerte ouverte :" = "1 открытое предупреждение:";
 "1. Clé API Claude" = "1. Ключ API Claude";
 "1. Colle le Client ID dans STUDIOLAFLEUR, puis clique « Se connecter… »." = "1. Вставь Client ID в STUDIOLAFLEUR и нажми «Подключиться…».";
 "1. Compte à rebours %lld s : relâche la pause" = "1. Обратный отсчёт %lld с: отпусти паузу";
@@ -71,6 +78,7 @@
 "Accent" = "Акцент";
 "Actions" = "Действия";
 "Actualiser" = "Обновить";
+"Afficher l'avis" = "Показать отзыв";
 "Afficher les demandes faites à l'IA" = "Показать запросы к ИИ";
 "Aide sur la clé API Claude" = "Помощь с ключом API Claude";
 "Aide — Claude dans STUDIOLAFLEUR" = "Справка — Claude в STUDIOLAFLEUR";
@@ -89,6 +97,7 @@
 "Aperçu 3D" = "3D-просмотр";
 "Appliquer" = "Применить";
 "Appliquer (⌘↩)" = "Применить (⌘↩)";
+"Appliquer les corrections de %@" = "Применить исправления %@";
 "Appliquer les corrections de Claude" = "Применить исправления Claude";
 "Artiste" = "Исполнитель";
 "Associer les fichiers audio" = "Привязать аудиофайлы";
@@ -100,6 +109,7 @@
 "Aucun fichier audio dans le dossier" = "В папке нет аудиофайлов";
 "Aucune demande à l'IA pour cette cassette." = "Для этой кассеты запросов к ИИ нет.";
 "Aucune image trouvée pour « %@ ». Importe-la toi-même ou reformule." = "Не найдено изображение для «%@». Импортируй сам или переформулируй.";
+"Aucune imprimante installée sur ce Mac : ajoute-la dans Réglages Système → Imprimantes et scanners, puis rouvre les Réglages." = "На этом Mac нет принтера: добавь его в Системных настройках → Принтеры и сканеры, затем снова открой Настройки.";
 "Aucune police lisible dans ces fichiers" = "В этих файлах нет читаемых шрифтов";
 "Aucune édition cassette trouvée : Claude partira de la pochette." = "Кассетных изданий не найдено: Claude начнёт с обложки.";
 "Audio" = "Аудио";
@@ -110,6 +120,7 @@
 "Avant de commencer" = "Перед началом";
 "Avant de lancer" = "Перед запуском";
 "Avec %lld volets, une partie va au verso : impression recto verso. Ajoute des volets pour tout imprimer d'un côté." = "При %lld панелях часть уходит на оборот: двусторонняя печать. Добавь панели, чтобы всё было на одной стороне.";
+"Avec la musique de ton dossier audio d'abord, puis quelques idées à trouver ailleurs." = "Сначала музыка из твоей аудиопапки, потом несколько идей, которые нужно найти в другом месте.";
 "BLANC DE DÉBUT DE BANDE" = "ТИШИНА В НАЧАЛЕ";
 "BLANC ENTRE LES MORCEAUX" = "ТИШИНА МЕЖДУ ТРЕКАМИ";
 "BOUT DE BANDE DANS %@" = "КОНЕЦ ЛЕНТЫ ЧЕРЕЗ %@";
@@ -132,6 +143,7 @@
 "C60 · 30 min/face" = "C60 · 30 мин/сторона";
 "C90 · 45 min/face" = "C90 · 45 мин/сторона";
 "Cadrage" = "Кадрирование";
+"Carte son choisie, débranchée (sortie par défaut du Mac en attendant)" = "Выбранная звуковая карта отключена (пока — выход Mac по умолчанию)";
 "Cassette" = "Кассета";
 "Cassette %@ ouverte" = "Кассета %@ открыта";
 "Cassette : %@ → %@" = "Кассета: %@ → %@";
@@ -191,6 +203,7 @@
 "Commencer" = "Начать";
 "Composer : %@" = "Подобрать: %@";
 "Composer avec Claude (mixtape)" = "Собрать с Claude (микстейп)";
+"Composer avec l'IA (mixtape)" = "Подобрать с ИИ (микстейп)";
 "Composer la sélection" = "Собрать подборку";
 "Compte Spotify" = "Аккаунт Spotify";
 "Compte à rebours : %lld s" = "Обратный отсчёт: %lld с";
@@ -216,6 +229,7 @@
 "Custom " = "Своя ";
 "Côté du QR" = "Сторона QR";
 "DROITE" = "ПРАВЫЙ";
+"Dans ton dossier audio" = "В твоей аудиопапке";
 "Demande à Claude…" = "Попроси Claude…";
 "Demande à Claude… (« plus sombre », « plus 90s »)" = "Попроси Claude… («темнее», «больше 90-х»)";
 "Descendre" = "Вниз";
@@ -245,12 +259,17 @@
 "En option, les mêmes règles à la verticale (si ton imprimante n'a pas la même erreur dans les deux sens) :" = "По желанию: те же линейки вертикально (если принтер ошибается по-разному в двух направлениях):";
 "En plus de la jaquette, l'IA peut changer la Mixtape (ordre, faces, morceaux, C60/C90, bande, Dolby, coque, titre), les réglages de la cassette et la Collection (créer, dupliquer, renommer). Tout s'annule en un clic. Elle demande toujours avant de supprimer une cassette, ne touche jamais aux clés, aux comptes ni aux fichiers audio, et ne lance ni l'enregistrement ni l'impression." = "Кроме вкладыша, ИИ может менять Микстейп (порядок, стороны, треки, C60/C90, ленту, Dolby, корпус, название), настройки кассеты и Коллекцию (создать, дублировать, переименовать). Всё отменяется одним щелчком. Перед удалением кассеты он всегда спрашивает, никогда не трогает ключи, аккаунты и аудиофайлы и не запускает запись или печать.";
 "English" = "English";
+"Enregistrer ici" = "Сохранить здесь";
 "Enregistrée" = "Записана";
 "Envoyer" = "Отправить";
 "Ex. « mets Glass en face B », « passe en C90 », « bande Type I sans Dolby »" = "Напр. «поставь Glass на сторону B», «сделай C90», «лента Type I без Dolby»";
 "Ex. « plus sombre », « plus 90s », « mets la vraie pochette », « mets le logo Sony »" = "Напр. «темнее», «больше 90-х», «поставь настоящую обложку», «добавь логотип Sony»";
 "Ex. « titre plus gros », « retire la pochette de l'étiquette », « code-barres de 30 mm », « décale l'image vers la gauche »" = "Напр. «название крупнее», «убери обложку с наклейки», «штрихкод 30 мм», «сдвинь изображение влево»";
 "Exporter" = "Экспорт";
+"Exporter le PDF" = "Экспорт в PDF";
+"Exporter le PDF…" = "Экспорт в PDF…";
+"Exporter les PNG" = "Экспорт PNG";
+"Exporter les PNG 600 DPI…" = "Экспорт PNG 600 DPI…";
 "Exporter quand même" = "Всё равно экспортировать";
 "FACE %@ TERMINÉE" = "СТОРОНА %@ ГОТОВА";
 "FACE %@ · %@" = "СТОРОНА %@ · %@";
@@ -262,16 +281,22 @@
 "Face B" = "Сторона B";
 "Face B terminée. C'est dans la boîte ✿ Arrête la platine." = "Сторона B готова. Готово ✿ Останови деку.";
 "Faces réparties par Claude ✓" = "Стороны распределены Claude ✓";
+"Faces vidées · « Remettre les morceaux » pour annuler" = "Стороны очищены · «Вернуть треки», чтобы отменить";
 "Fait" = "Готово";
 "Fenêtre" = "Окно";
 "Fermer" = "Закрыть";
 "Fichier introuvable dans le dossier audio : %@" = "Файл не найден в аудиопапке: %@";
+"Fichier → Exporter le PDF… (⇧⌘E)" = "Файл → Экспорт в PDF… (⇧⌘E)";
+"Fichier → Imprimer… (⌘P)" = "Файл → Печать… (⌘P)";
 "Fond" = "Фон";
 "Format" = "Формат";
 "Français" = "Français";
 "Fumée" = "Дымчатый";
 "GAUCHE" = "ЛЕВЫЙ";
 "Garder l'ordre (auto)" = "Сохранить порядок (авто)";
+"Garder les %lld sans fichier" = "Оставить все %lld без файла";
+"Garder sans fichier" = "Оставить без файла";
+"Glisse (même vers l'autre face) ou clic droit pour réordonner · ⇄ change de face · × retire" = "Перетаскивай (даже на другую сторону) или жми правой кнопкой, чтобы менять порядок · ⇄ меняет сторону · × убирает";
 "Glisse l'image dans l'aperçu pour choisir la partie visible." = "Перетащи изображение в превью, чтобы выбрать видимую часть.";
 "Glisse les codes dans l'aperçu de la J-card." = "Перетащи коды в окне просмотра вкладыша.";
 "Glisse les codes où tu veux" = "Перетащи коды куда хочешь";
@@ -305,6 +330,8 @@
 "Imprimante" = "Принтер";
 "Imprimante et papier" = "Принтер и бумага";
 "Imprime à 100 %, pas « Ajuster à la page »." = "Печатай в 100 %, не «По размеру страницы».";
+"Imprimer" = "Печать";
+"Imprimer la jaquette…" = "Печать обложки…";
 "Imprimer la règle" = "Напечатать линейку";
 "Imprimer la règle d'abord" = "Сначала напечатать линейку";
 "Imprimer quand même" = "Всё равно печатать";
@@ -317,6 +344,8 @@
 "J'ai lu et j'accepte ces conditions" = "Я прочитал(а) и принимаю эти условия";
 "J-card" = "J-card";
 "J-card verso" = "Оборот вкладыша";
+"J-card · extérieur" = "J-card · внешняя сторона";
+"J-card · verso (imprimer au dos, retourner sur le grand côté)" = "J-card · оборот (печатать на обороте, переворот по длинной стороне)";
 "J-card, O-card, obi : papier mat ou satiné de 170 à 250 g/m², A4." = "J-card, O-card, оби: матовая или сатиновая бумага 170–250 г/м², A4.";
 "Jamais les paroles complètes (droits d'auteur) : seulement où les trouver." = "Никогда полный текст (авторские права): только где его найти.";
 "Jamais sorti en cassette : Claude part du dos de l'édition CD ou vinyle." = "Никогда не выходил на кассете: Claude берёт за основу оборот издания на CD или виниле.";
@@ -325,12 +354,16 @@
 "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Dis-moi l'ambiance, ou clique sur « Proposer »." = "Я начну с настоящих кассетных изданий, если найду, иначе — с твоей обложки. Опиши настроение или нажми «Предложить».";
 "Jeton Discogs" = "Токен Discogs";
 "Jeton Discogs refusé : vérifie-le dans Réglages → Sources." = "Токен Discogs отклонён: проверь его в Настройки → Источники.";
+"L'API de Spotify demande un compte Premium. Sans Premium, utilise « Cassette depuis le dossier »." = "API Spotify требует аккаунт Premium. Без Premium используй «Кассета из папки».";
 "L'IA a refusé la demande (%@)." = "ИИ отклонил запрос (%@).";
 "L'IA a répondu %lld : %@" = "ИИ ответил %lld: %@";
 "L'IA demande de supprimer cette cassette de la Collection. Tes fichiers audio ne sont pas touchés." = "ИИ просит удалить эту кассету из Коллекции. Твои аудиофайлы не затрагиваются.";
 "L'IA ne touche pas à « %@ » (clés, comptes, fichiers et sorties restent à toi)." = "ИИ не трогает «%@» (ключи, аккаунты, файлы и выходы — твои).";
 "L'IA peut chercher sur des sites choisis (sources citées)" = "ИИ может искать на выбранных сайтах (с источниками)";
 "L'app joue seulement sur cette sortie ; le reste du Mac ne change pas." = "Приложение играет только на этот выход; остальной Mac не меняется.";
+"L'image tient déjà en entier dans son cadre : agrandis-la (Zoom de l'image) pour pouvoir la déplacer." = "Изображение уже целиком помещается в рамку: увеличь его (Масштаб изображения), чтобы двигать.";
+"L'image tient déjà en hauteur : agrandis-la (Zoom de l'image) pour la déplacer en haut ou en bas." = "Изображение уже помещается по высоте: увеличь его (Масштаб изображения), чтобы двигать вверх или вниз.";
+"L'image tient déjà en largeur : agrandis-la (Zoom de l'image) pour la déplacer à gauche ou à droite." = "Изображение уже помещается по ширине: увеличь его (Масштаб изображения), чтобы двигать влево или вправо.";
 "La cassette est retirée de la collection. Tes fichiers audio ne sont pas touchés." = "Кассета удаляется из коллекции. Твои аудиофайлы не трогаются.";
 "La platine repart : clique ici" = "Дека поехала: нажми здесь";
 "La recherche web de Claude est désactivée (Réglages → Claude)." = "Поиск Claude в интернете выключен (Настройки → Claude).";
@@ -343,6 +376,7 @@
 "Lecture" = "Воспроизведение";
 "Lecture du dossier audio…" = "Чтение папки с аудио…";
 "Lecture du dossier…" = "Чтение папки…";
+"Les %lld morceaux sont retirés de la cassette. Tes fichiers audio ne sont pas touchés, et « Remettre les morceaux » les rend." = "Все треки (%lld) убираются с кассеты. Аудиофайлы не трогаются, а «Вернуть треки» возвращает их.";
 "Les logos des maisons de disque sont des marques. Importe seulement un fichier que tu as déjà ; l'app ne télécharge ni ne partage jamais de logos." = "Логотипы лейблов — товарные знаки. Импортируй только файл, который у тебя уже есть; приложение никогда не скачивает и не распространяет логотипы.";
 "Les réglages de la cassette demandent le mode expert (Réglages → IA)." = "Для настроек кассеты нужен режим эксперта (Настройки → ИИ).";
 "Lettre de face (étiquette)" = "Буква стороны (наклейка)";
@@ -362,6 +396,7 @@
 "Maison de disque" = "Лейбл";
 "Marque / modèle" = "Марка / модель";
 "Masquer" = "Скрыть";
+"Maximum à cette place : %@ × %@ mm" = "Максимум в этом месте: %@ × %@ мм";
 "Mentions techniques (bande, Dolby)" = "Технические данные (лента, Dolby)";
 "Mes playlists…" = "Мои плейлисты…";
 "Mesure la règle de 10 cm (ou celle de 4 pouces) avec une vraie règle, puis tape la valeur dans" = "Измерь линейку 10 см (или 4 дюйма) настоящей линейкой и введи значение в";
@@ -378,6 +413,8 @@
 "Modèle" = "Модель";
 "Monter" = "Вверх";
 "Morceau introuvable : %@" = "Трек не найден: %@";
+"Morceaux gardés sans fichier · ils seront associés quand tu ajouteras la musique (Relire)" = "Треки оставлены без файла · они будут сопоставлены, когда добавишь музыку (Перечитать)";
+"Morceaux remis sur les faces" = "Треки возвращены на стороны";
 "Moteur" = "Движок";
 "Moteur d'IA" = "Движок ИИ";
 "MusicBrainz (dos CD/vinyle)" = "MusicBrainz (оборот CD/винила)";
@@ -420,6 +457,7 @@
 "Papier conseillé" = "Рекомендуемая бумага";
 "Paroles : genius.com" = "Тексты песен: genius.com";
 "Pas connecté à Spotify (Réglages → Spotify)." = "Нет подключения к Spotify (Настройки → Spotify).";
+"Pas dans ton dossier audio : à te procurer avant l'enregistrement" = "Нет в твоей аудиопапке: достань его до записи";
 "Pas de fichier audio pour « %@ ». Associe-le dans l'écran Mixtape." = "Нет аудиофайла для «%@». Привяжи его на экране Микстейп.";
 "Passer au début de la face B" = "Перейти к началу стороны B";
 "Passer à la fin de la face A" = "Перейти к концу стороны A";
@@ -457,6 +495,7 @@
 "Rabat" = "Клапан";
 "Rabat, en bas" = "Клапан, внизу";
 "Rangée dans le trousseau du Mac." = "Хранится в связке ключей Mac.";
+"Rappel : usage personnel et non commercial. Tu es seul responsable de ce que tu imprimes (droits d'auteur, marques). Imprime toujours à 100 %." = "Напоминание: только личное некоммерческое использование. Ты сам отвечаешь за то, что печатаешь (авторские права, товарные знаки). Всегда печатай в масштабе 100 %.";
 "Recherche des titres sur Spotify…" = "Поиск треков в Spotify…";
 "Recherche des vraies éditions cassette de « %@ »…" = "Ищу настоящие кассетные издания «%@»…";
 "Recherche des vraies éditions cassette…" = "Ищу настоящие кассетные издания…";
@@ -469,7 +508,10 @@
 "Relancer l'app maintenant" = "Перезапустить приложение";
 "Relire" = "Перечитать";
 "Relâche la pause de la platine… %lld" = "Отпусти паузу деки… %lld";
+"Remettre les morceaux (%lld)" = "Вернуть треки (%lld)";
 "Remettre « %@ »" = "Вернуть «%@»";
+"Replier" = "Свернуть";
+"Replier la conversation" = "Свернуть разговор";
 "Reprendre crédits et notes" = "Взять титры и заметки";
 "Retirer ce morceau" = "Убрать этот трек";
 "Retirer cette image" = "Убрать это изображение";
@@ -505,6 +547,7 @@
 "STUDIOLAFLEUR → Réglages → Impression. C'est tout : l'app corrige toutes tes impressions." = "STUDIOLAFLEUR → Настройки → Печать. Всё: приложение исправит всю печать.";
 "Sans logo importé, le nom est écrit en texte." = "Без импортированного логотипа название пишется текстом.";
 "Sans pochette" = "Без обложки";
+"Sans titre" = "Без названия";
 "Se connecter…" = "Подключиться…";
 "Si Spotify refuse l'accès, c'est en général qu'il faut Premium, ou que la Redirect URI ne correspond pas exactement." = "Если Spotify отказывает в доступе, обычно нужен Premium или Redirect URI не совпадает точно.";
 "Simple, sans auto-reverse : l'app dit de retourner la cassette" = "Простая, без автореверса: приложение скажет перевернуть кассету";
@@ -517,6 +560,7 @@
 "Sous 5 pt, l'app prévient : c'est trop petit pour être lu une fois imprimé." = "Меньше 5 pt приложение предупредит: после печати не прочесть.";
 "Spotify" = "Spotify";
 "Spotify : connecté" = "Spotify: подключён";
+"Spotify : connecté, sans Premium" = "Spotify: подключён, без Premium";
 "Spotify : non connecté" = "Spotify: не подключён";
 "Spotify a répondu %lld : %@" = "Spotify ответил %lld: %@";
 "Spotify connecté ✓" = "Spotify подключён ✓";
@@ -551,6 +595,7 @@
 "Titre de la cassette" = "Название кассеты";
 "Titre en italique" = "Название курсивом";
 "Titres, durées, maison de disque et pochette, sans Spotify." = "Треки, длительность, лейбл и обложка — без Spotify.";
+"Ton imprimante (%@) n'est pas encore calibrée : imprime d'abord la règle pour vérifier que la jaquette sort à la bonne taille (Réglages → Impression)." = "Твой принтер (%@) ещё не откалиброван: сначала распечатай линейку, чтобы проверить размер обложки (Настройки → Печать).";
 "Tonalité 1 kHz" = "Тон 1 кГц";
 "Total" = "Итого";
 "Tout corriger" = "Исправить всё";
@@ -560,6 +605,7 @@
 "Tranche" = "Корешок";
 "Transparente" = "Прозрачный";
 "Tu paies à l'usage : préparer une cassette coûte en général quelques centimes. La clé reste dans le trousseau de ton Mac. Claude reçoit les titres, les durées et les infos d'album, jamais tes fichiers audio." = "Оплата по факту: подготовка кассеты обычно стоит несколько центов. Ключ хранится в связке ключей Mac. Claude получает названия, длительности и данные альбома, но не аудиофайлы.";
+"Tu peux le garder sans fichier (pour faire la jaquette avant d'avoir la musique) : il sera associé quand tu ajouteras le fichier au dossier, avec « Relire »." = "Можно оставить его без файла (чтобы сделать обложку до появления музыки): он будет сопоставлен, когда добавишь файл в папку и нажмёшь «Перечитать».";
 "Tu préfères GPT ou Gemini ? Choisis-le plus tard dans Réglages → IA." = "Предпочитаешь GPT или Gemini? Выбери позже в Настройках → ИИ.";
 "Type" = "Тип";
 "Type I · Normal" = "Тип I · Normal";
@@ -574,14 +620,19 @@
 "Versions (%lld)" = "Версии (%lld)";
 "Vertical" = "Вертикально";
 "Vide = modèle conseillé (%@)." = "Пусто = рекомендуемая модель (%@).";
+"Vider" = "Очистить";
+"Vider les deux faces ?" = "Очистить обе стороны?";
 "Vider les faces" = "Очистить стороны";
 "Voile" = "Вуаль";
+"Voile faible : les petits textes risquent d'être difficiles à lire sur l'image." = "Слабая вуаль: мелкий текст может плохо читаться на изображении.";
+"Voir les %lld messages précédents" = "Показать предыдущие сообщения (%lld)";
 "Volet intérieur" = "Внутренняя панель";
 "Volets" = "Панели";
 "Vraie pochette trouvée (Cover Art Archive)" = "Настоящая обложка найдена (Cover Art Archive)";
 "Vraies éditions cassette" = "Настоящие кассетные издания";
 "Vérification avant impression" = "Проверка перед печатью";
 "Vérification de Claude : tout est bon ✓" = "Проверка Claude: всё в порядке ✓";
+"Vérifier avec %@" = "Проверить с %@";
 "Vérifier avec Claude" = "Проверить с Claude";
 "Vérifier avec l'IA" = "Проверить с ИИ";
 "Zoom" = "Масштаб";
@@ -630,7 +681,9 @@
 "Étiquettes" = "Наклейки";
 "Étiquettes de K7" = "Наклейки кассеты";
 "Étiquettes de K7 : papier autocollant A4 pleine page, mat. L'app imprime les traits de coupe." = "Этикетки: самоклеящаяся матовая бумага A4 целым листом. Приложение печатает метки реза.";
+"Étiquettes de K7 · faces A et B" = "Наклейки кассеты · стороны A и B";
 "étiquette" = "этикетка";
+"Русский" = "Русский";
 "• Design : propose couleurs, polices et variantes à partir de ta pochette." = "• Дизайн: предлагает цвета, шрифты и варианты по твоей обложке.";
 "• Enregistrement : conseils selon ton type de bande et ta platine." = "• Запись: советы под твой тип ленты и деку.";
 "• L'app est fournie telle quelle, sans garantie. L'auteur de STUDIOLAFLEUR n'est pas responsable de l'usage fait de l'app ni des objets produits." = "• Приложение предоставляется как есть, без гарантий. Автор STUDIOLAFLEUR не отвечает за использование приложения и созданные предметы.";

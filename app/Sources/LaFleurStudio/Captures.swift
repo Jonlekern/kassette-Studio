@@ -188,6 +188,23 @@ enum Captures {
         etat.prefs.modeExpertIA = false
         etat.conversation = []; etat.filModif = []; etat.elementSelectionne = nil
 
+        // Dos du boîtier 3D : le rabat et la cassette à travers le plastique.
+        if let img = Boitier3D.image(etat.mise, taille: CGSize(width: 600, height: 600), dos: true), let t = img.tiffRepresentation,
+           let png = NSBitmapImageRep(data: t)?.representation(using: .png, properties: [:]) {
+            try? png.write(to: dossier.appendingPathComponent("boitier-3d-dos.png"))
+        }
+        // Mixtape avec plusieurs artistes et des titres longs : la durée ne doit jamais disparaître.
+        var mx = etat.projet
+        mx.mode = .mixtape
+        mx.faceA[1].morceau.titre = "Parked In The Front Of The Mall (Extended Night Version)"
+        mx.faceA[1].morceau.artistes = ["The Long Name Orchestra"]
+        mx.faceA[2].morceau.artistes = ["Nick Drake"]
+        let mxMise = Mise(projet: mx, design: etat.design)
+        for (i, p) in Export.pages(mxMise).enumerated() where !p.nom.contains("Obi") {
+            if let data = Export.png(p.vue, dpi: 300) { try? data.write(to: dossier.appendingPathComponent("mixtape-\(i + 1).png")) }
+        }
+        journal.append("Alertes mixtape (titres longs) : " + mxMise.alertes().map(\.message).joined(separator: " | "))
+
         // VU-mètres pendant la musique (pas seulement avec la tonalité) : un fichier à −12 dBFS doit les mettre vers 0 VU.
         journal.append(await testerVU(moteur, tmp))
 

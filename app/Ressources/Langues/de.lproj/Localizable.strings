@@ -10,6 +10,7 @@
 "%@ : prêt" = "%@: bereit";
 "%@ DE MUSIQUE" = "%@ MUSIK";
 "%@ LIBRES" = "%@ FREI";
+"%@ compose la sélection…" = "%@ stellt die Auswahl zusammen…";
 "%@ modifie la cassette…" = "%@ bearbeitet die Kassette…";
 "%@ n'a rien changé" = "%@ hat nichts geändert";
 "%@ pt" = "%@ pt";
@@ -19,9 +20,11 @@
 "%lld / %lld morceaux associés à un fichier" = "%lld / %lld Titel mit einer Datei verknüpft";
 "%lld / %lld morceaux associés à un fichier · %lld à confirmer" = "%lld / %lld Titel mit einer Datei verknüpft · %lld zu bestätigen";
 "%lld TITRES" = "%lld TITEL";
+"%lld alertes ouvertes :" = "%lld offene Warnungen:";
 "%lld cassette · prochain numéro : %@" = "%lld Kassette · nächste Nummer: %@";
 "%lld cassettes · prochain numéro : %@" = "%lld Kassetten · nächste Nummer: %@";
 "%lld changement(s) appliqué(s) ✓" = "%lld Änderung(en) übernommen ✓";
+"%lld demande(s) annulée(s)" = "%lld Anfrage(n) rückgängig gemacht";
 "%lld demandes" = "%lld Anfragen";
 "%lld demandes · environ %@ $" = "%lld Anfragen · etwa %@ $";
 "%lld fichiers chargés dans l'ordre des pistes" = "%lld Dateien in Titelreihenfolge geladen";
@@ -30,8 +33,12 @@
 "%lld image PNG 600 DPI enregistrée" = "%lld PNG-Bild mit 600 DPI gespeichert";
 "%lld images PNG 600 DPI enregistrées" = "%lld PNG-Bilder mit 600 DPI gespeichert";
 "%lld min/face" = "%lld Min./Seite";
+"%lld morceaux de ton dossier · %lld à trouver ailleurs : coche ceux que tu gardes" = "%lld Titel aus deinem Ordner · %lld anderswo zu finden: hak an, was du behältst";
+"%lld morceaux retirés : clique plusieurs fois pour les remettre un par un" = "%lld Titel entfernt: mehrmals klicken, um sie einzeln zurückzuholen";
+"%lld sur %lld cassettes · prochain numéro : %@" = "%lld von %lld Kassetten · nächste Nummer: %@";
 "%lld titres trouvés : coche ceux que tu gardes" = "%lld Titel gefunden: hake die an, die du behältst";
 "(une règle de 10 cm et une de 4 pouces)" = "(ein 10-cm- und ein 4-Zoll-Lineal)";
+"1 alerte ouverte :" = "1 offene Warnung:";
 "1. Clé API Claude" = "1. Claude-API-Schlüssel";
 "1. Colle le Client ID dans STUDIOLAFLEUR, puis clique « Se connecter… »." = "1. Füge die Client ID in STUDIOLAFLEUR ein und klicke auf „Verbinden…“.";
 "1. Compte à rebours %lld s : relâche la pause" = "1. %lld s Countdown: Pause lösen";
@@ -71,6 +78,7 @@
 "Accent" = "Akzent";
 "Actions" = "Aktionen";
 "Actualiser" = "Aktualisieren";
+"Afficher l'avis" = "Bewertung anzeigen";
 "Afficher les demandes faites à l'IA" = "Anfragen an die KI anzeigen";
 "Aide sur la clé API Claude" = "Hilfe zum Claude-API-Schlüssel";
 "Aide — Claude dans STUDIOLAFLEUR" = "Hilfe — Claude in STUDIOLAFLEUR";
@@ -89,6 +97,7 @@
 "Aperçu 3D" = "3D-Vorschau";
 "Appliquer" = "Anwenden";
 "Appliquer (⌘↩)" = "Anwenden (⌘↩)";
+"Appliquer les corrections de %@" = "Korrekturen von %@ übernehmen";
 "Appliquer les corrections de Claude" = "Korrekturen von Claude übernehmen";
 "Artiste" = "Künstler";
 "Associer les fichiers audio" = "Audiodateien zuordnen";
@@ -100,6 +109,7 @@
 "Aucun fichier audio dans le dossier" = "Keine Audiodatei im Ordner";
 "Aucune demande à l'IA pour cette cassette." = "Noch keine KI-Anfragen für diese Kassette.";
 "Aucune image trouvée pour « %@ ». Importe-la toi-même ou reformule." = "Kein Bild für „%@“ gefunden. Importiere es selbst oder formuliere um.";
+"Aucune imprimante installée sur ce Mac : ajoute-la dans Réglages Système → Imprimantes et scanners, puis rouvre les Réglages." = "Kein Drucker auf diesem Mac installiert: füge ihn unter Systemeinstellungen → Drucker & Scanner hinzu und öffne die Einstellungen erneut.";
 "Aucune police lisible dans ces fichiers" = "Keine lesbare Schrift in diesen Dateien";
 "Aucune édition cassette trouvée : Claude partira de la pochette." = "Keine Kassettenausgabe gefunden: Claude startet mit dem Cover.";
 "Audio" = "Audio";
@@ -110,6 +120,7 @@
 "Avant de commencer" = "Bevor du anfängst";
 "Avant de lancer" = "Vor dem Start";
 "Avec %lld volets, une partie va au verso : impression recto verso. Ajoute des volets pour tout imprimer d'un côté." = "Mit %lld Feldern kommt ein Teil auf die Rückseite: beidseitiger Druck. Füge Felder hinzu, um alles einseitig zu drucken.";
+"Avec la musique de ton dossier audio d'abord, puis quelques idées à trouver ailleurs." = "Zuerst mit der Musik aus deinem Audio-Ordner, dann ein paar Ideen, die du anderswo findest.";
 "BLANC DE DÉBUT DE BANDE" = "STILLE AM BANDANFANG";
 "BLANC ENTRE LES MORCEAUX" = "STILLE ZWISCHEN TITELN";
 "BOUT DE BANDE DANS %@" = "BANDENDE IN %@";
@@ -132,6 +143,7 @@
 "C60 · 30 min/face" = "C60 · 30 Min./Seite";
 "C90 · 45 min/face" = "C90 · 45 Min./Seite";
 "Cadrage" = "Bildausschnitt";
+"Carte son choisie, débranchée (sortie par défaut du Mac en attendant)" = "Gewählte Soundkarte, nicht angeschlossen (bis dahin Standardausgang des Mac)";
 "Cassette" = "Kassette";
 "Cassette %@ ouverte" = "Kassette %@ geöffnet";
 "Cassette : %@ → %@" = "Kassette: %@ → %@";
@@ -191,6 +203,7 @@
 "Commencer" = "Loslegen";
 "Composer : %@" = "Zusammenstellen: %@";
 "Composer avec Claude (mixtape)" = "Mit Claude zusammenstellen (Mixtape)";
+"Composer avec l'IA (mixtape)" = "Mit KI zusammenstellen (Mixtape)";
 "Composer la sélection" = "Auswahl zusammenstellen";
 "Compte Spotify" = "Spotify-Konto";
 "Compte à rebours : %lld s" = "Countdown: %lld s";
@@ -216,6 +229,7 @@
 "Custom " = "Eigene ";
 "Côté du QR" = "QR-Größe";
 "DROITE" = "RECHTS";
+"Dans ton dossier audio" = "In deinem Audio-Ordner";
 "Demande à Claude…" = "Frag Claude…";
 "Demande à Claude… (« plus sombre », « plus 90s »)" = "Frag Claude… („dunkler“, „mehr 90er“)";
 "Descendre" = "Nach unten";
@@ -245,12 +259,17 @@
 "En option, les mêmes règles à la verticale (si ton imprimante n'a pas la même erreur dans les deux sens) :" = "Optional: dieselben Lineale senkrecht (falls dein Drucker in beiden Richtungen unterschiedlich abweicht):";
 "En plus de la jaquette, l'IA peut changer la Mixtape (ordre, faces, morceaux, C60/C90, bande, Dolby, coque, titre), les réglages de la cassette et la Collection (créer, dupliquer, renommer). Tout s'annule en un clic. Elle demande toujours avant de supprimer une cassette, ne touche jamais aux clés, aux comptes ni aux fichiers audio, et ne lance ni l'enregistrement ni l'impression." = "Neben dem J-Card kann die KI das Mixtape (Reihenfolge, Seiten, Titel, C60/C90, Band, Dolby, Gehäuse, Name), die Kassetteneinstellungen und die Sammlung (anlegen, duplizieren, umbenennen) ändern. Alles lässt sich mit einem Klick rückgängig machen. Vor dem Löschen einer Kassette fragt sie immer nach, sie rührt nie Schlüssel, Konten oder Audiodateien an und startet weder Aufnahme noch Druck.";
 "English" = "English";
+"Enregistrer ici" = "Hier speichern";
 "Enregistrée" = "Aufgenommen";
 "Envoyer" = "Senden";
 "Ex. « mets Glass en face B », « passe en C90 », « bande Type I sans Dolby »" = "Z. B. „Glass auf Seite B“, „auf C90 umstellen“, „Typ-I-Band ohne Dolby“";
 "Ex. « plus sombre », « plus 90s », « mets la vraie pochette », « mets le logo Sony »" = "Z. B. „dunkler“, „mehr 90er“, „nimm das echte Cover“, „füg das Sony-Logo ein“";
 "Ex. « titre plus gros », « retire la pochette de l'étiquette », « code-barres de 30 mm », « décale l'image vers la gauche »" = "Z. B. „Titel größer“, „Cover vom Etikett entfernen“, „Barcode 30 mm“, „Bild nach links schieben“";
 "Exporter" = "Exportieren";
+"Exporter le PDF" = "PDF exportieren";
+"Exporter le PDF…" = "PDF exportieren…";
+"Exporter les PNG" = "PNGs exportieren";
+"Exporter les PNG 600 DPI…" = "PNGs mit 600 DPI exportieren…";
 "Exporter quand même" = "Trotzdem exportieren";
 "FACE %@ TERMINÉE" = "SEITE %@ FERTIG";
 "FACE %@ · %@" = "SEITE %@ · %@";
@@ -262,16 +281,22 @@
 "Face B" = "Seite B";
 "Face B terminée. C'est dans la boîte ✿ Arrête la platine." = "Seite B fertig. Im Kasten ✿ Deck stoppen.";
 "Faces réparties par Claude ✓" = "Seiten von Claude verteilt ✓";
+"Faces vidées · « Remettre les morceaux » pour annuler" = "Seiten geleert · „Titel zurücklegen“ zum Rückgängigmachen";
 "Fait" = "Fertig";
 "Fenêtre" = "Fenster";
 "Fermer" = "Schließen";
 "Fichier introuvable dans le dossier audio : %@" = "Datei im Audioordner nicht gefunden: %@";
+"Fichier → Exporter le PDF… (⇧⌘E)" = "Ablage → PDF exportieren… (⇧⌘E)";
+"Fichier → Imprimer… (⌘P)" = "Ablage → Drucken… (⌘P)";
 "Fond" = "Hintergrund";
 "Format" = "Format";
 "Français" = "Français";
 "Fumée" = "Rauchgrau";
 "GAUCHE" = "LINKS";
 "Garder l'ordre (auto)" = "Reihenfolge behalten (auto)";
+"Garder les %lld sans fichier" = "Alle %lld ohne Datei behalten";
+"Garder sans fichier" = "Ohne Datei behalten";
+"Glisse (même vers l'autre face) ou clic droit pour réordonner · ⇄ change de face · × retire" = "Ziehen (auch auf die andere Seite) oder Rechtsklick zum Umsortieren · ⇄ wechselt die Seite · × entfernt";
 "Glisse l'image dans l'aperçu pour choisir la partie visible." = "Zieh das Bild in der Vorschau, um den sichtbaren Ausschnitt zu wählen.";
 "Glisse les codes dans l'aperçu de la J-card." = "Zieh die Codes in der J-Card-Vorschau.";
 "Glisse les codes où tu veux" = "Zieh die Codes, wohin du willst";
@@ -305,6 +330,8 @@
 "Imprimante" = "Drucker";
 "Imprimante et papier" = "Drucker und Papier";
 "Imprime à 100 %, pas « Ajuster à la page »." = "Mit 100 % drucken, nicht „An Seite anpassen“.";
+"Imprimer" = "Drucken";
+"Imprimer la jaquette…" = "J-Card drucken…";
 "Imprimer la règle" = "Lineal drucken";
 "Imprimer la règle d'abord" = "Zuerst das Lineal drucken";
 "Imprimer quand même" = "Trotzdem drucken";
@@ -317,6 +344,8 @@
 "J'ai lu et j'accepte ces conditions" = "Ich habe diese Bedingungen gelesen und akzeptiere sie";
 "J-card" = "J-Card";
 "J-card verso" = "J-Card Rückseite";
+"J-card · extérieur" = "J-Card · außen";
+"J-card · verso (imprimer au dos, retourner sur le grand côté)" = "J-Card · Rückseite (auf die Rückseite drucken, an der langen Kante wenden)";
 "J-card, O-card, obi : papier mat ou satiné de 170 à 250 g/m², A4." = "J-Card, O-Card, Obi: mattes oder seidenmattes Papier, 170–250 g/m², A4.";
 "Jamais les paroles complètes (droits d'auteur) : seulement où les trouver." = "Nie die vollständigen Songtexte (Urheberrecht): nur wo man sie findet.";
 "Jamais sorti en cassette : Claude part du dos de l'édition CD ou vinyle." = "Nie auf Kassette erschienen: Claude geht von der Rückseite der CD- oder Vinyl-Ausgabe aus.";
@@ -325,12 +354,16 @@
 "Je pars des vraies éditions cassette si j'en trouve, sinon de ta pochette. Dis-moi l'ambiance, ou clique sur « Proposer »." = "Ich starte mit echten Kassettenausgaben, falls ich welche finde, sonst mit deinem Cover. Sag mir die Stimmung oder klick „Vorschlagen“.";
 "Jeton Discogs" = "Discogs-Token";
 "Jeton Discogs refusé : vérifie-le dans Réglages → Sources." = "Discogs-Token abgelehnt: prüfe es unter Einstellungen → Quellen.";
+"L'API de Spotify demande un compte Premium. Sans Premium, utilise « Cassette depuis le dossier »." = "Die Spotify-API verlangt ein Premium-Konto. Ohne Premium nimm „Kassette aus dem Ordner“.";
 "L'IA a refusé la demande (%@)." = "Die KI hat die Anfrage abgelehnt (%@).";
 "L'IA a répondu %lld : %@" = "Die KI antwortete %lld: %@";
 "L'IA demande de supprimer cette cassette de la Collection. Tes fichiers audio ne sont pas touchés." = "Die KI möchte diese Kassette aus der Sammlung löschen. Deine Audiodateien bleiben unberührt.";
 "L'IA ne touche pas à « %@ » (clés, comptes, fichiers et sorties restent à toi)." = "Die KI rührt „%@“ nicht an (Schlüssel, Konten, Dateien und Ausgänge bleiben deine Sache).";
 "L'IA peut chercher sur des sites choisis (sources citées)" = "Die KI darf auf ausgewählten Websites suchen (mit Quellen)";
 "L'app joue seulement sur cette sortie ; le reste du Mac ne change pas." = "Die App spielt nur über diesen Ausgang; der Rest des Mac bleibt unverändert.";
+"L'image tient déjà en entier dans son cadre : agrandis-la (Zoom de l'image) pour pouvoir la déplacer." = "Das Bild passt schon ganz in seinen Rahmen: vergrößere es (Bildzoom), um es zu verschieben.";
+"L'image tient déjà en hauteur : agrandis-la (Zoom de l'image) pour la déplacer en haut ou en bas." = "Das Bild passt schon in der Höhe: vergrößere es (Bildzoom), um es nach oben oder unten zu verschieben.";
+"L'image tient déjà en largeur : agrandis-la (Zoom de l'image) pour la déplacer à gauche ou à droite." = "Das Bild passt schon in der Breite: vergrößere es (Bildzoom), um es nach links oder rechts zu verschieben.";
 "La cassette est retirée de la collection. Tes fichiers audio ne sont pas touchés." = "Die Kassette wird aus der Sammlung entfernt. Deine Audiodateien bleiben unberührt.";
 "La platine repart : clique ici" = "Das Deck läuft wieder: hier klicken";
 "La recherche web de Claude est désactivée (Réglages → Claude)." = "Claudes Websuche ist aus (Einstellungen → Claude).";
@@ -343,6 +376,7 @@
 "Lecture" = "Wiedergabe";
 "Lecture du dossier audio…" = "Lese den Audio-Ordner…";
 "Lecture du dossier…" = "Lese den Ordner…";
+"Les %lld morceaux sont retirés de la cassette. Tes fichiers audio ne sont pas touchés, et « Remettre les morceaux » les rend." = "Alle %lld Titel werden von der Kassette entfernt. Deine Audiodateien bleiben unberührt, und „Titel zurücklegen“ holt sie zurück.";
 "Les logos des maisons de disque sont des marques. Importe seulement un fichier que tu as déjà ; l'app ne télécharge ni ne partage jamais de logos." = "Label-Logos sind Marken. Importiere nur eine Datei, die du schon hast; die App lädt oder teilt nie Logos.";
 "Les réglages de la cassette demandent le mode expert (Réglages → IA)." = "Kassetteneinstellungen brauchen den Expertenmodus (Einstellungen → KI).";
 "Lettre de face (étiquette)" = "Seitenbuchstabe (Etikett)";
@@ -362,6 +396,7 @@
 "Maison de disque" = "Label";
 "Marque / modèle" = "Marke / Modell";
 "Masquer" = "Ausblenden";
+"Maximum à cette place : %@ × %@ mm" = "Maximum an dieser Stelle: %@ × %@ mm";
 "Mentions techniques (bande, Dolby)" = "Technische Angaben (Band, Dolby)";
 "Mes playlists…" = "Meine Playlists…";
 "Mesure la règle de 10 cm (ou celle de 4 pouces) avec une vraie règle, puis tape la valeur dans" = "Miss das 10-cm-Lineal (oder das 4-Zoll-Lineal) mit einem echten Lineal und gib den Wert ein in";
@@ -378,6 +413,8 @@
 "Modèle" = "Modell";
 "Monter" = "Nach oben";
 "Morceau introuvable : %@" = "Titel nicht gefunden: %@";
+"Morceaux gardés sans fichier · ils seront associés quand tu ajouteras la musique (Relire)" = "Titel ohne Datei behalten · sie werden zugeordnet, sobald du die Musik hinzufügst (Neu einlesen)";
+"Morceaux remis sur les faces" = "Titel wieder auf die Seiten gelegt";
 "Moteur" = "Modell";
 "Moteur d'IA" = "KI-Modell";
 "MusicBrainz (dos CD/vinyle)" = "MusicBrainz (CD-/Vinyl-Rückseite)";
@@ -420,6 +457,7 @@
 "Papier conseillé" = "Empfohlenes Papier";
 "Paroles : genius.com" = "Songtexte: genius.com";
 "Pas connecté à Spotify (Réglages → Spotify)." = "Nicht mit Spotify verbunden (Einstellungen → Spotify).";
+"Pas dans ton dossier audio : à te procurer avant l'enregistrement" = "Nicht in deinem Audio-Ordner: vor der Aufnahme besorgen";
 "Pas de fichier audio pour « %@ ». Associe-le dans l'écran Mixtape." = "Keine Audiodatei für „%@“. Ordne sie im Mixtape-Bildschirm zu.";
 "Passer au début de la face B" = "Zum Anfang von Seite B";
 "Passer à la fin de la face A" = "Zum Ende von Seite A";
@@ -457,6 +495,7 @@
 "Rabat" = "Lasche";
 "Rabat, en bas" = "Lasche, unten";
 "Rangée dans le trousseau du Mac." = "Im Schlüsselbund des Mac gespeichert.";
+"Rappel : usage personnel et non commercial. Tu es seul responsable de ce que tu imprimes (droits d'auteur, marques). Imprime toujours à 100 %." = "Hinweis: nur privat, nicht kommerziell. Du allein bist verantwortlich für das, was du druckst (Urheberrecht, Marken). Immer mit 100 % drucken.";
 "Recherche des titres sur Spotify…" = "Suche die Titel auf Spotify…";
 "Recherche des vraies éditions cassette de « %@ »…" = "Suche echte Kassettenausgaben von „%@“…";
 "Recherche des vraies éditions cassette…" = "Suche echte Kassettenausgaben…";
@@ -469,7 +508,10 @@
 "Relancer l'app maintenant" = "App jetzt neu starten";
 "Relire" = "Neu einlesen";
 "Relâche la pause de la platine… %lld" = "Pause am Deck lösen… %lld";
+"Remettre les morceaux (%lld)" = "Titel zurücklegen (%lld)";
 "Remettre « %@ »" = "„%@“ zurücklegen";
+"Replier" = "Einklappen";
+"Replier la conversation" = "Unterhaltung einklappen";
 "Reprendre crédits et notes" = "Credits und Notizen übernehmen";
 "Retirer ce morceau" = "Diesen Titel entfernen";
 "Retirer cette image" = "Dieses Bild entfernen";
@@ -505,6 +547,7 @@
 "STUDIOLAFLEUR → Réglages → Impression. C'est tout : l'app corrige toutes tes impressions." = "STUDIOLAFLEUR → Einstellungen → Drucken. Das war's: die App korrigiert alle Drucke.";
 "Sans logo importé, le nom est écrit en texte." = "Ohne importiertes Logo wird der Name als Text geschrieben.";
 "Sans pochette" = "Ohne Cover";
+"Sans titre" = "Ohne Titel";
 "Se connecter…" = "Verbinden…";
 "Si Spotify refuse l'accès, c'est en général qu'il faut Premium, ou que la Redirect URI ne correspond pas exactement." = "Verweigert Spotify den Zugriff, fehlt meist Premium oder die Redirect URI stimmt nicht exakt.";
 "Simple, sans auto-reverse : l'app dit de retourner la cassette" = "Einfach, ohne Auto-Reverse: die App sagt dir, wann du umdrehen musst";
@@ -517,6 +560,7 @@
 "Sous 5 pt, l'app prévient : c'est trop petit pour être lu une fois imprimé." = "Unter 5 pt warnt die App: gedruckt zu klein zum Lesen.";
 "Spotify" = "Spotify";
 "Spotify : connecté" = "Spotify: verbunden";
+"Spotify : connecté, sans Premium" = "Spotify: verbunden, ohne Premium";
 "Spotify : non connecté" = "Spotify: nicht verbunden";
 "Spotify a répondu %lld : %@" = "Spotify antwortete %lld: %@";
 "Spotify connecté ✓" = "Spotify verbunden ✓";
@@ -551,6 +595,7 @@
 "Titre de la cassette" = "Titel der Kassette";
 "Titre en italique" = "Titel kursiv";
 "Titres, durées, maison de disque et pochette, sans Spotify." = "Titel, Dauer, Label und Cover, ohne Spotify.";
+"Ton imprimante (%@) n'est pas encore calibrée : imprime d'abord la règle pour vérifier que la jaquette sort à la bonne taille (Réglages → Impression)." = "Dein Drucker (%@) ist noch nicht kalibriert: druck zuerst das Lineal, um zu prüfen, ob die J-Card in der richtigen Größe herauskommt (Einstellungen → Drucken).";
 "Tonalité 1 kHz" = "1-kHz-Ton";
 "Total" = "Gesamt";
 "Tout corriger" = "Alles korrigieren";
@@ -560,6 +605,7 @@
 "Tranche" = "Rücken";
 "Transparente" = "Transparent";
 "Tu paies à l'usage : préparer une cassette coûte en général quelques centimes. La clé reste dans le trousseau de ton Mac. Claude reçoit les titres, les durées et les infos d'album, jamais tes fichiers audio." = "Du zahlst nach Nutzung: eine Kassette vorzubereiten kostet meist ein paar Cent. Der Schlüssel bleibt im Schlüsselbund deines Mac. Claude bekommt Titel, Dauer und Albuminfos, nie deine Audiodateien.";
+"Tu peux le garder sans fichier (pour faire la jaquette avant d'avoir la musique) : il sera associé quand tu ajouteras le fichier au dossier, avec « Relire »." = "Du kannst ihn ohne Datei behalten (um die J-Card zu machen, bevor du die Musik hast): er wird zugeordnet, sobald du die Datei in den Ordner legst und „Neu einlesen“ klickst.";
 "Tu préfères GPT ou Gemini ? Choisis-le plus tard dans Réglages → IA." = "Lieber GPT oder Gemini? Wähl es später unter Einstellungen → KI.";
 "Type" = "Typ";
 "Type I · Normal" = "Typ I · Normal";
@@ -574,14 +620,19 @@
 "Versions (%lld)" = "Versionen (%lld)";
 "Vertical" = "Hochformat";
 "Vide = modèle conseillé (%@)." = "Leer = empfohlenes Modell (%@).";
+"Vider" = "Leeren";
+"Vider les deux faces ?" = "Beide Seiten leeren?";
 "Vider les faces" = "Seiten leeren";
 "Voile" = "Schleier";
+"Voile faible : les petits textes risquent d'être difficiles à lire sur l'image." = "Schwacher Schleier: kleine Texte sind auf dem Bild womöglich schwer lesbar.";
+"Voir les %lld messages précédents" = "Die %lld früheren Nachrichten ansehen";
 "Volet intérieur" = "Innenfeld";
 "Volets" = "Felder";
 "Vraie pochette trouvée (Cover Art Archive)" = "Echtes Cover gefunden (Cover Art Archive)";
 "Vraies éditions cassette" = "Echte Kassettenausgaben";
 "Vérification avant impression" = "Prüfung vor dem Druck";
 "Vérification de Claude : tout est bon ✓" = "Claudes Prüfung: alles gut ✓";
+"Vérifier avec %@" = "Mit %@ prüfen";
 "Vérifier avec Claude" = "Mit Claude prüfen";
 "Vérifier avec l'IA" = "Mit KI prüfen";
 "Zoom" = "Zoom";
@@ -630,7 +681,9 @@
 "Étiquettes" = "Etiketten";
 "Étiquettes de K7" = "Kassettenetiketten";
 "Étiquettes de K7 : papier autocollant A4 pleine page, mat. L'app imprime les traits de coupe." = "Kassettenetiketten: mattes A4-Klebepapier, ganzseitig. Die App druckt die Schnittmarken.";
+"Étiquettes de K7 · faces A et B" = "Kassettenetiketten · Seiten A und B";
 "étiquette" = "Etikett";
+"Русский" = "Русский";
 "• Design : propose couleurs, polices et variantes à partir de ta pochette." = "• Design: schlägt Farben, Schriften und Varianten nach deinem Cover vor.";
 "• Enregistrement : conseils selon ton type de bande et ta platine." = "• Aufnahme: Tipps für deinen Bandtyp und dein Deck.";
 "• L'app est fournie telle quelle, sans garantie. L'auteur de STUDIOLAFLEUR n'est pas responsable de l'usage fait de l'app ni des objets produits." = "• Die App wird ohne Gewähr bereitgestellt. Der Autor von STUDIOLAFLEUR haftet nicht für die Nutzung der App oder die erzeugten Gegenstände.";

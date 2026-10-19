@@ -35,7 +35,7 @@ public actor ClientMusicBrainz {
     private var derniereRequete = Date.distantPast
     public init() {}
 
-    private func get(_ chemin: String, _ params: [String: String]) async throws -> Data {
+    private func get(_ chemin: String, _ params: [String: String], essai: Int = 1) async throws -> Data {
         // Au plus une requête par seconde.
         let attente = 1.05 - Date().timeIntervalSince(derniereRequete)
         if attente > 0 { try await Task.sleep(for: .seconds(attente)) }
@@ -46,6 +46,11 @@ public actor ClientMusicBrainz {
         req.setValue("STUDIOLAFLEUR/0.1 ( https://lafleurstudio.ch )", forHTTPHeaderField: "User-Agent")
         let (data, rep) = try await URLSession.shared.data(for: req)
         let code = (rep as? HTTPURLResponse)?.statusCode ?? 0
+        // 503 = trop de requêtes : MusicBrainz demande d'attendre un peu. On réessaie seul, deux fois.
+        if code == 503 && essai < 3 {
+            try await Task.sleep(for: .seconds(1.5 * Double(essai)))
+            return try await get(chemin, params, essai: essai + 1)
+        }
         guard code == 200 else { throw Erreur.http(code) }
         return data
     }
@@ -63,7 +68,10 @@ public actor ClientMusicBrainz {
         var q = Self.requete(texte)
         if cassetteSeulement { q = "(\(q)) AND format:Cassette" }
         let d = try await get("/release/", ["query": q, "limit": "15"])
-        return try JSONDecoder().decode(ReponseRecherche.self, from: d).releases.map { $0.album }
+        let albums = try JSONDecoder().decode(ReponseRecherche.self, from: d).releases.map { $0.album }
+        // Les éditions cassette d'abord (c'est ce qu'on fabrique), puis le reste dans l'ordre de MusicBrainz.
+        let k7 = albums.filter { $0.formats.contains { $0.localizedCaseInsensitiveContains("cassette") } }
+        return k7 + albums.filter { a in !k7.contains { $0.id == a.id } }
     }
 
     public func detail(_ id: String) async throws -> Detail {

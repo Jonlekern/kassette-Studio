@@ -74,7 +74,11 @@ private struct Sources: View {
                     }
                 }
                 Groupe(titre: "MusicBrainz (gratuit, sans compte)") {
-                    Champ(invite: "Album, ou « Artiste - Album »…", texte: $rechercheMB).onSubmit { etat.chercherMusicBrainz(rechercheMB) }
+                    HStack(spacing: 4) {
+                        Champ(invite: "Album, ou « Artiste - Album »…", texte: $rechercheMB).onSubmit { etat.chercherMusicBrainz(rechercheMB) }
+                        Button("Chercher") { etat.chercherMusicBrainz(rechercheMB) }.buttonStyle(.w98).fixedSize()
+                            .disabled(rechercheMB.trimmingCharacters(in: .whitespaces).isEmpty || etat.occupe)
+                    }
                     if !etat.albumsMusicBrainz.isEmpty {
                         VStack(spacing: 0) {
                             ForEach(etat.albumsMusicBrainz) { a in
