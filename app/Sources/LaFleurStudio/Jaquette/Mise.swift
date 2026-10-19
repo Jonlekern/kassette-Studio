@@ -403,8 +403,11 @@ struct Mise {
         case .tranche:
             return nil
         case .interieur:
-            let volet = g.panneaux.compactMap { if case .interieur = $0.genre { return CGFloat($0.largeur) } else { return nil } }.min() ?? 60
-            return (volet - 8, 25)
+            let volets: [CGFloat] = g.panneaux.compactMap { p -> CGFloat? in
+                if case .interieur = p.genre { return CGFloat(p.largeur) }
+                return nil
+            }
+            return ((volets.min() ?? 60) - 8, 25)
         case .libre:
             return (60, 40)
         }

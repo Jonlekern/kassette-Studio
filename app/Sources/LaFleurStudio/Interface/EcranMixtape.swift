@@ -93,11 +93,13 @@ private struct Sources: View {
                     }
                     Text("Titres, durées, maison de disque et pochette, sans Spotify.").foregroundStyle(W98.ombre)
                 }
-                Groupe(titre: "Composer avec Claude (mixtape)") {
+                Groupe(titre: "Composer avec l'IA (mixtape)") {
+                    Text("Avec la musique de ton dossier audio d'abord, puis quelques idées à trouver ailleurs.").foregroundStyle(W98.ombre)
+                        .fixedSize(horizontal: false, vertical: true)
                     Text("Ambiance").bold()
                     TextEditor(text: $ambiance).font(W98.police).frame(height: 54).scrollContentBackground(.hidden).creux()
                     Button("Composer la sélection") { etat.composer(ambiance: ambiance) }.buttonStyle(.w98)
-                        .disabled(ambiance.isEmpty || etat.occupe || !etat.spotifyConnecte)
+                        .disabled(ambiance.isEmpty || etat.occupe)
                     if !etat.propositions.isEmpty {
                         Text("Coche ce que tu gardes. Rien n'est ajouté sans toi.").foregroundStyle(W98.ombre)
                         VStack(alignment: .leading, spacing: 2) {
@@ -106,10 +108,15 @@ private struct Sources: View {
                                     HStack {
                                         Text("\(p.idee.artiste) – \(p.idee.titre)").lineLimit(1)
                                         Spacer()
-                                        Text(p.morceau.map { formaterDuree($0.duree) } ?? "introuvable").foregroundStyle(p.morceau == nil ? W98.rouge : .black)
+                                        if p.fichier != nil {
+                                            Text(p.morceau.map { formaterDuree($0.duree) } ?? "").monospacedDigit()
+                                        } else {
+                                            Text(p.morceau.map { "à trouver · " + formaterDuree($0.duree) } ?? "à trouver").foregroundStyle(W98.orange)
+                                        }
                                     }
                                 }
                                 .toggleStyle(.checkbox).disabled(p.morceau == nil)
+                                .help(p.fichier != nil ? "Dans ton dossier audio" : "Pas dans ton dossier audio : à te procurer avant l'enregistrement")
                             }
                         }
                         .padding(6).creux()
@@ -275,6 +282,7 @@ private struct LignePiste: View {
 
 private struct Actions: View {
     @EnvironmentObject var etat: EtatApp
+    @State private var confirmerVidage = false
     var body: some View {
         let r = etat.prefs.platine
         let musique = etat.projet.toutes.reduce(0) { $0 + $1.duree }
@@ -285,11 +293,21 @@ private struct Actions: View {
                 Button("Équilibrer avec Claude") { etat.equilibrerAvecClaude() }.buttonStyle(.w98Gras)
                     .disabled(etat.occupe || etat.projet.toutes.isEmpty)
                 Button("Garder l'ordre (auto)") { etat.repartirDansLOrdre() }.buttonStyle(.w98).disabled(etat.projet.toutes.isEmpty)
-                Button("Vider les faces") { etat.viderFaces() }.buttonStyle(.w98)
+                Button("Vider les faces") { confirmerVidage = true }.buttonStyle(.w98).disabled(etat.projet.toutes.isEmpty)
+                if let v = etat.avantVidage {
+                    Button("Remettre les morceaux (\(v.a.count + v.b.count))") { etat.annulerVidage() }.buttonStyle(.w98)
+                }
                 if let r = etat.dernierRetire {
                     Button("Remettre « \(r.piste.morceau.titre) »") { etat.annulerRetrait() }.buttonStyle(.w98).lineLimit(1)
+                        .help(etat.retires.count > 1 ? "\(etat.retires.count) morceaux retirés : clique plusieurs fois pour les remettre un par un" : "")
                 }
                 Button("Nouvelle cassette") { etat.nouvelleCassette() }.buttonStyle(.w98)
+            }
+            .alert("Vider les deux faces ?", isPresented: $confirmerVidage) {
+                Button("Vider", role: .destructive) { etat.viderFaces() }
+                Button("Annuler", role: .cancel) {}
+            } message: {
+                Text("Les \(etat.projet.toutes.count) morceaux sont retirés de la cassette. Tes fichiers audio ne sont pas touchés, et « Remettre les morceaux » les rend.")
             }
             Groupe(titre: "Total") {
                 VStack(alignment: .leading, spacing: 2) {
@@ -339,8 +357,19 @@ struct QuestionAssociation: View {
                     }
                     .creux()
                 }
+                if question.candidats.isEmpty {
+                    Text("Tu peux le garder sans fichier (pour faire la jaquette avant d'avoir la musique) : il sera associé quand tu ajouteras le fichier au dossier, avec « Relire ».")
+                        .foregroundStyle(W98.ombre).fixedSize(horizontal: false, vertical: true)
+                }
                 HStack {
                     Button("Retirer de la cassette") { ecoute?.stop(); etat.repondre(question, fichier: nil, duree: nil) }.buttonStyle(.w98)
+                    // Échap = garder sans fichier : la fenêtre ne bloque plus rien.
+                    Button("Garder sans fichier") { ecoute?.stop(); etat.garderSansFichier(question) }.buttonStyle(.w98)
+                        .keyboardShortcut(.cancelAction)
+                    let autres = etat.questions.filter { $0.candidats.isEmpty }.count
+                    if question.candidats.isEmpty && autres > 1 {
+                        Button("Garder les \(autres) sans fichier") { ecoute?.stop(); etat.garderTousSansFichier() }.buttonStyle(.w98Gras)
+                    }
                     Spacer()
                     Button("Choisir un fichier…") { ecoute?.stop(); etat.choisirFichierAMain(question) }.buttonStyle(.w98)
                     if !question.candidats.isEmpty {

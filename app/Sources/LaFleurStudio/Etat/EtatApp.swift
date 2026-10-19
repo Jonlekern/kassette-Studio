@@ -19,6 +19,8 @@ struct Proposition: Identifiable, Equatable {
     let idee: PropositionMixtape.Idee
     var morceau: Morceau?
     var gardee = true
+    /// Fichier du dossier audio : le morceau peut être enregistré tout de suite.
+    var fichier: InfosFichier?
 }
 
 /// L'état de l'app : réglages, cassette en cours, collection, connexions.
@@ -49,6 +51,8 @@ final class EtatApp: ObservableObject {
     let musicBrainz = ClientMusicBrainz()
     @Published var playlists: [ClientSpotify.Playlist] = []
     @Published var questions: [QuestionFichier] = []
+    @Published var retires: [(piste: Piste, face: Face, index: Int)] = []
+    @Published var avantVidage: (a: [Piste], b: [Piste])?
     @Published private(set) var fichiers: [InfosFichier] = []
 
     // Jaquette
@@ -177,13 +181,13 @@ final class EtatApp: ObservableObject {
         nouveau.cassette = projet.cassette
         prefs = p
         projet = nouveau
-        commentaireClaude = ""; propositions = []; questions = []
+        commentaireClaude = ""; propositions = []; questions = []; retires = []; avantVidage = nil
         conversation = []; editionsK7 = []; editionsCherchees = false; avisClaude = nil
         rafraichirCollection()
     }
 
     func ouvrir(_ p: Projet) {
-        projet = p; commentaireClaude = ""; propositions = []; questions = []
+        projet = p; commentaireClaude = ""; propositions = []; questions = []; retires = []; avantVidage = nil
         conversation = []; editionsK7 = []; editionsCherchees = false; avisClaude = nil
     }
 
@@ -433,20 +437,19 @@ final class EtatApp: ObservableObject {
 
     /// Retire le morceau de la cassette : il ne sera pas enregistré. Rien n'est supprimé sur le Mac.
     func retirer(_ id: UUID) {
-        if let i = projet.faceA.firstIndex(where: { $0.id == id }) { dernierRetire = (projet.faceA.remove(at: i), .a, i) }
-        if let i = projet.faceB.firstIndex(where: { $0.id == id }) { dernierRetire = (projet.faceB.remove(at: i), .b, i) }
+        if let i = projet.faceA.firstIndex(where: { $0.id == id }) { retires.append((projet.faceA.remove(at: i), .a, i)) }
+        if let i = projet.faceB.firstIndex(where: { $0.id == id }) { retires.append((projet.faceB.remove(at: i), .b, i)) }
         if let r = dernierRetire { statut = String(localized: "« \(r.piste.morceau.titre) » retiré de la cassette (il ne sera pas enregistré)") }
         commentaireClaude = ""
     }
 
-    /// Dernier morceau retiré, pour pouvoir le remettre à sa place.
-    @Published private(set) var dernierRetire: (piste: Piste, face: Face, index: Int)?
+    /// Morceaux retirés de cette cassette, du plus ancien au plus récent : « Remettre » les rend un par un.
+    var dernierRetire: (piste: Piste, face: Face, index: Int)? { retires.last }
 
     func annulerRetrait() {
-        guard let r = dernierRetire else { return }
+        guard let r = retires.popLast() else { return }
         if r.face == .a { projet.faceA.insert(r.piste, at: min(r.index, projet.faceA.count)) }
         else { projet.faceB.insert(r.piste, at: min(r.index, projet.faceB.count)) }
-        dernierRetire = nil
         statut = String(localized: "« \(r.piste.morceau.titre) » remis à sa place")
     }
 
@@ -473,7 +476,29 @@ final class EtatApp: ObservableObject {
         if face == .a { projet.faceA.move(fromOffsets: depuis, toOffset: vers) } else { projet.faceB.move(fromOffsets: depuis, toOffset: vers) }
     }
 
-    func viderFaces() { projet.faceA = []; projet.faceB = []; commentaireClaude = "" }
+    /// Vide les deux faces ; « Remettre les morceaux » les rend tous (rien n'est supprimé sur le Mac).
+    func viderFaces() {
+        guard !projet.toutes.isEmpty else { return }
+        avantVidage = (projet.faceA, projet.faceB)
+        projet.faceA = []; projet.faceB = []; commentaireClaude = ""
+        statut = String(localized: "Faces vidées · « Remettre les morceaux » pour annuler")
+    }
+
+    func annulerVidage() {
+        guard let v = avantVidage else { return }
+        projet.faceA = v.a + projet.faceA; projet.faceB = v.b + projet.faceB
+        avantVidage = nil
+        statut = String(localized: "Morceaux remis sur les faces")
+    }
+
+    /// Le morceau n'est pas (encore) dans le dossier audio : on le garde quand même, par exemple pour faire la jaquette.
+    func garderSansFichier(_ q: QuestionFichier) { questions.removeAll { $0.id == q.id } }
+
+    /// Garde sans fichier tous les morceaux introuvables d'un coup (album importé avant d'avoir la musique).
+    func garderTousSansFichier() {
+        questions.removeAll { $0.candidats.isEmpty }
+        statut = String(localized: "Morceaux gardés sans fichier · ils seront associés quand tu ajouteras la musique (Relire)")
+    }
 
     // MARK: Claude
 
@@ -494,26 +519,41 @@ final class EtatApp: ObservableObject {
     }
 
     func composer(ambiance: String) {
-        lancer(String(localized: "Claude compose la sélection…")) { [self] in
+        lancer(String(localized: "\(fournisseurIA.nom) compose la sélection…")) { [self] in
             let c = try claude()
-            let prop = try await c.composer(ambiance: ambiance, cassette: projet.cassette, reglages: prefs.platine, deja: projet.toutes)
-            noterEchange(String(localized: "Composer : \(ambiance)"), prop.titre + " — " + prop.morceaux.map { "\($0.artiste) – \($0.titre)" }.joined(separator: ", "),
+            // D'abord la musique du dossier audio : c'est elle qu'on peut enregistrer.
+            await relireDossier()
+            let dossier = Array(fichiers.prefix(600))
+            let prop = try await c.composer(ambiance: ambiance, cassette: projet.cassette, reglages: prefs.platine, deja: projet.toutes,
+                                            dossier: dossier)
+            var liste: [Proposition] = []
+            var vus = Set<Int>()
+            for i in prop.dossier where dossier.indices.contains(i) && vus.insert(i).inserted {
+                let f = dossier[i]
+                let m = DossierAudio.pistes(depuis: [f]).first?.morceau
+                liste.append(Proposition(idee: .init(artiste: f.artiste ?? "", titre: f.titreAffiche), morceau: m, gardee: true, fichier: f))
+            }
+            noterEchange(String(localized: "Composer : \(ambiance)"),
+                         prop.titre + " — " + (liste.map { "\($0.idee.artiste) – \($0.idee.titre)" } + prop.morceaux.map { "\($0.artiste) – \($0.titre)" }).joined(separator: ", "),
                          [], client: c, refaisable: false)
             if projet.titre.isEmpty { projet.titre = prop.titre }
-            statut = String(localized: "Recherche des titres sur Spotify…")
-            let sp = try clientSpotify()
-            var liste: [Proposition] = []
+            // Morceaux à trouver ailleurs : jamais cochés d'office. Avec Spotify (Premium), on les cherche pour leur durée.
+            let sp = spotifyConnecte ? try? clientSpotify() : nil
+            if sp != nil && !prop.morceaux.isEmpty { statut = String(localized: "Recherche des titres sur Spotify…") }
             for idee in prop.morceaux {
-                let m = try? await sp.trouver(artiste: idee.artiste, titre: idee.titre)
-                liste.append(Proposition(idee: idee, morceau: m, gardee: m != nil))
+                let m = sp == nil ? nil : try? await sp?.trouver(artiste: idee.artiste, titre: idee.titre)
+                liste.append(Proposition(idee: idee, morceau: m, gardee: false))
             }
             propositions = liste
-            statut = String(localized: "\(liste.filter { $0.morceau != nil }.count) titres trouvés : coche ceux que tu gardes")
+            let locaux = liste.filter { $0.fichier != nil }.count
+            statut = String(localized: "\(locaux) morceaux de ton dossier · \(liste.count - locaux) à trouver ailleurs : coche ceux que tu gardes")
         }
     }
 
     func ajouterPropositions() {
-        let nouveaux = propositions.filter(\.gardee).compactMap(\.morceau).map { Piste(morceau: $0) }
+        let nouveaux = propositions.filter(\.gardee).compactMap { p in
+            p.morceau.map { Piste(morceau: $0, fichier: p.fichier?.url, dureeFichier: p.fichier?.duree) }
+        }
         propositions = []
         projet.mode = .mixtape
         repartirDansLOrdre(projet.toutes + nouveaux)

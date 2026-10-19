@@ -134,8 +134,15 @@ public struct ClientClaude: Sendable {
 // MARK: - Services rendus par Claude pour la mixtape
 
 public struct PropositionMixtape: Decodable, Sendable {
-    public struct Idee: Decodable, Sendable, Hashable { public let artiste: String; public let titre: String }
+    public struct Idee: Decodable, Sendable, Hashable {
+        public let artiste: String
+        public let titre: String
+        public init(artiste: String, titre: String) { self.artiste = artiste; self.titre = titre }
+    }
     public let titre: String
+    /// Numéros des fichiers choisis dans le dossier audio de l'utilisateur (la base de la sélection).
+    public let dossier: [Int]
+    /// Morceaux à trouver ailleurs (pas dans le dossier) : en option seulement.
     public let morceaux: [Idee]
 }
 
@@ -156,22 +163,34 @@ private func ligne(_ i: Int, _ p: Piste) -> String {
 }
 
 extension ClientClaude {
-    /// Propose une sélection pour une mixtape. Les idées sont ensuite cherchées sur Spotify et cochées par l'utilisateur.
-    public func composer(ambiance: String, cassette: Cassette, reglages: ReglagesPlatine, deja: [Piste]) async throws -> PropositionMixtape {
+    /// Propose une sélection pour une mixtape, d'abord avec les fichiers du dossier audio (ceux qu'on peut enregistrer),
+    /// puis, en option, quelques morceaux à trouver ailleurs. L'utilisateur coche ce qu'il garde.
+    public func composer(ambiance: String, cassette: Cassette, reglages: ReglagesPlatine, deja: [Piste],
+                         dossier: [InfosFichier]) async throws -> PropositionMixtape {
         let minutes = cassette.longueur.minutesParFace
         let dejaTexte = deja.isEmpty ? "" : "\n\nDéjà sur la cassette (ne les repropose pas) :\n"
             + deja.enumerated().map { ligne($0.offset, $0.element) }.joined(separator: "\n")
+        let fichiers = dossier.prefix(600).enumerated().map { i, f in
+            "\(i). \(f.artiste ?? "?") - \(f.titreAffiche)\(f.album.map { " [\($0)]" } ?? "") (\(formaterDuree(f.duree)))"
+        }
+        let dossierTexte = fichiers.isEmpty
+            ? "\n\nLe dossier audio est vide : propose seulement des morceaux à trouver (`dossier` vide)."
+            : "\n\nDOSSIER AUDIO de l'utilisateur (seuls ces fichiers peuvent être enregistrés tout de suite) :\n" + fichiers.joined(separator: "\n")
         return try await demander(PropositionMixtape.self,
             systeme: """
-            Tu composes des mixtapes sur cassette audio. Tu proposes uniquement des morceaux qui existent vraiment \
-            sur Spotify, avec l'artiste et le titre exacts. Pense à l'enchaînement. Réponds en \(langue).
+            Tu composes des mixtapes sur cassette audio, d'abord avec la musique que l'utilisateur possède déjà. \
+            Dans `dossier`, mets les numéros des fichiers du dossier audio qui vont avec l'ambiance, dans l'ordre d'écoute \
+            (pense à l'enchaînement, aux tempos, aux durées). Remplis les deux faces avec le dossier autant que possible. \
+            Dans `morceaux`, seulement en complément et en petit nombre (aucun si le dossier suffit) : des morceaux qui \
+            existent vraiment (artiste et titre exacts), que l'utilisateur devra se procurer. Réponds en \(langue).
             """,
             message: """
             Ambiance : \(ambiance)
             Cassette \(cassette.longueur.nom) : 2 faces de \(minutes) min. Propose de quoi remplir les deux faces, \
-            plus 3 ou 4 titres en réserve, et un titre de mixtape court.\(dejaTexte)
+            plus 3 ou 4 titres en réserve, et un titre de mixtape court.\(dejaTexte)\(dossierTexte)
             """,
-            schema: objet(["titre": chaine, "morceaux": ["type": "array", "items": objet(["artiste": chaine, "titre": chaine])]]),
+            schema: objet(["titre": chaine, "dossier": entiers,
+                           "morceaux": ["type": "array", "items": objet(["artiste": chaine, "titre": chaine])]]),
             effort: "high")
     }
 
@@ -184,7 +203,9 @@ extension ClientClaude {
             d'écoute, pour chaque face. Contrainte stricte par face : somme des durées + \(Int(r.blanc)) s entre \
             chaque morceau ≤ \(place) s. Vérifie tes additions. Vise des faces de durées proches. \
             \(garderOrdre ? "Garde l'ordre donné : choisis seulement où couper entre la face A et la face B." : "Cherche un enchaînement fluide.") \
-            Le commentaire, en deux phrases, est en \(langue).
+            Le commentaire, en deux phrases, est en \(langue) et parle comme l'écran de l'app : morceaux numérotés \
+            à partir de 1 dans chaque face (« morceaux 1 à 6 »), durées en minutes:secondes (« 25:05 sur 29:25 »), \
+            jamais d'indices à partir de 0 ni de durées en secondes.
             """,
             message: "Cassette \(cassette.longueur.nom), \(place) s utiles par face.\n"
                 + pistes.enumerated().map { ligne($0.offset, $0.element) }.joined(separator: "\n"),
