@@ -210,6 +210,9 @@ private struct ReglagesCassette: View {
 private struct ListeFace: View {
     @EnvironmentObject var etat: EtatApp
     let face: Face
+    /// Morceau au-dessus duquel on s'apprête à lâcher (trait bleu).
+    @State private var survol: UUID?
+    @State private var finCiblee = false
 
     var pistes: [Piste] { etat.projet.pistes(face) }
 
@@ -225,15 +228,34 @@ private struct ListeFace: View {
             }
             Blocs(valeur: duree, total: capacite, couleur: deborde ? W98.rouge : W98.bleu)
             if deborde { Text("Dépasse la bande : retire ou déplace un morceau.").foregroundStyle(W98.rouge) }
-            List {
-                ForEach(Array(pistes.enumerated()), id: \.element.id) { i, p in
-                    LignePiste(numero: i + 1, piste: p, face: face)
-                        .listRowInsets(EdgeInsets(top: 2, leading: 4, bottom: 2, trailing: 4))
+            // Liste maison : la List de macOS gardait le glisser pour elle, et réordonner ne marchait pas.
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(Array(pistes.enumerated()), id: \.element.id) { i, p in
+                        LignePiste(numero: i + 1, piste: p, face: face, survol: survol == p.id)
+                            .padding(.horizontal, 4).padding(.vertical, 3)
+                            .draggable(p.id.uuidString)
+                            .dropDestination(for: String.self) { ids, _ in
+                                guard let id = ids.first.flatMap(UUID.init(uuidString:)) else { return false }
+                                etat.deplacer(id, avant: p.id, face: face)
+                                return true
+                            } isTargeted: { if $0 { survol = p.id } else if survol == p.id { survol = nil } }
+                        Divider()
+                    }
+                    // Lâché sous le dernier morceau : à la fin de la face.
+                    Color.clear.frame(height: 40).contentShape(Rectangle())
+                        .dropDestination(for: String.self) { ids, _ in
+                            guard let id = ids.first.flatMap(UUID.init(uuidString:)) else { return false }
+                            etat.deplacer(id, avant: nil, face: face)
+                            return true
+                        } isTargeted: { finCiblee = $0 }
+                        .overlay(alignment: .top) { if finCiblee { Rectangle().fill(W98.bleu).frame(height: 2) } }
                 }
-                .onMove { etat.deplacer(face, depuis: $0, vers: $1) }
             }
-            .listStyle(.plain).scrollContentBackground(.hidden).creux()
-            Text("Glisse ou clic droit pour réordonner · ⇄ change de face · × retire").foregroundStyle(W98.ombre).font(W98.police)
+            .scrollIndicators(.visible)
+            .frame(maxHeight: .infinity)
+            .background(Color.white).creux()
+            Text("Glisse (même vers l'autre face) ou clic droit pour réordonner · ⇄ change de face · × retire").foregroundStyle(W98.ombre).font(W98.police)
                 .fixedSize(horizontal: false, vertical: true)
         }
         .frame(maxWidth: .infinity)
@@ -245,6 +267,7 @@ private struct LignePiste: View {
     let numero: Int
     let piste: Piste
     let face: Face
+    var survol = false
 
     var body: some View {
         HStack(spacing: 6) {
@@ -268,6 +291,9 @@ private struct LignePiste: View {
                 .buttonStyle(.plain).fixedSize().help("Retirer de la cassette (ne sera pas enregistré)").accessibilityLabel("Retirer ce morceau")
         }
         .font(W98.police)
+        .contentShape(Rectangle())
+        // Trait bleu au-dessus : le morceau glissé viendra ici.
+        .overlay(alignment: .top) { if survol { Rectangle().fill(W98.bleu).frame(height: 2).offset(y: -3) } }
         .contextMenu {
             Button("Monter") { etat.monter(piste.id, de: -1) }
             Button("Descendre") { etat.monter(piste.id, de: 1) }

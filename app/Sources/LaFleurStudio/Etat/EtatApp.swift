@@ -471,6 +471,19 @@ final class EtatApp: ObservableObject {
         else if let i = projet.faceB.firstIndex(where: { $0.id == id }) { projet.faceA.append(projet.faceB.remove(at: i)) }
     }
 
+    /// Glisser-déposer : met le morceau juste avant `cible` (ou à la fin de la face si nil), même sur l'autre face.
+    func deplacer(_ id: UUID, avant cible: UUID?, face: Face) {
+        guard id != cible, let piste = projet.toutes.first(where: { $0.id == id }) else { return }
+        commentaireClaude = ""
+        var a = projet.faceA.filter { $0.id != id }, b = projet.faceB.filter { $0.id != id }
+        func inserer(_ l: inout [Piste]) {
+            let i = cible.flatMap { c in l.firstIndex { $0.id == c } } ?? l.count
+            l.insert(piste, at: i)
+        }
+        if face == .a { inserer(&a) } else { inserer(&b) }
+        projet.faceA = a; projet.faceB = b
+    }
+
     func deplacer(_ face: Face, depuis: IndexSet, vers: Int) {
         commentaireClaude = ""
         if face == .a { projet.faceA.move(fromOffsets: depuis, toOffset: vers) } else { projet.faceB.move(fromOffsets: depuis, toOffset: vers) }

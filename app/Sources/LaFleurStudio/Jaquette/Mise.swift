@@ -79,10 +79,47 @@ struct Mise {
 
     /// Lignes de la tracklist : (face, numéro, titre, durée).
     func lignes(_ f: Face) -> [(String, String, String)] {
-        projet.pistes(f).enumerated().map { i, piste in
-            let t = projet.mode == .mixtape ? "\(piste.morceau.titre) — \(piste.morceau.artiste)" : piste.morceau.titre
+        // Mixtape : l'artiste suit le titre, sauf s'il est le même pour tous les morceaux (inutile de le répéter).
+        let artistes = Set(projet.toutes.map(\.morceau.artiste).filter { !$0.isEmpty })
+        let avecArtiste = projet.mode == .mixtape && artistes.count > 1
+        return projet.pistes(f).enumerated().map { i, piste in
+            let t = avecArtiste && !piste.morceau.artiste.isEmpty ? "\(piste.morceau.titre) — \(piste.morceau.artiste)" : piste.morceau.titre
             return ("\(f.rawValue)\(i + 1)", t, formaterDuree(piste.duree))
         }
+    }
+
+    /// Une ligne de la tracklist telle qu'elle est dessinée : le titre passe sur deux lignes s'il est trop long,
+    /// la durée reste toujours entière à droite.
+    struct LigneTracklist { let numero: String; let titre: [String]; let duree: String }
+
+    /// Largeur de la colonne du numéro et des espaces (mm), pour la tracklist.
+    static let colonneNumero: CGFloat = 5, espaceTracklist: CGFloat = 1.5
+
+    func tracklist(_ f: Face, largeur: CGFloat) -> [LigneTracklist] {
+        let police = Typo.nsFont(v.policeTexte, tracklistTaille())
+        return lignes(f).map { num, titre, duree in
+            let place = largeur - Self.colonneNumero - Self.espaceTracklist * 2 - Typo.largeurMM(duree, police)
+            return LigneTracklist(numero: num, titre: Self.couper(titre, police, place, lignesMax: 2), duree: duree)
+        }
+    }
+
+    /// Coupe un texte en lignes de largeur `place` (mm), mot par mot ; la dernière ligne garde le reste.
+    static func couper(_ texte: String, _ f: NSFont, _ place: CGFloat, lignesMax: Int) -> [String] {
+        guard Typo.largeurMM(texte, f) > place, lignesMax > 1 else { return [texte] }
+        var lignes: [String] = [], courante = ""
+        let mots = texte.split(separator: " ").map(String.init)
+        for (i, mot) in mots.enumerated() {
+            let essai = courante.isEmpty ? mot : courante + " " + mot
+            if Typo.largeurMM(essai, f) <= place || courante.isEmpty {
+                courante = essai
+            } else {
+                lignes.append(courante)
+                if lignes.count == lignesMax - 1 { lignes.append(mots[i...].joined(separator: " ")); return lignes }
+                courante = mot
+            }
+        }
+        lignes.append(courante)
+        return lignes
     }
 
     // MARK: Zones
@@ -166,17 +203,20 @@ struct Mise {
     func tracklistTaille() -> CGFloat { 5.6 * e("tracklist") }
 
     func tracklistSpecs(largeur: CGFloat, hauteur: CGFloat) -> [SpecTexte] {
-        let l = [Face.a, .b].flatMap { lignes($0) }
+        let l = [Face.a, .b].flatMap { tracklist($0, largeur: largeur) }
         let entetes = [Face.a, .b].filter { !projet.pistes($0).isEmpty }.count
         // Chaque ligne prend `interligne` fois la hauteur d'une ligne ; chaque face a un titre et un espace.
-        let lignesTotales = Double(l.count + entetes * 2) * Double(Mise.interligne)
+        // Un titre sur deux lignes compte pour deux.
+        let lignesTotales = Double(l.reduce(0) { $0 + $1.titre.count } + entetes * 2) * Double(Mise.interligne)
         // Première zone : la liste entière, pour vérifier qu'elle tient en hauteur.
         var specs = [SpecTexte(zone: "tracklist", texte: l.isEmpty ? "" : "FACE A", famille: v.policeTexte, pt: tracklistTaille(),
                                largeur: largeur, hauteur: hauteur, lignes: max(1, Int(lignesTotales.rounded(.up))),
                                couleur: couleurZone("tracklist"), fond: p.fond)]
-        for (num, t, d) in l {
-            specs.append(SpecTexte(zone: "tracklist", texte: "\(num)  \(t)  \(d)", famille: v.policeTexte, pt: tracklistTaille(),
-                                   largeur: largeur, hauteur: hauteur, lignes: 1, couleur: couleurZone("tracklist"), fond: p.fond))
+        for ln in l {
+            // Chaque ligne dessinée doit tenir en largeur (numéro, titre, durée sur la première ; suite du titre dessous).
+            let texte = (["\(ln.numero)  \(ln.titre[0])  \(ln.duree)"] + ln.titre.dropFirst().map { "\(ln.numero)  \($0)" }).joined(separator: "\n")
+            specs.append(SpecTexte(zone: "tracklist", texte: texte, famille: v.policeTexte, pt: tracklistTaille(),
+                                   largeur: largeur, hauteur: hauteur, lignes: ln.titre.count, couleur: couleurZone("tracklist"), fond: p.fond))
         }
         return specs
     }

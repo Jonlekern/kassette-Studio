@@ -357,21 +357,26 @@ struct BlocVue: View {
                 let ligne = Typo.hauteurLigneMM(Typo.nsFont(v.policeTexte, t)) * Mise.interligne
                 VStack(alignment: .leading, spacing: 0) {
                     ForEach([Face.a, .b], id: \.self) { face in
-                        let lignes = mise.lignes(face)
+                        let lignes = mise.tracklist(face, largeur: l)
                         if !lignes.isEmpty {
                             Text("FACE \(face.rawValue) · \(formaterDuree(Faces.duree(mise.projet.pistes(face), ReglagesPlatine())))")
                                 .font(fg).foregroundStyle(Color(hex: mise.couleurTitresFaces))
                                 .frame(height: ligne * u, alignment: .leading)
                             ForEach(lignes.indices, id: \.self) { i in
                                 let ln = lignes[i]
-                                HStack(spacing: 1.5 * u) {
-                                    Text(ln.0).font(fg).frame(width: 5 * u, alignment: .leading)
-                                    Text(ln.1).font(f).lineLimit(1).fixedSize()
-                                    Spacer(minLength: 1 * u)
-                                    Text(ln.2).font(f)
+                                // La durée ne se cache jamais : un titre trop long passe sur deux lignes, puis se coupe.
+                                HStack(alignment: .top, spacing: Mise.espaceTracklist * u) {
+                                    Text(ln.numero).font(fg).frame(width: Mise.colonneNumero * u, height: ligne * u, alignment: .leading)
+                                    VStack(alignment: .leading, spacing: 0) {
+                                        ForEach(ln.titre.indices, id: \.self) { j in
+                                            Text(ln.titre[j]).font(f).lineLimit(1).truncationMode(.tail).frame(height: ligne * u, alignment: .leading)
+                                        }
+                                    }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    Text(ln.duree).font(f).fixedSize().frame(height: ligne * u)
                                 }
                                 .foregroundStyle(Color(hex: v.palette.texte))
-                                .frame(width: l * u, height: ligne * u, alignment: .leading)
+                                .frame(width: l * u, height: ligne * u * CGFloat(ln.titre.count), alignment: .topLeading)
                             }
                             Spacer().frame(height: ligne * u)
                         }

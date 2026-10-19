@@ -26,6 +26,8 @@ final class MoteurEnregistrement: ObservableObject {
     /// Niveaux crête gauche / droite en dBFS.
     @Published private(set) var niveaux: (gauche: Float, droite: Float) = (-90, -90)
     @Published private(set) var tonaliteActive = false
+    /// Dernier niveau mesuré sur le fil audio (dBFS), pour le test automatique des VU-mètres.
+    var niveauMesure: (Float, Float) { mesure.lire() }
 
     private(set) var deroule = Deroule([], ReglagesPlatine(), cassette: Cassette())
     private(set) var pistes: [Piste] = []
@@ -237,10 +239,12 @@ final class MoteurEnregistrement: ObservableObject {
                 Task { @MainActor in self?.rafraichirVU() }
             }
         }
-        guard !tapInstalle else { return }
+        // Toujours réinstallée : après un changement de sortie ou de fichiers, l'ancienne mesure pouvait ne plus rien
+        // recevoir (les aiguilles bougeaient avec la tonalité, mais restaient au repos pendant la musique).
+        if tapInstalle { moteur.mainMixerNode.removeTap(onBus: 0) }
         tapInstalle = true
         let mesure = self.mesure
-        moteur.mainMixerNode.installTap(onBus: 0, bufferSize: 1024, format: nil) { tampon, _ in
+        moteur.mainMixerNode.installTap(onBus: 0, bufferSize: 1024, format: moteur.mainMixerNode.outputFormat(forBus: 0)) { tampon, _ in
             guard let canaux = tampon.floatChannelData, tampon.frameLength > 0 else { return }
             let n = Int(tampon.frameLength), nc = Int(tampon.format.channelCount)
             func rms(_ c: Int) -> Float {
@@ -272,7 +276,7 @@ final class MoteurEnregistrement: ObservableObject {
         let relancer = moteur.isRunning
         moteur.stop()
         try? choisirSortie(uid)
-        if relancer { moteur.prepare(); try? moteur.start() }
+        if relancer { installerTap(); moteur.prepare(); try? moteur.start() }
     }
 
     // MARK: Tonalité de réglage
@@ -305,6 +309,7 @@ final class MoteurEnregistrement: ObservableObject {
         }
         if !moteur.isRunning {
             try? choisirSortie(sortieCourante)
+            installerTap()
             moteur.prepare(); try? moteur.start()
         }
         tonaliteActive.toggle()

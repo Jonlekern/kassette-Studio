@@ -1,3 +1,4 @@
+import AVFoundation
 import AppKit
 import LaFleurCore
 import SwiftUI
@@ -187,6 +188,9 @@ enum Captures {
         etat.prefs.modeExpertIA = false
         etat.conversation = []; etat.filModif = []; etat.elementSelectionne = nil
 
+        // VU-mètres pendant la musique (pas seulement avec la tonalité) : un fichier à −12 dBFS doit les mettre vers 0 VU.
+        journal.append(await testerVU(moteur, tmp))
+
         journal.append("Plan de la cassette envoyé à Claude :\n" + etat.mise.anatomie())
         journal.append("Polices disponibles : " + Typo.disponibles.joined(separator: ", "))
         try? journal.joined(separator: "\n").write(to: dossier.appendingPathComponent("journal.txt"), atomically: true, encoding: .utf8)
@@ -214,6 +218,32 @@ enum Captures {
             try? rep.representation(using: .png, properties: [:])?.write(to: url)
         }
         w.orderOut(nil)
+    }
+
+    static func testerVU(_ moteur: MoteurEnregistrement, _ dossier: URL) async -> String {
+        let url = dossier.appendingPathComponent("sinus-12dB.caf")
+        let taux = 44100.0
+        guard let format = AVAudioFormat(standardFormatWithSampleRate: taux, channels: 2),
+              let fichier = try? AVAudioFile(forWriting: url, settings: format.settings),
+              let tampon = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(taux * 6)) else { return "VU : fichier de test impossible" }
+        tampon.frameLength = tampon.frameCapacity
+        for c in 0..<2 {
+            for i in 0..<Int(tampon.frameLength) { tampon.floatChannelData![c][i] = Float(0.355 * sin(2 * Double.pi * 440 * Double(i) / taux)) }
+        }
+        try? fichier.write(from: tampon)
+        var p = Projet(numeroCatalogue: "TEST-VU")
+        p.faceA = [Piste(morceau: Morceau(titre: "Sinus", artistes: ["Test"], dureeMs: 6000), fichier: url, dureeFichier: 6)]
+        var r = ReglagesPlatine(); r.amorce = 0.2; r.compteARebours = 0
+        moteur.charger(p, face: .a, reglages: r, sortieUID: nil, egaliser: false)
+        if case .erreur(let e) = moteur.etat { return "VU : moteur audio indisponible sur cette machine (\(e))" }
+        moteur.demarrer()
+        try? await Task.sleep(for: .milliseconds(2500))
+        let (g, d) = moteur.niveauMesure
+        let affiche = moteur.niveaux
+        moteur.arreter()
+        let ok = g > -20 && affiche.gauche > -20
+        return String(format: "VU pendant la musique : mesuré %.1f / %.1f dBFS, aiguilles %.1f / %.1f dBFS (attendu ≈ −12) → %@",
+                      g, d, affiche.gauche, affiche.droite, ok ? "OK" : "IMMOBILES")
     }
 
     /// Affiche la vue, fait tourner la molette (comme un vrai utilisateur) sur chaque zone qui défile,
