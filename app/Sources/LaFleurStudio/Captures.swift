@@ -307,6 +307,8 @@ enum Captures {
             let r = sv.convert(sv.bounds, to: nil)
             for f in [0.2, 0.5, 0.8] {
                 let p = NSPoint(x: r.midX, y: r.minY + r.height * f)
+                // Chaque essai part du haut de toutes les zones.
+                for z in zones { z.contentView.scroll(to: .zero); z.reflectScrolledClipView(z.contentView) }
                 let avant = zones.map { $0.contentView.bounds.origin.y }
                 guard let cg = CGEvent(scrollWheelEvent2Source: nil, units: .pixel, wheelCount: 1, wheel1: -400, wheel2: 0, wheel3: 0),
                       let e = NSEvent(cgEvent: cg) else { continue }
