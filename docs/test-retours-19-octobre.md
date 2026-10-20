@@ -71,3 +71,21 @@ commit et push sur `etape-1`. Ne corrige rien dans le code.
 
 - **Dupliquer** copie aussi l'historique IA (voulu : la copie garde de quoi « Revenir à cette version »).
 - Libellés de bande (« Type I · Normal ») : laissés tels quels.
+
+---
+
+# Recontrôle des points C1 à C5 (retours du 20 octobre)
+
+1. **C1 / C2 Molette** : mets la souris **au-dessus d'un curseur, d'un champ, du panneau Élément ou de la liste de
+   « Composer »**, puis tourne la molette. La colonne doit défiler (Jaquette gauche et droite, Mixtape gauche). Au-dessus
+   du fil de « Modifier avec l'IA », le fil défile d'abord, puis la colonne quand il est au bout.
+2. **C3 MusicBrainz** : « Miles Davis - Kind of Blue » → les **éditions cassette en tête** (1981, 1982, 1987…).
+   **Chercher** marche au premier clic juste après avoir tapé. Après import + « Garder sans fichier », la vignette de
+   la Collection garde la pochette (même après avoir relancé l'app).
+3. **C4 Composer** : sur une cassette qui contient déjà tout le dossier → « Tous les morceaux de ton dossier sont déjà
+   sur la cassette · n idées à trouver ailleurs ». Nouvelle cassette : le champ Ambiance est vide.
+4. **C5 Glisser vers l'autre face** : à la **vraie souris** (bouton maintenu, déplacement lent), glisse « Glass » de la
+   face A sur un morceau de la face B, puis sous le dernier morceau de la face B. L'aperçu pendant le glisser montre
+   **le titre du morceau déplacé**. (Avec un outil d'automatisation qui « téléporte » la souris, le glisser part du
+   morceau d'arrivée : c'est ce qu'on a vu le 20 octobre. La logique est vérifiée par la CI.)
+5. Les points non testés le 20 : 1.2, 2.2, 3.8, 4.2, 5.2.
