@@ -47,6 +47,7 @@ T = {
 "Vérifier avec %@": ("Check with %@", "Проверить с %@", "Mit %@ prüfen"),
 "Русский": ("Русский", "Русский", "Русский"),
 "Chercher": ("Search", "Искать", "Suchen"),
+"Tous les morceaux de ton dossier sont déjà sur la cassette · %lld idées à trouver ailleurs": ("All the tracks in your folder are already on the tape · %lld ideas to find elsewhere", "Все треки из твоей папки уже на кассете · идей, которые нужно найти в другом месте: %lld", "Alle Titel aus deinem Ordner sind schon auf der Kassette · %lld Ideen, die du anderswo findest"),
 # Textes lus à l'exécution (tr) : PDF, rappel avant export, noms des exports.
 "Exporter le PDF": ("Export PDF", "Экспорт в PDF", "PDF exportieren"),
 "Exporter les PNG": ("Export PNGs", "Экспорт PNG", "PNGs exportieren"),

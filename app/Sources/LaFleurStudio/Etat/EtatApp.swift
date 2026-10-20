@@ -334,7 +334,10 @@ final class EtatApp: ObservableObject {
             projet.titre = a.titre; projet.artiste = a.artiste; projet.mode = .album
             projet.annee = a.annee; projet.labelOrigine = a.maisonDeDisque; projet.catalogueOrigine = a.catalogue
             projet.codeBarresOrigine = d.codeBarres; projet.musicBrainzID = a.id
-            projet.pochetteURL = d.aUnePochette ? a.pochetteURL : projet.pochetteURL
+            // Pochette copiée dans le dossier de l'app : la vignette de la Collection et l'impression ne dépendent plus du réseau.
+            if d.aUnePochette, let url = URL(string: "https://coverartarchive.org/release/\(a.id)/front-1200") {
+                projet.pochetteURL = await telecharger(url) ?? a.pochetteURL
+            }
             albumsMusicBrainz = []
             remplir(d.morceaux)
         }
@@ -565,7 +568,12 @@ final class EtatApp: ObservableObject {
             }
             propositions = liste
             let locaux = liste.filter { $0.fichier != nil }.count
-            statut = String(localized: "\(locaux) morceaux de ton dossier · \(liste.count - locaux) à trouver ailleurs : coche ceux que tu gardes")
+            let surLaCassette = Set(projet.toutes.compactMap(\.fichier))
+            if locaux == 0, !dossier.isEmpty, dossier.allSatisfy({ surLaCassette.contains($0.url) }) {
+                statut = String(localized: "Tous les morceaux de ton dossier sont déjà sur la cassette · \(liste.count) idées à trouver ailleurs")
+            } else {
+                statut = String(localized: "\(locaux) morceaux de ton dossier · \(liste.count - locaux) à trouver ailleurs : coche ceux que tu gardes")
+            }
         }
     }
 

@@ -599,6 +599,7 @@
 "Ton imprimante (%@) n'est pas encore calibrée : imprime d'abord la règle pour vérifier que la jaquette sort à la bonne taille (Réglages → Impression)." = "Your printer (%@) isn't calibrated yet: print the ruler first to check the J-card comes out at the right size (Settings → Printing).";
 "Tonalité 1 kHz" = "1 kHz tone";
 "Total" = "Total";
+"Tous les morceaux de ton dossier sont déjà sur la cassette · %lld idées à trouver ailleurs" = "All the tracks in your folder are already on the tape · %lld ideas to find elsewhere";
 "Tout corriger" = "Fix everything";
 "Tout est corrigé ✓" = "All fixed ✓";
 "Tout l'objet dans l'aperçu" = "The whole item in the preview";

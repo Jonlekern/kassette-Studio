@@ -16,6 +16,8 @@ struct LaFleurStudioApp: App {
         NSApplication.shared.activate(ignoringOtherApps: true)
         // Polices libres de l'app et polices importées par l'utilisateur.
         Typo.enregistrer()
+        // La molette fait défiler les colonnes, même au-dessus d'un curseur ou d'un champ.
+        Molette.installer()
         let args = CommandLine.arguments
         if let i = args.firstIndex(of: "--captures"), i + 1 < args.count {
             let dossier = URL(fileURLWithPath: args[i + 1])

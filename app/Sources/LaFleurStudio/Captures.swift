@@ -181,12 +181,27 @@ enum Captures {
         journal += await testerDefilement(FenetrePrincipale(ecranInitial: .jaquette).padding(16).background(W98.bureau).w98()
                                             .environmentObject(etat).environmentObject(moteur).preferredColorScheme(.light),
                                           CGSize(width: 1180, height: 760), dossier, "defilement-jaquette")
+        journal += await testerDefilement(FenetrePrincipale(ecranInitial: .jaquette).padding(16).background(W98.bureau).w98()
+                                            .environmentObject(etat).environmentObject(moteur).preferredColorScheme(.light),
+                                          CGSize(width: 1920, height: 1050), dossier, "defilement-jaquette-plein-ecran")
         etat.prefs.modeExpertIA = true
         journal += await testerDefilement(FenetrePrincipale(ecranInitial: .mixtape).padding(16).background(W98.bureau).w98()
                                             .environmentObject(etat).environmentObject(moteur).preferredColorScheme(.light),
                                           CGSize(width: 1180, height: 760), dossier, "defilement-mixtape")
         etat.prefs.modeExpertIA = false
         etat.conversation = []; etat.filModif = []; etat.elementSelectionne = nil
+
+        // Glisser-déposer d'une face à l'autre : la dernière de la face A va avant la 2e de la face B, puis à la fin de la face A.
+        let sauvegardeProjet = etat.projet
+        if let glass = etat.projet.faceA.last, etat.projet.faceB.count > 1 {
+            let cible = etat.projet.faceB[1]
+            etat.deplacer(glass.id, avant: cible.id, face: .b)
+            let ok1 = etat.projet.faceB.firstIndex { $0.id == glass.id } == 1 && !etat.projet.faceA.contains { $0.id == glass.id }
+            etat.deplacer(glass.id, avant: nil, face: .a)
+            let ok2 = etat.projet.faceA.last?.id == glass.id && !etat.projet.faceB.contains { $0.id == glass.id }
+            journal.append("Glisser vers l'autre face : « \(glass.morceau.titre) » avant « \(cible.morceau.titre) » en face B \(ok1 ? "OK" : "RATÉ"), puis fin de la face A \(ok2 ? "OK" : "RATÉ")")
+        }
+        etat.projet = sauvegardeProjet
 
         // Dos du boîtier 3D : le rabat et la cassette à travers le plastique.
         if let img = Boitier3D.image(etat.mise, taille: CGSize(width: 600, height: 600), dos: true), let t = img.tiffRepresentation,
@@ -281,17 +296,24 @@ enum Captures {
         }
         photo("avant")
         func defilantes(_ v: NSView) -> [NSScrollView] { ((v as? NSScrollView).map { [$0] } ?? []) + v.subviews.flatMap(defilantes) }
-        var lignes = ["Défilement \(nom) :"]
-        for sv in defilantes(h) {
-            let doc = sv.documentView?.frame.height ?? 0, vu = sv.contentView.bounds.height
-            guard doc > vu + 1 else { continue }
-            let avant = sv.contentView.bounds.origin.y
-            if let cg = CGEvent(scrollWheelEvent2Source: nil, units: .pixel, wheelCount: 1, wheel1: -3000, wheel2: 0, wheel3: 0),
-               let e = NSEvent(cgEvent: cg) { sv.scrollWheel(with: e) }
-            try? await Task.sleep(for: .milliseconds(600))
-            let apres = sv.contentView.bounds.origin.y
-            let x = Int(sv.convert(sv.bounds, to: h).minX)
-            lignes.append("- zone x=\(x) : contenu \(Int(doc)) pt, visible \(Int(vu)) pt, molette \(Int(avant)) → \(Int(apres)) \(apres != avant ? "OK" : "BLOQUÉ")")
+        let zones = defilantes(h).filter { ($0.documentView?.frame.height ?? 0) > $0.contentView.bounds.height + 1 }
+        func decrire(_ sv: NSScrollView) -> String {
+            let r = sv.convert(sv.bounds, to: nil)
+            return "zone x=\(Int(r.minX)) (\(Int(sv.documentView?.frame.height ?? 0)) pt pour \(Int(sv.contentView.bounds.height)))"
+        }
+        var lignes = ["Défilement \(nom) (\(Int(taille.width)) × \(Int(taille.height))) :"]
+        // Comme une vraie molette : l'événement part de la position de la souris (au-dessus des curseurs, champs, listes…).
+        for sv in zones {
+            let r = sv.convert(sv.bounds, to: nil)
+            for f in [0.2, 0.5, 0.8] {
+                let p = NSPoint(x: r.midX, y: r.minY + r.height * f)
+                let avant = zones.map { $0.contentView.bounds.origin.y }
+                guard let cg = CGEvent(scrollWheelEvent2Source: nil, units: .pixel, wheelCount: 1, wheel1: -400, wheel2: 0, wheel3: 0),
+                      let e = NSEvent(cgEvent: cg) else { continue }
+                Molette.defiler(e, fenetre: w, point: p)
+                let bouge = zip(zones, avant).filter { $0.0.contentView.bounds.origin.y != $0.1 }.map { decrire($0.0) }
+                lignes.append("- souris sur \(decrire(sv)) à \(Int(f * 100)) % : " + (bouge.isEmpty ? "RIEN NE BOUGE" : "défile → " + bouge.joined(separator: ", ")))
+            }
         }
         h.layoutSubtreeIfNeeded()
         photo("apres")

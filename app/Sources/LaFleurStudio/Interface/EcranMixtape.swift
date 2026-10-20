@@ -76,8 +76,9 @@ private struct Sources: View {
                 Groupe(titre: "MusicBrainz (gratuit, sans compte)") {
                     HStack(spacing: 4) {
                         Champ(invite: "Album, ou « Artiste - Album »…", texte: $rechercheMB).onSubmit { etat.chercherMusicBrainz(rechercheMB) }
+                        // Jamais grisé : le champ n'envoie son texte qu'en perdant le focus, et le 1er clic était perdu.
                         Button("Chercher") { etat.chercherMusicBrainz(rechercheMB) }.buttonStyle(.w98).fixedSize()
-                            .disabled(rechercheMB.trimmingCharacters(in: .whitespaces).isEmpty || etat.occupe)
+                            .disabled(etat.occupe)
                     }
                     if !etat.albumsMusicBrainz.isEmpty {
                         VStack(spacing: 0) {
@@ -140,6 +141,8 @@ private struct Sources: View {
                     Button("Cassette depuis le dossier (sans Spotify)") { etat.importerDossierSeul() }.buttonStyle(.w98)
                 }
         }
+        // Nouvelle cassette : l'ambiance de la précédente ne reste pas dans le champ.
+        .onChange(of: etat.projet.id) { _, _ in ambiance = "" }
     }
 }
 
@@ -238,7 +241,11 @@ private struct ListeFace: View {
                     ForEach(Array(pistes.enumerated()), id: \.element.id) { i, p in
                         LignePiste(numero: i + 1, piste: p, face: face, survol: survol == p.id)
                             .padding(.horizontal, 4).padding(.vertical, 3)
-                            .draggable(p.id.uuidString)
+                            // Aperçu du glisser : le titre du morceau qu'on déplace.
+                            .draggable(p.id.uuidString) {
+                                Text(verbatim: p.morceau.titre).font(W98.policeGras).padding(.horizontal, 6).padding(.vertical, 3)
+                                    .background(W98.bulle).border(W98.bleu)
+                            }
                             .dropDestination(for: String.self) { ids, _ in
                                 guard let id = ids.first.flatMap(UUID.init(uuidString:)) else { return false }
                                 etat.deplacer(id, avant: p.id, face: face)

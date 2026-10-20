@@ -599,6 +599,7 @@
 "Ton imprimante (%@) n'est pas encore calibrée : imprime d'abord la règle pour vérifier que la jaquette sort à la bonne taille (Réglages → Impression)." = "Твой принтер (%@) ещё не откалиброван: сначала распечатай линейку, чтобы проверить размер обложки (Настройки → Печать).";
 "Tonalité 1 kHz" = "Тон 1 кГц";
 "Total" = "Итого";
+"Tous les morceaux de ton dossier sont déjà sur la cassette · %lld idées à trouver ailleurs" = "Все треки из твоей папки уже на кассете · идей, которые нужно найти в другом месте: %lld";
 "Tout corriger" = "Исправить всё";
 "Tout est corrigé ✓" = "Всё исправлено ✓";
 "Tout l'objet dans l'aperçu" = "Весь объект в окне";

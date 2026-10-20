@@ -69,9 +69,13 @@ public actor ClientMusicBrainz {
         if cassetteSeulement { q = "(\(q)) AND format:Cassette" }
         let d = try await get("/release/", ["query": q, "limit": "15"])
         let albums = try JSONDecoder().decode(ReponseRecherche.self, from: d).releases.map { $0.album }
-        // Les éditions cassette d'abord (c'est ce qu'on fabrique), puis le reste dans l'ordre de MusicBrainz.
-        let k7 = albums.filter { $0.formats.contains { $0.localizedCaseInsensitiveContains("cassette") } }
-        return k7 + albums.filter { a in !k7.contains { $0.id == a.id } }
+        if cassetteSeulement { return albums }
+        // Les éditions cassette d'abord (c'est ce qu'on fabrique) : elles sont rarement dans les 15 premiers résultats,
+        // on les demande donc à part, puis le reste dans l'ordre de MusicBrainz.
+        let k7 = (try? await chercher(texte, cassetteSeulement: true)) ?? []
+        let autresK7 = albums.filter { a in a.formats.contains { $0.localizedCaseInsensitiveContains("cassette") } && !k7.contains { $0.id == a.id } }
+        let tete = k7 + autresK7
+        return tete + albums.filter { a in !tete.contains { $0.id == a.id } }
     }
 
     public func detail(_ id: String) async throws -> Detail {
