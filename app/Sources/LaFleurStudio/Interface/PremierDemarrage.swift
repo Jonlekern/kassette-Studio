@@ -13,10 +13,10 @@ struct PremierDemarrage: View {
         HStack(alignment: .top, spacing: 24) {
             Fenetre(titre: "Bienvenue dans STUDIOLAFLEUR") {
                 VStack(alignment: .leading, spacing: 12) {
-                    Logo().frame(height: 26).foregroundStyle(.black)
+                    Logo().frame(height: 30).foregroundStyle(.black)
                     Text("Quatre réglages et une validation, et tu peux faire ta première cassette. Tout est modifiable plus tard dans Réglages.")
                         .fixedSize(horizontal: false, vertical: true)
-                    Groupe(titre: "1. Clé API Claude") {
+                    Groupe(titre: "1. Clé API Claude", police: W98.titreGras) {
                         HStack {
                             Champ(invite: "sk-ant-…", texte: $etat.cleClaude, secret: true).disabled(!etat.clesChargees)
                             Button("Tester") { tester() }.buttonStyle(.w98)
@@ -26,11 +26,11 @@ struct PremierDemarrage: View {
                         }
                         Text("Tu préfères GPT ou Gemini ? Choisis-le plus tard dans Réglages → IA.").foregroundStyle(W98.ombre)
                     }
-                    Groupe(titre: "2. Spotify (facultatif, Premium obligatoire)") {
+                    Groupe(titre: "2. Spotify (facultatif, Premium obligatoire)", police: W98.titreGras) {
                         ReglageSpotify()
                         Button("Guide pas à pas…") { aideSpotify.toggle() }.buttonStyle(.w98)
                     }
-                    Groupe(titre: "3. Dossier audio") {
+                    Groupe(titre: "3. Dossier audio", police: W98.titreGras) {
                         HStack {
                             Text(etat.prefs.dossierAudio?.path(percentEncoded: false) ?? "Aucun dossier choisi")
                                 .lineLimit(1).truncationMode(.middle).padding(.horizontal, 6).frame(maxWidth: .infinity, alignment: .leading)
@@ -38,8 +38,8 @@ struct PremierDemarrage: View {
                             Button("Choisir…") { etat.choisirDossier() }.buttonStyle(.w98)
                         }
                     }
-                    Groupe(titre: "4. Sortie vers la platine") { ChoixSortie() }
-                    Groupe(titre: "5. Conditions d'utilisation") {
+                    Groupe(titre: "4. Sortie vers la platine", police: W98.titreGras) { ChoixSortie() }
+                    Groupe(titre: "5. Conditions d'utilisation", police: W98.titreGras) {
                         ScrollView { TexteConditions().padding(6) }.frame(height: 110).creux()
                         Toggle("J'ai lu et j'accepte ces conditions", isOn: $accepte).toggleStyle(.checkbox).bold()
                     }

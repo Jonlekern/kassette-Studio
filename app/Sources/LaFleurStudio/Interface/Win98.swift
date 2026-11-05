@@ -15,6 +15,9 @@ enum W98 {
     static let orange = Color(red: 0.702, green: 0.42, blue: 0)
     static let police = Font.custom("Arial", size: 12)
     static let policeGras = Font.custom("Arial", size: 12).bold()
+    /// Titres de l'app (onglets, écran d'accueil) : Calebard, la police du logo. Très large, d'où la petite taille.
+    static let titre = Font.custom("Calebard-Regular", size: 10.5)
+    static let titreGras = Font.custom("Calebard-Bold", size: 10.5)
     static let lcd = Font.system(size: 26, weight: .regular, design: .monospaced)
 }
 
@@ -68,6 +71,8 @@ extension ButtonStyle where Self == BoutonW98 {
 /// Cadre gravé avec légende, comme les « group box » de Windows.
 struct Groupe<Contenu: View>: View {
     let titre: LocalizedStringKey
+    /// Police du titre de l'encadré (Calebard sur l'écran d'accueil).
+    var police: Font = W98.police
     @ViewBuilder var contenu: Contenu
     var body: some View {
         VStack(alignment: .leading, spacing: 6) { contenu }
@@ -75,7 +80,7 @@ struct Groupe<Contenu: View>: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .overlay(RoundedRectangle(cornerRadius: 0).stroke(W98.grisFonce, lineWidth: 1).padding(.top, 6))
             .overlay(alignment: .topLeading) {
-                Text(titre).font(W98.police).padding(.horizontal, 4).background(W98.gris).padding(.leading, 8)
+                Text(titre).font(police).padding(.horizontal, 4).background(W98.gris).padding(.leading, 8)
             }
     }
 }
@@ -113,7 +118,7 @@ struct Onglets<Valeur: Hashable>: View {
                 let (valeur, titre) = onglets[i]
                 let actif = valeur == selection
                 Button { selection = valeur } label: {
-                    Text(LocalizedStringKey(titre)).font(actif ? W98.policeGras : W98.police).foregroundStyle(.black)
+                    Text(LocalizedStringKey(titre)).font(actif ? W98.titreGras : W98.titre).foregroundStyle(.black)
                         .padding(.horizontal, 16).padding(.vertical, actif ? 5 : 4)
                         .relief().offset(y: actif ? 1 : 2)
                 }

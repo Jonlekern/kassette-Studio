@@ -31,6 +31,10 @@ enum Captures {
         await ecran("ecran-2-jaquette.png", .jaquette)
         await ecran("ecran-3-enregistrer.png", .enregistrer)
         await ecran("ecran-4-collection.png", .collection)
+        // Écran d'accueil (premier démarrage) : logo et titres en Calebard.
+        await capturer(ScrollView { PremierDemarrage().padding(24).frame(maxWidth: .infinity) }.background(W98.bureau).w98()
+                        .environmentObject(etat).environmentObject(moteur).preferredColorScheme(.light),
+                       CGSize(width: 1280, height: 900), dossier.appendingPathComponent("ecran-0-accueil.png"))
         // Étiquettes « pochette en fond » et jaquette retouchée (titre agrandi et déplacé, pochette de l'étiquette masquée).
         var dr = etat.design
         dr.etiquettePochette = .fond; dr.voileEtiquette = 0.4
