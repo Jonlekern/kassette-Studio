@@ -15,9 +15,10 @@ enum W98 {
     static let orange = Color(red: 0.702, green: 0.42, blue: 0)
     static let police = Font.custom("Arial", size: 12)
     static let policeGras = Font.custom("Arial", size: 12).bold()
-    /// Titres de l'app (onglets, écran d'accueil) : Calebard, la police du logo. Très large, d'où la petite taille.
-    static let titre = Font.custom("Calebard-Regular", size: 10.5)
-    static let titreGras = Font.custom("Calebard-Bold", size: 10.5)
+    /// Titres de l'app (onglets, écran d'accueil) : Calebard, la police du logo, en graisses fines (le logo reste en Black).
+    /// Très large, d'où la petite taille.
+    static let titre = Font.custom("Calebard-Light", size: 10.5)
+    static let titreGras = Font.custom("Calebard-Regular", size: 10.5)
     static let lcd = Font.system(size: 26, weight: .regular, design: .monospaced)
 }
 
